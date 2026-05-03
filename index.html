@@ -372,6 +372,7 @@
       <div class="layer-box"><span class="lt">15+ More</span><span class="ls">Bedrock, vLLM...</span></div>
     </div>
   </div>
+  <p style="text-align:center;font-size:11px;color:var(--text-faint);margin-top:12px;">Stats from openclaw/openclaw main branch, May 2026. File counts from src/ directory listings.</p>
 </div>
 
 <div class="divider" aria-hidden="true"></div>
@@ -562,7 +563,15 @@ function createExpandable(item) {
   btn.onclick = () => toggle(card);
   btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(card); } };
 
-  btn.innerHTML = `<span class="exp-icon">${item.icon||'·'}</span><div class="exp-meta"><div class="exp-name">${item.name}</div>${item.tagline||item.files?'<div class="exp-tagline">'+(item.tagline||item.files)+'</div>':''}</div><span class="exp-chevron">▼</span>`;
+  const icon = document.createElement('span'); icon.className = 'exp-icon'; icon.textContent = item.icon||'·';
+  const meta = document.createElement('div'); meta.className = 'exp-meta';
+  const name = document.createElement('div'); name.className = 'exp-name'; name.textContent = item.name; meta.appendChild(name);
+  if (item.tagline || item.files) {
+    const tag = document.createElement('div'); tag.className = 'exp-tagline'; tag.textContent = item.tagline || item.files;
+    meta.appendChild(tag);
+  }
+  const chevron = document.createElement('span'); chevron.className = 'exp-chevron'; chevron.textContent = '▼';
+  btn.append(icon, meta, chevron);
 
   const body = document.createElement('div');
   body.className = 'exp-body';
@@ -596,7 +605,9 @@ document.addEventListener('DOMContentLoaded', () => {
     grp.className = 'ext-grp';
     const label = document.createElement('div');
     label.className = 'ext-group-head';
-    label.innerHTML = `${g.group} <span class="ext-count">${g.count}</span>`;
+    const labelSpan = document.createElement('span'); labelSpan.className = 'ext-count'; labelSpan.textContent = g.count;
+    label.textContent = g.group;
+    label.appendChild(labelSpan);
     grp.appendChild(label);
     const grid = document.createElement('div');
     grid.className = 'ext-grid';
@@ -615,7 +626,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sg) DATA.stack.forEach(s => {
     const el = document.createElement('div');
     el.className = 'stack-item';
-    el.innerHTML = `<span class="stack-area">${s.area}</span><div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div></div>`;
+    const a = document.createElement('span'); a.className = 'stack-area'; a.textContent = s.area;
+    const d = document.createElement('div');
+    const n = document.createElement('div'); n.className = 'stack-name'; n.textContent = s.name;
+    const de = document.createElement('div'); de.className = 'stack-desc'; de.textContent = s.desc;
+    d.append(n, de);
+    el.append(a, d);
     sg.appendChild(el);
   });
 });
