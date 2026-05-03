@@ -8,10 +8,10 @@
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Geist+Mono:wght@400;500;700&display=swap');
 
   :root {
-    --gold: #B89A4D;
+    --gold: #9A7E35;
     --gold-muted: #D4C5A9;
     --gold-light: #F5F0E6;
-    --gold-bg: rgba(184,154,77,0.06);
+    --gold-bg: rgba(154,126,53,0.06);
     --bg: #FFFFFF;
     --surface: #F8F9FA;
     --surface-raised: #F1F3F5;
@@ -240,13 +240,16 @@
     .stats-bar { gap: 14px; }
     .stat-value { font-size: 18px; }
   }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  .sr-only:focus { position: fixed; width: auto; height: auto; padding: 12px; margin: 0; clip: auto; background: #9A7E35; color: #fff; z-index: 9999; font-size: 14px; text-decoration: none; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
 <body>
-<a href="#main-content" class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" onfocus="this.style.position='fixed';this.style.width='auto';this.style.height='auto';this.style.padding='12px';this.style.margin='0';this.style.clip='auto';this.style.background='#B89A4D';this.style.color='#fff';this.style.zIndex='9999';this.style.fontSize='14px'" onblur="this.style.position='absolute';this.style.width='1px';this.style.height='1px';this.style.padding='0';this.style.margin='-1px';this.style.overflow='hidden';this.style.clip='rect(0,0,0,0)'">Skip to main content</a>
+<a href="#main-content" class="sr-only">Skip to main content</a>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
   <defs>
     <symbol id="a-r" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -260,7 +263,7 @@
 <div class="stats-bar">
   <div class="stat"><div class="stat-value">378K</div><div class="stat-label">Lines of Source</div></div>
   <div class="stat"><div class="stat-value">2,188</div><div class="stat-label">Source Files</div></div>
-  <div class="stat"><div class="stat-value">38</div><div class="stat-label">Extensions</div></div>
+  <div class="stat" id="stat-ext"><div class="stat-value">38</div><div class="stat-label">Extensions</div></div>
   <div class="stat"><div class="stat-value">10+</div><div class="stat-label">Channels</div></div>
   <div class="stat"><div class="stat-value">4</div><div class="stat-label">Native Apps</div></div>
   <div class="stat"><div class="stat-value">22+</div><div class="stat-label">LLM Providers</div></div>
@@ -560,8 +563,9 @@ function createExpandable(item) {
   const btn = document.createElement('button');
   btn.className = 'exp-btn';
   btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', bodyId);
   btn.onclick = () => toggle(card);
-  btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(card); } };
+
 
   const icon = document.createElement('span'); icon.className = 'exp-icon'; icon.textContent = item.icon||'·';
   const meta = document.createElement('div'); meta.className = 'exp-meta';
@@ -573,8 +577,10 @@ function createExpandable(item) {
   const chevron = document.createElement('span'); chevron.className = 'exp-chevron'; chevron.textContent = '▼';
   btn.append(icon, meta, chevron);
 
+  const bodyId = 'exp-' + Math.random().toString(36).slice(2,8);
   const body = document.createElement('div');
   body.className = 'exp-body';
+  body.id = bodyId;
   if (item.desc) {
     const d = document.createElement('div'); d.className = 'exp-desc'; d.textContent = item.desc;
     body.appendChild(d);
@@ -597,6 +603,11 @@ function createExpandable(item) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Dynamic stat: extensions count
+  const extTotal = DATA.extensions.reduce((n,g) => n + g.items.length, 0);
+  const extStat = document.querySelector('#stat-ext .stat-value');
+  if (extStat) extStat.textContent = String(extTotal);
+
   // Deep Dive
   const dd = document.getElementById('deep-dive-cards');
   if (dd) DATA.deepDive.forEach(item => dd.appendChild(createExpandable(item)));
