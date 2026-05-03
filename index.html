@@ -19,16 +19,13 @@
     --text-secondary: #495057;
     --text-muted: #868E96;
     --text-faint: #ADB5BD;
-    --accent-blue: #3B82F6;
-    --accent-green: #10B981;
-    --accent-amber: #F59E0B;
-    --accent-purple: #8B5CF6;
-    --accent-teal: #0D9488;
     --gradient-start: #F8F9FA;
     --gradient-end: #FFFFFF;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Geist+Mono:wght@400;500;700&display=swap');
 
   body {
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -190,7 +187,7 @@
   .mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
   /* ─── Extensions ─── */
-  .ext-group { margin-bottom: 24px; }
+  .ext-grp { margin-bottom: 24px; }
   .ext-group-head { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
   .ext-count { font-size: 10px; color: var(--text-faint); font-weight: 500; background: var(--surface-raised); padding: 1px 6px; border-radius: 4px; }
   .ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
@@ -248,6 +245,7 @@
 </style>
 </head>
 <body>
+<noscript><div style="padding:20px;text-align:center;background:#F8F9FA;border-bottom:1px solid #E9ECEF;font-family:sans-serif;color:#495057;">JavaScript is required for expanded content sections (Architecture Deep Dive, Module Reference, Extensions, Tech Stack). The executive summary diagram and statistics are always visible.</div></noscript>
 <div class="bg-grid" aria-hidden="true"></div>
 
 <div class="stats-bar">
@@ -536,8 +534,10 @@ const DATA = {
 /* ═══════════════ RENDER ═══════════════ */
 
 function toggle(el) {
-  const expanded = el.getAttribute('aria-expanded') === 'true';
-  el.setAttribute('aria-expanded', String(!expanded));
+  const next = el.getAttribute('aria-expanded') !== 'true';
+  el.setAttribute('aria-expanded', String(next));
+  const btn = el.querySelector('.exp-btn');
+  if (btn) btn.setAttribute('aria-expanded', String(next));
 }
 
 function createExpandable(item) {
@@ -572,19 +572,21 @@ function createExpandable(item) {
 document.addEventListener('DOMContentLoaded', () => {
   // Deep Dive
   const dd = document.getElementById('deep-dive-cards');
-  DATA.deepDive.forEach(item => dd.appendChild(createExpandable(item)));
+  if (dd) DATA.deepDive.forEach(item => dd.appendChild(createExpandable(item)));
 
   // Modules
   const mg = document.getElementById('module-grid');
-  DATA.modules.forEach(m => mg.appendChild(createExpandable(m)));
+  if (mg) DATA.modules.forEach(m => mg.appendChild(createExpandable(m)));
 
   // Extensions
   const ex = document.getElementById('extensions-root');
-  DATA.extensions.forEach(g => {
+  if (ex) DATA.extensions.forEach(g => {
+    const grp = document.createElement('div');
+    grp.className = 'ext-grp';
     const label = document.createElement('div');
     label.className = 'ext-group-head';
     label.innerHTML = `${g.group} <span class="ext-count">${g.count}</span>`;
-    ex.appendChild(label);
+    grp.appendChild(label);
     const grid = document.createElement('div');
     grid.className = 'ext-grid';
     g.items.forEach(name => {
@@ -593,12 +595,13 @@ document.addEventListener('DOMContentLoaded', () => {
       el.textContent = name;
       grid.appendChild(el);
     });
-    ex.appendChild(grid);
+    grp.appendChild(grid);
+    ex.appendChild(grp);
   });
 
   // Stack
   const sg = document.getElementById('stack-grid');
-  DATA.stack.forEach(s => {
+  if (sg) DATA.stack.forEach(s => {
     const el = document.createElement('div');
     el.className = 'stack-item';
     el.innerHTML = `<span class="stack-area">${s.area}</span><div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div></div>`;
