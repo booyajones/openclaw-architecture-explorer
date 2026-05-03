@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw Architecture Explorer v2</title>
+<title>OpenClaw Architecture Explorer</title>
 <style>
   :root {
     --bg: #0a0e17;
@@ -21,12 +21,6 @@
     --amber: #f59e0b;
     --purple: #a855f7;
     --pink: #ec4899;
-    --layer-surfaces: #1e3a6a;
-    --layer-channels: #1a4a6a;
-    --layer-gateway: #1a5a6a;
-    --layer-agent: #1a5a5a;
-    --layer-infra: #2a3a5a;
-    --layer-providers: #3a2a5a;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,1239 +33,843 @@
     min-height: 100vh;
   }
 
-  .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
   /* ─── Stats Bar ─── */
   .stats-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    padding: 20px 24px;
-    background: var(--bg2);
+    display: flex; flex-wrap: wrap; gap: 24px;
+    justify-content: center; align-items: center;
+    padding: 16px 24px;
+    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 0%);
     border-bottom: 1px solid var(--border);
   }
-  .stat-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--text2);
-  }
-  .stat-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .stat-unit { font-size: 12px; color: var(--text3); }
+  .stat { text-align: center; }
+  .stat-value { font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1.1; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-  /* ─── Hero / Title ─── */
+  /* ─── Hero / Executive Summary ─── */
   .hero {
     text-align: center;
-    padding: 48px 24px 32px;
-    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    padding: 48px 24px 0;
   }
   .hero h1 {
-    font-size: 36px;
-    font-weight: 800;
+    font-size: 42px; font-weight: 800;
     background: linear-gradient(135deg, var(--accent), var(--blue));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .hero p {
-    margin-top: 12px;
-    font-size: 16px;
-    color: var(--text2);
-    max-width: 640px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 12px; font-size: 16px; color: var(--text2);
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .hero-tagline {
+    display: flex; justify-content: center; gap: 8px;
+    margin-top: 16px; font-size: 13px; color: var(--text3);
+    flex-wrap: wrap;
+  }
+  .hero-tagline span { background: var(--bg3); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+
+  /* ─── Architecture Diagram ─── */
+  .diagram-section {
+    margin: 40px auto;
+    max-width: 1000px;
+  }
+  .diagram-section h2 {
+    font-size: 18px; font-weight: 700; color: var(--text);
+    text-align: center; margin-bottom: 20px;
   }
 
-  /* ─── Section ─── */
-  .section {
-    margin: 40px 0;
-  }
-  .section-title {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-  .section-subtitle {
-    font-size: 14px;
-    color: var(--text3);
-    margin-bottom: 24px;
-  }
-
-  /* ─── Process Flow Diagram ─── */
-  .flow-container {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 24px;
+  .arch-diagram {
+    display: flex; flex-direction: column; gap: 0;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
     overflow-x: auto;
   }
 
-  .flow-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    flex-wrap: nowrap;
-    min-width: min-content;
+  .diagram-row {
+    display: flex; align-items: center;
+    gap: 0; flex-shrink: 0;
   }
-  .flow-row + .flow-row { margin-top: 16px; }
+  .diagram-row + .diagram-row { margin-top: 0; }
 
-  .flow-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    min-width: 100px;
-    cursor: default;
+  .diagram-box {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 14px 18px; border-radius: 10px;
+    min-width: 110px; text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
+    cursor: pointer;
   }
-  .flow-node:hover {
+  .diagram-box:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(22,158,227,0.15);
+    box-shadow: 0 6px 24px rgba(22,158,227,0.18);
   }
-  .flow-node .icon { font-size: 20px; }
-  .flow-node .label {
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .flow-node .sub {
-    font-size: 10px;
-    color: var(--text3);
-    white-space: nowrap;
-  }
+  .d-icon { font-size: 22px; line-height: 1; }
+  .d-title { font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .d-sub { font-size: 10px; color: rgba(255,255,255,0.6); white-space: nowrap; }
 
-  .flow-node.node-user { background: var(--layer-surfaces); }
-  .flow-node.node-channel { background: var(--layer-channels); }
-  .flow-node.node-routing { background: #1a3a5a; }
-  .flow-node.node-gateway { background: var(--layer-gateway); }
-  .flow-node.node-agent { background: var(--layer-agent); }
-  .flow-node.node-llm { background: var(--layer-providers); }
-  .flow-node.node-policy { background: #3a2a3a; }
-  .flow-node.node-sandbox { background: #2a3a2a; }
-  .flow-node.node-result { background: #1a3a3a; }
-  .flow-node.node-subscribe { background: #2a2a4a; }
-  .flow-node.node-response { background: #2a3a5a; }
+  .d-arrow { display: flex; align-items: center; padding: 0 4px; flex-shrink: 0; }
 
-  .flow-arrow {
-    display: flex;
-    align-items: center;
-    padding: 0 4px;
-    flex-shrink: 0;
-  }
-  .flow-arrow svg { display: block; }
-
-  .flow-arrow-down {
-    display: flex;
-    justify-content: center;
-    padding: 4px 0;
-  }
-
-  .flow-subgroup {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-    padding: 12px;
-    background: rgba(255,255,255,0.02);
-  }
-
-  .flow-label {
-    font-size: 11px;
-    color: var(--text3);
+  .d-layer-label {
     text-align: center;
-    padding: 8px 0 4px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text3);
+    padding: 6px 0 2px;
+    border-top: 1px dashed var(--border);
+    margin-top: 2px;
   }
 
-  /* ─── Architecture Layers ─── */
-  .layer-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    position: relative;
+  .d-connect {
+    display: flex; justify-content: center; padding: 2px 0;
   }
 
-  .layer-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
+  /* Layer colors */
+  .d-surfaces { background: #1e3a6a; } .d-surfaces:hover { box-shadow: 0 6px 24px rgba(30,58,106,0.3); }
+  .d-channels { background: #1a4a6a; } .d-channels:hover { box-shadow: 0 6px 24px rgba(26,74,106,0.3); }
+  .d-routing  { background: #1a3a5a; } .d-routing:hover  { box-shadow: 0 6px 24px rgba(26,58,90,0.3); }
+  .d-gateway  { background: #1a5a6a; } .d-gateway:hover  { box-shadow: 0 6px 24px rgba(26,90,106,0.3); }
+  .d-agent    { background: #1a5a5a; } .d-agent:hover    { box-shadow: 0 6px 24px rgba(26,90,90,0.3); }
+  .d-llm      { background: #3a2a5a; } .d-llm:hover      { box-shadow: 0 6px 24px rgba(58,42,90,0.3); }
+  .d-policy   { background: #3a2a3a; }
+  .d-sandbox  { background: #2a3a2a; }
+  .d-subscribe{ background: #2a2a4a; }
+  .d-infra    { background: #2a3a5a; }
+
+  /* ─── Section Header ─── */
+  .section {
+    margin: 48px 0;
   }
-  .layer-card:hover {
-    border-color: var(--blue-dim);
-    background: var(--bg3);
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 20px;
   }
-  .layer-card.expanded {
-    border-color: var(--blue);
+  .section-header h2 {
+    font-size: 24px; font-weight: 700;
+  }
+  .section-header .num {
+    font-size: 14px; font-weight: 700; color: var(--blue);
+    background: rgba(22,158,227,0.1); padding: 2px 10px;
+    border-radius: 6px;
+  }
+  .section-subtitle {
+    font-size: 14px; color: var(--text3);
+    margin-bottom: 24px; line-height: 1.5;
   }
 
-  .layer-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  /* ─── Process Flow Section ─── */
+  .flow-container {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 24px;
+    overflow-x: auto;
   }
-  .layer-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  .flow-block {
+    margin-bottom: 28px;
   }
-  .layer-name {
-    font-size: 16px;
-    font-weight: 600;
-    flex: 1;
+  .flow-block:last-child { margin-bottom: 0; }
+  .flow-block-title {
+    font-size: 13px; font-weight: 700; color: var(--text2);
+    margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .layer-toggle {
-    font-size: 18px;
-    color: var(--text3);
-    transition: transform 0.25s;
+  .flow-block-title .dot {
+    width: 8px; height: 8px; border-radius: 50%;
   }
-  .layer-card.expanded .layer-toggle {
-    transform: rotate(180deg);
+  .flow-row {
+    display: flex; align-items: center; flex-wrap: nowrap;
+    gap: 4px; min-width: min-content;
   }
+  .flow-step {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 10px 14px; border-radius: 8px;
+    min-width: 80px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .flow-step .f-icon { font-size: 18px; }
+  .flow-step .f-label { font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .flow-step .f-sub { font-size: 9px; color: var(--text3); white-space: nowrap; }
 
-  .layer-content {
+  .flow-arr { flex-shrink: 0; display: flex; align-items: center; }
+
+  /* ─── Architecture Reference ─── */
+  .ref-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 14px;
+  }
+  .ref-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .ref-card:hover { border-color: var(--blue-dim); }
+  .ref-card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px; cursor: pointer;
+    user-select: none;
+  }
+  .ref-c-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .ref-c-meta { flex: 1; min-width: 0; }
+  .ref-c-name { font-size: 15px; font-weight: 700; }
+  .ref-c-count { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .ref-c-toggle {
+    font-size: 12px; color: var(--text3);
+    transition: transform 0.25s; flex-shrink: 0;
+  }
+  .ref-card.open .ref-c-toggle { transform: rotate(180deg); }
+
+  .ref-card-body {
     display: none;
-    margin-top: 16px;
-    padding-top: 16px;
+    padding: 0 18px 16px;
     border-top: 1px solid var(--border);
   }
-  .layer-card.expanded .layer-content { display: block; }
+  .ref-card.open .ref-card-body { display: block; }
 
-  .layer-components {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+  .ref-card-desc {
+    font-size: 13px; color: var(--text2); line-height: 1.6;
+    margin-top: 14px;
   }
-
-  .layer-comp {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 8px;
-    padding: 12px 14px;
+  .ref-card-path {
+    font-size: 11px; color: var(--text3);
+    font-family: 'SF Mono', 'Cascadia Code', 'Menlo', monospace;
+    margin-top: 8px; background: rgba(255,255,255,0.03);
+    padding: 6px 10px; border-radius: 4px;
   }
-  .layer-comp-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 2px;
+  .ref-card-comps {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px; margin-top: 12px;
   }
-  .layer-comp-desc {
-    font-size: 11px;
-    color: var(--text3);
-    line-height: 1.4;
-  }
-  .layer-comp-path {
-    font-size: 10px;
-    color: var(--text3);
-    font-family: 'SF Mono', 'Cascadia Code', monospace;
-    margin-top: 4px;
-    opacity: 0.7;
-  }
-
-  .layer-connector {
-    display: flex;
-    justify-content: center;
-    padding: 4px 0;
-    position: relative;
-    height: 24px;
-  }
-
-  /* ─── Module Reference ─── */
-  .module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 12px;
-  }
-
-  .module-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .module-card:hover {
-    border-color: var(--blue-dim);
-    transform: translateY(-1px);
-  }
-  .module-card.expanded {
-    border-color: var(--blue);
-  }
-
-  .module-card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .module-card-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .module-card-name {
-    font-size: 14px;
-    font-weight: 600;
-    flex: 1;
-  }
-  .module-card-files {
-    font-size: 11px;
-    color: var(--text3);
-    background: rgba(255,255,255,0.05);
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .module-card-arrow { font-size: 14px; color: var(--text3); }
-
-  .module-card-body {
-    display: none;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  .module-card.expanded .module-card-body { display: block; }
-
-  .module-card-desc {
-    font-size: 12px;
-    color: var(--text2);
-    line-height: 1.5;
-  }
-  .module-card-path {
-    font-size: 11px;
-    color: var(--text3);
-    font-family: 'SF Mono', 'Cascadia Code', monospace;
-    margin-top: 6px;
-    padding: 4px 8px;
-    background: rgba(255,255,255,0.03);
+  .ref-card-comp {
+    font-size: 11px; color: var(--text2);
+    padding: 4px 8px; background: rgba(255,255,255,0.02);
     border-radius: 4px;
   }
 
   /* ─── Extensions ─── */
-  .ext-group {
-    margin-bottom: 24px;
-  }
-  .ext-group-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text2);
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
   .ext-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 8px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px; margin-bottom: 20px;
   }
-  .ext-chip {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 12px;
-    cursor: default;
-    transition: border-color 0.15s;
+  .ext-group-label {
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
   }
-  .ext-chip:hover { border-color: var(--blue-dim); }
-  .ext-chip .ico { font-size: 14px; }
+  .ext-group-label .count {
+    font-size: 11px; color: var(--text3); font-weight: 400;
+    background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;
+  }
+  .ext-item {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 10px;
+    font-size: 12px; transition: border-color 0.15s;
+  }
+  .ext-item:hover { border-color: var(--blue-dim); }
+  .ext-item .e-icon { font-size: 13px; }
 
   /* ─── Tech Stack ─── */
   .stack-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 10px;
   }
   .stack-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
+    display: flex; gap: 12px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
   }
   .stack-area {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 80px;
-    flex-shrink: 0;
+    font-size: 10px; font-weight: 700; color: var(--blue);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    min-width: 72px; flex-shrink: 0;
   }
-  .stack-detail { flex: 1; }
-  .stack-name {
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .stack-desc {
-    font-size: 11px;
-    color: var(--text3);
-    line-height: 1.4;
-  }
+  .stack-name { font-size: 13px; font-weight: 600; }
+  .stack-desc { font-size: 11px; color: var(--text3); line-height: 1.4; margin-top: 2px; }
 
   /* ─── Footer ─── */
   .footer {
-    text-align: center;
-    padding: 32px 24px;
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-    color: var(--text3);
-    font-size: 12px;
+    text-align: center; padding: 32px 24px;
+    border-top: 1px solid var(--border); margin-top: 48px;
+    color: var(--text3); font-size: 12px;
   }
   .footer a { color: var(--accent); text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
 
   /* ─── Responsive ─── */
-  @media (max-width: 768px) {
-    .hero h1 { font-size: 26px; }
-    .stats-bar { gap: 12px; padding: 16px; }
-    .stat-value { font-size: 16px; }
-    .flow-node { min-width: 70px; padding: 8px 10px; }
-    .flow-node .icon { font-size: 16px; }
-    .flow-node .label { font-size: 10px; }
-    .flow-node .sub { display: none; }
-    .module-grid { grid-template-columns: 1fr; }
-    .layer-components { grid-template-columns: 1fr; }
-    .ext-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  @media (max-width: 800px) {
+    .hero h1 { font-size: 28px; }
+    .stats-bar { gap: 16px; }
+    .stat-value { font-size: 22px; }
+    .arch-diagram { padding: 20px; }
+    .diagram-box { min-width: 80px; padding: 10px 12px; }
+    .d-icon { font-size: 18px; }
+    .d-title { font-size: 11px; }
+    .d-sub { display: none; }
+    .ref-grid { grid-template-columns: 1fr; }
+    .ext-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
     .stack-grid { grid-template-columns: 1fr; }
   }
-
   @media (max-width: 480px) {
     .container { padding: 0 12px; }
-    .hero { padding: 32px 12px 24px; }
-    .flow-container { padding: 16px 8px; }
+    .stats-bar { padding: 12px; gap: 12px; }
+    .stat-value { font-size: 18px; }
+    .diagram-box { min-width: 64px; padding: 8px; }
+    .d-title { font-size: 10px; }
+    .ref-card-comps { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- Stats Bar -->
+<!-- ═══════════════════════ STATS BAR ═══════════════════════ -->
 <div class="stats-bar">
-  <div class="stat-item"><span class="stat-value">378K</span><span class="stat-unit">lines of source</span></div>
-  <div class="stat-item"><span class="stat-value">2,188</span><span class="stat-unit">source files</span></div>
-  <div class="stat-item"><span class="stat-value">38</span><span class="stat-unit">extensions</span></div>
-  <div class="stat-item"><span class="stat-value">10+</span><span class="stat-unit">messaging channels</span></div>
-  <div class="stat-item"><span class="stat-value">4</span><span class="stat-unit">native apps</span></div>
+  <div class="stat"><div class="stat-value">378K</div><div class="stat-label">Lines of Source</div></div>
+  <div class="stat"><div class="stat-value">2,188</div><div class="stat-label">Source Files</div></div>
+  <div class="stat"><div class="stat-value">38</div><div class="stat-label">Extensions</div></div>
+  <div class="stat"><div class="stat-value">10+</div><div class="stat-label">Channels</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">Native Apps</div></div>
+  <div class="stat"><div class="stat-value">22+</div><div class="stat-label">LLM Providers</div></div>
 </div>
 
-<!-- Hero -->
-<div class="hero">
-  <h1>OpenClaw Architecture Explorer</h1>
-  <p>An interactive deep-dive into the OpenClaw codebase — modules, data flow, and system architecture at a glance.</p>
-</div>
-
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
 <div class="container">
+<div class="hero">
+  <h1>OpenClaw Architecture</h1>
+  <p>A self-hosted AI gateway that connects your messaging apps to agentic AI. One process, many channels, your rules.</p>
+  <div class="hero-tagline">
+    <span>Gateway Daemon</span>
+    <span>Multi-Channel</span>
+    <span>Agent Runtime</span>
+    <span>Self-Hosted</span>
+    <span>MIT Licensed</span>
+  </div>
+</div>
 
-<!-- ─── Section: Process Flow ─── -->
+<!-- ═══════════════════════ EXECUTIVE SUMMARY: ARCHITECTURE DIAGRAM ═══════════════════════ -->
+<div class="diagram-section">
+  <h2>Executive Summary &mdash; System Architecture at a Glance</h2>
+  <div class="arch-diagram">
+
+    <!-- Layer 1: User Surfaces -->
+    <div class="d-layer-label">User-Facing Surfaces</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-surfaces"><span class="d-icon">&#x1f5a5;&#xfe0f;</span><span class="d-title">CLI</span><span class="d-sub">Commander</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-surfaces"><span class="d-icon">&#x1f310;</span><span class="d-title">Web UI</span><span class="d-sub">Lit + Vite</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-surfaces"><span class="d-icon">&#x1f4f1;</span><span class="d-title">Mobile</span><span class="d-sub">iOS/Android</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-surfaces"><span class="d-icon">&#x1f5a5;&#xfe0f;</span><span class="d-title">macOS App</span><span class="d-sub">SwiftUI</span></div>
+    </div>
+
+    <div class="d-connect"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Layer 2: Messaging Channels -->
+    <div class="d-layer-label">Messaging Channels</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-channels"><span class="d-icon">&#x1f4e8;</span><span class="d-title">WhatsApp</span><span class="d-sub">Baileys</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-channels"><span class="d-icon">&#x2709;&#xfe0f;</span><span class="d-title">Telegram</span><span class="d-sub">grammY</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-channels"><span class="d-icon">&#x1f535;</span><span class="d-title">Discord</span><span class="d-sub">Carbon</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-channels"><span class="d-icon">&#x1f4ac;</span><span class="d-title">Slack</span><span class="d-sub">Bolt</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-channels"><span class="d-icon">&#x1f4f6;</span><span class="d-title">Signal</span><span class="d-sub">E2E</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-channels"><span class="d-icon">&#x2795;</span><span class="d-title">+20 Ext</span><span class="d-sub">Matrix, Teams&hellip;</span></div>
+    </div>
+
+    <div class="d-connect"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Layer 3: Gateway Core -->
+    <div class="d-layer-label">Gateway Core Engine</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-gateway"><span class="d-icon">&#x1f310;</span><span class="d-title">Server</span><span class="d-sub">Express + WS</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-gateway"><span class="d-icon">&#x1f9f0;</span><span class="d-title">Routing</span><span class="d-sub">Session Keys</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-gateway"><span class="d-icon">&#x1f512;</span><span class="d-title">Auth</span><span class="d-sub">Token + Proxy</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-gateway"><span class="d-icon">&#x1f4cb;</span><span class="d-title">Sessions</span><span class="d-sub">JSONL</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-gateway"><span class="d-icon">&#x1f517;</span><span class="d-title">Hooks</span><span class="d-sub">Events</span></div>
+    </div>
+
+    <div class="d-connect"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Layer 4: Agent Layer -->
+    <div class="d-layer-label">AI Agent Runtime</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-agent"><span class="d-icon">&#x1f916;</span><span class="d-title">Pi Runner</span><span class="d-sub">Agent Loop</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-agent"><span class="d-icon">&#x1f6e1;&#xfe0f;</span><span class="d-title">Tool Policy</span><span class="d-sub">Permissions</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-sandbox"><span class="d-icon">&#x1f9ea;</span><span class="d-title">Sandbox</span><span class="d-sub">Docker</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-agent"><span class="d-icon">&#x1f4e6;</span><span class="d-title">Skills</span><span class="d-sub">ClawHub</span></div>
+      <div class="d-arrow"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-agent"><span class="d-icon">&#x1f9f1;</span><span class="d-title">Sub-Agents</span><span class="d-sub">Parallel</span></div>
+    </div>
+
+    <div class="d-connect"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Layer 5: Infrastructure -->
+    <div class="d-layer-label">Infrastructure &amp; Storage</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-infra"><span class="d-icon">&#x1f9e0;</span><span class="d-title">Memory</span><span class="d-sub">SQLite-vec</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-infra"><span class="d-icon">&#x1f4c1;</span><span class="d-title">Config</span><span class="d-sub">YAML/JSON</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-infra"><span class="d-icon">&#x1f4e6;</span><span class="d-title">Plugins</span><span class="d-sub">jiti</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-infra"><span class="d-icon">&#x1f3ac;</span><span class="d-title">Media</span><span class="d-sub">Pipeline</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-infra"><span class="d-icon">&#x1f6e1;&#xfe0f;</span><span class="d-title">Security</span><span class="d-sub">Audit</span></div>
+    </div>
+
+    <div class="d-connect"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <!-- Layer 6: LLM Providers -->
+    <div class="d-layer-label">AI Model Providers</div>
+    <div class="diagram-row">
+      <div class="diagram-box d-llm"><span class="d-icon">&#x1f9e0;</span><span class="d-title">Anthropic</span><span class="d-sub">Claude</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-llm"><span class="d-icon">&#x1f9e0;</span><span class="d-title">OpenAI</span><span class="d-sub">GPT/o</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-llm"><span class="d-icon">&#x1f9e0;</span><span class="d-title">Google</span><span class="d-sub">Gemini</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-llm"><span class="d-icon">&#x1f5bf;&#xfe0f;</span><span class="d-title">Local</span><span class="d-sub">Ollama</span></div>
+      <div class="d-arrow"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="diagram-box d-llm"><span class="d-icon">&#x2795;</span><span class="d-title">15+ More</span><span class="d-sub">Bedrock, vLLM&hellip;</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ SECTION 1: MESSAGE LIFECYCLE ═══════════════════════ -->
 <div class="section">
-  <h2 class="section-title">Message Lifecycle</h2>
-  <p class="section-subtitle">How a user message travels through the system and returns as an AI response. All flows visible without clicking.</p>
+  <div class="section-header">
+    <span class="num">01</span>
+    <h2>Message Lifecycle</h2>
+  </div>
+  <p class="section-subtitle">How a user message travels through the system and returns as an AI response. Three distinct phases: inbound routing, tool execution, and response delivery.</p>
 
   <div class="flow-container">
-    <!-- Inbound Flow -->
-    <div class="flow-label">Inbound: User Message to LLM</div>
-    <div class="flow-row">
-      <div class="flow-node node-user">
-        <span class="icon">&#x1f464;</span>
-        <span class="label">User</span>
-        <span class="sub">any channel</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-channel">
-        <span class="icon">&#x1f4e8;</span>
-        <span class="label">Channel</span>
-        <span class="sub">WhatsApp, Telegram, etc.</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-routing">
-        <span class="icon">&#x1f9f0;</span>
-        <span class="label">Routing</span>
-        <span class="sub">allow-list, session key</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-gateway">
-        <span class="icon">&#x1f310;</span>
-        <span class="label">Gateway</span>
-        <span class="sub">WS server, auth</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-agent">
-        <span class="icon">&#x1f916;</span>
-        <span class="label">Agent</span>
-        <span class="sub">Pi runner, system prompt</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-llm">
-        <span class="icon">&#x1f9e0;</span>
-        <span class="label">LLM Provider</span>
-        <span class="sub">Claude, GPT, Gemini</span>
+    <div class="flow-block">
+      <div class="flow-block-title"><span class="dot" style="background:var(--blue);"></span> Inbound &mdash; User Message to LLM</div>
+      <div class="flow-row">
+        <div class="flow-step" style="background:#1e3a6a;"><span class="f-icon">&#x1f464;</span><span class="f-label">User</span><span class="f-sub">any channel</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a4a6a;"><span class="f-icon">&#x1f4e8;</span><span class="f-label">Channel</span><span class="f-sub">receive &amp; parse</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a3a5a;"><span class="f-icon">&#x1f9f0;</span><span class="f-label">Routing</span><span class="f-sub">allow-list + session</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a5a6a;"><span class="f-icon">&#x1f310;</span><span class="f-label">Gateway</span><span class="f-sub">WS server, auth</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon">&#x1f916;</span><span class="f-label">Agent</span><span class="f-sub">prompt assembly</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#3a2a5a;"><span class="f-icon">&#x1f9e0;</span><span class="f-label">LLM</span><span class="f-sub">inference</span></div>
       </div>
     </div>
 
-    <!-- Tool Execution Loop -->
-    <div class="flow-label" style="margin-top:24px;">Tool Execution Loop</div>
-    <div class="flow-row">
-      <div class="flow-node node-agent">
-        <span class="icon">&#x1f916;</span>
-        <span class="label">Agent</span>
-        <span class="sub">decides to use tool</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-policy">
-        <span class="icon">&#x1f6e1;&#xfe0f;</span>
-        <span class="label">Tool Policy</span>
-        <span class="sub">permission check</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-sandbox">
-        <span class="icon">&#x1f9ea;</span>
-        <span class="label">Sandbox</span>
-        <span class="sub">Docker / native exec</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#22c55e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-result">
-        <span class="icon">&#x1f4ca;</span>
-        <span class="label">Result</span>
-        <span class="sub">back to agent context</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#22c55e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-agent">
-        <span class="icon">&#x1f504;</span>
-        <span class="label">Agent</span>
-        <span class="sub">continues / responds</span>
+    <div class="flow-block">
+      <div class="flow-block-title"><span class="dot" style="background:var(--amber);"></span> Tool Execution Loop</div>
+      <div class="flow-row">
+        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon">&#x1f916;</span><span class="f-label">Agent</span><span class="f-sub">decides to use tool</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#3a2a3a;"><span class="f-icon">&#x1f6e1;&#xfe0f;</span><span class="f-label">Tool Policy</span><span class="f-sub">permission check</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#2a3a2a;"><span class="f-icon">&#x1f9ea;</span><span class="f-label">Sandbox</span><span class="f-sub">Docker / exec</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a3a3a;"><span class="f-icon">&#x1f4ca;</span><span class="f-label">Result</span><span class="f-sub">back to context</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon">&#x1f504;</span><span class="f-label">Agent</span><span class="f-sub">continues or responds</span></div>
       </div>
     </div>
 
-    <!-- Outbound Flow -->
-    <div class="flow-label" style="margin-top:24px;">Outbound: LLM Response to User</div>
-    <div class="flow-row">
-      <div class="flow-node node-llm">
-        <span class="icon">&#x1f9e0;</span>
-        <span class="label">LLM</span>
-        <span class="sub">streamed tokens</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-subscribe">
-        <span class="icon">&#x1f4e1;</span>
-        <span class="label">Subscribe</span>
-        <span class="sub">stream processing</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-gateway">
-        <span class="icon">&#x1f310;</span>
-        <span class="label">Gateway</span>
-        <span class="sub">broadcast to clients</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-channel">
-        <span class="icon">&#x1f4e8;</span>
-        <span class="label">Channel</span>
-        <span class="sub">format for platform</span>
-      </div>
-      <div class="flow-arrow">
-        <svg width="32" height="20" viewBox="0 0 32 20"><path d="M2 10h24l-6-6m6 6l-6 6" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="flow-node node-user">
-        <span class="icon">&#x1f464;</span>
-        <span class="label">User</span>
-        <span class="sub">receives reply</span>
+    <div class="flow-block">
+      <div class="flow-block-title"><span class="dot" style="background:var(--purple);"></span> Outbound &mdash; LLM Response to User</div>
+      <div class="flow-row">
+        <div class="flow-step" style="background:#3a2a5a;"><span class="f-icon">&#x1f9e0;</span><span class="f-label">LLM</span><span class="f-sub">streamed tokens</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#2a2a4a;"><span class="f-icon">&#x1f4e1;</span><span class="f-label">Subscribe</span><span class="f-sub">stream processing</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a5a6a;"><span class="f-icon">&#x1f310;</span><span class="f-label">Gateway</span><span class="f-sub">broadcast to clients</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1a4a6a;"><span class="f-icon">&#x1f4e8;</span><span class="f-label">Channel</span><span class="f-sub">format for platform</span></div>
+        <div class="flow-arr"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="flow-step" style="background:#1e3a6a;"><span class="f-icon">&#x1f464;</span><span class="f-label">User</span><span class="f-sub">receives reply</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ─── Section: Architecture Layers ─── -->
+<!-- ═══════════════════════ SECTION 2: ARCHITECTURE DEEP DIVE ═══════════════════════ -->
 <div class="section">
-  <h2 class="section-title">Architecture Layers</h2>
-  <p class="section-subtitle">Click any layer to expand component details. The stack shows how user surfaces connect through channels to the gateway, agent runtime, and providers.</p>
-
-  <div class="layer-stack">
-
-    <!-- Layer: User Surfaces -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-surfaces);"></span>
-        <span class="layer-name">User-Facing Surfaces</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">CLI</div>
-            <div class="layer-comp-desc">Command-line interface. Entry point parsing, Commander program setup, all CLI subcommands (gateway, config, channels, browser, etc.).</div>
-            <div class="layer-comp-path">src/cli/ + src/commands/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Web UI</div>
-            <div class="layer-comp-desc">Browser-based dashboard for chat, config, sessions, and nodes. Built with Lit + Vite.</div>
-            <div class="layer-comp-path">ui/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">TUI</div>
-            <div class="layer-comp-desc">Terminal UI for keyboard-driven interaction with the agent.</div>
-            <div class="layer-comp-path">src/tui/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">macOS App</div>
-            <div class="layer-comp-desc">Native macOS application built with SwiftUI. Canvas, voice, and node capabilities.</div>
-            <div class="layer-comp-path">apps/macos/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">iOS App</div>
-            <div class="layer-comp-desc">iOS application built with Swift. Mobile node with camera, voice, and location.</div>
-            <div class="layer-comp-path">apps/ios/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Android App</div>
-            <div class="layer-comp-desc">Android application in Kotlin. Mobile node capabilities.</div>
-            <div class="layer-comp-path">apps/android/</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="layer-connector"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5l5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-    <!-- Layer: Channels -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-channels);"></span>
-        <span class="layer-name">Messaging Channels</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">WhatsApp</div>
-            <div class="layer-comp-desc">WhatsApp Web integration via Baileys library. QR code pairing, message handling, media upload.</div>
-            <div class="layer-comp-path">src/web/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Telegram</div>
-            <div class="layer-comp-desc">Telegram bot via grammY framework. Groups, DMs, inline queries, throttling.</div>
-            <div class="layer-comp-path">src/telegram/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Discord</div>
-            <div class="layer-comp-desc">Discord bot via Carbon library. Guild management, slash commands, voice support.</div>
-            <div class="layer-comp-path">src/discord/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Slack</div>
-            <div class="layer-comp-desc">Slack app via Bolt framework. Workspace events, slash commands, interactive messages.</div>
-            <div class="layer-comp-path">src/slack/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Signal</div>
-            <div class="layer-comp-desc">Signal messenger integration. Private messaging with E2E encryption.</div>
-            <div class="layer-comp-path">src/signal/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">iMessage</div>
-            <div class="layer-comp-desc">Apple iMessage integration (macOS only). BlueBubbles extension available.</div>
-            <div class="layer-comp-path">src/imessage/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">LINE</div>
-            <div class="layer-comp-desc">LINE messaging platform integration.</div>
-            <div class="layer-comp-path">src/line/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">20+ Extension Channels</div>
-            <div class="layer-comp-desc">MS Teams, Matrix, IRC, Nostr, Twitch, Google Chat, Mattermost, Zalo, and more via extensions/.</div>
-            <div class="layer-comp-path">extensions/</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="layer-connector"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5l5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-    <!-- Layer: Gateway -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-gateway);"></span>
-        <span class="layer-name">Gateway (Core Engine)</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">Gateway Server</div>
-            <div class="layer-comp-desc">WebSocket + HTTP server. Channel management, agent chat orchestration, OpenAI-compatible API, session management, auth, hooks, node events.</div>
-            <div class="layer-comp-path">src/gateway/server.ts</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Routing</div>
-            <div class="layer-comp-desc">Message routing: session key derivation, route resolution (which agent handles which message), account ID mapping.</div>
-            <div class="layer-comp-path">src/routing/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Sessions</div>
-            <div class="layer-comp-desc">Session management. JSONL files per agent. Continuity across conversations.</div>
-            <div class="layer-comp-path">src/sessions/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Auth</div>
-            <div class="layer-comp-desc">WebSocket authentication, token validation, shared-secret, Tailscale, trusted-proxy modes.</div>
-            <div class="layer-comp-path">src/gateway/auth.ts</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Hooks</div>
-            <div class="layer-comp-desc">Event-driven hook system for extending gateway behavior.</div>
-            <div class="layer-comp-path">src/hooks/</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="layer-connector"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5l5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-    <!-- Layer: Agent -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-agent);"></span>
-        <span class="layer-name">AI Agent Layer</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">Agent System</div>
-            <div class="layer-comp-desc">Pi-embedded runner. System prompts, tool definitions, tool policy, sandbox config. Subagent spawning/registry, model catalog, compaction, workspace management.</div>
-            <div class="layer-comp-path">src/agents/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Tool System</div>
-            <div class="layer-comp-desc">Bash execution, browser automation (Playwright), Canvas rendering. Tool policy and permission gating.</div>
-            <div class="layer-comp-path">src/agents/tools/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Skills</div>
-            <div class="layer-comp-desc">Extensible skill system. 50+ integrations via ClawHub. SKILL.md-driven agent instructions.</div>
-            <div class="layer-comp-path">skills/ + src/agents/skills/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Sandbox</div>
-            <div class="layer-comp-desc">Docker isolation for safe tool execution. Configurable sandbox policies.</div>
-            <div class="layer-comp-path">src/sandbox/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Sub-Agents</div>
-            <div class="layer-comp-desc">Parallel child agent spawning, lifecycle management, result collection.</div>
-            <div class="layer-comp-path">src/agents/subagents/</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="layer-connector"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5l5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-    <!-- Layer: Infrastructure -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-infra);"></span>
-        <span class="layer-name">Infrastructure &amp; Storage</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">Memory</div>
-            <div class="layer-comp-desc">Vector memory system with SQLite-vec. Embedding management (OpenAI, Gemini, Voyage, local), hybrid search, temporal decay, MMR reranking.</div>
-            <div class="layer-comp-path">src/memory/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Config</div>
-            <div class="layer-comp-desc">Configuration management. File loading/saving, session store, profile management. Data stored at ~/.openclaw/.</div>
-            <div class="layer-comp-path">src/config/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Plugin System</div>
-            <div class="layer-comp-desc">Runtime discovery, loading (jiti), installation (npm), manifest registry, hook system, tool/service registration.</div>
-            <div class="layer-comp-path">src/plugins/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Media Pipeline</div>
-            <div class="layer-comp-desc">Image, audio, video, document processing. Transcoding, format detection, AI-based media understanding.</div>
-            <div class="layer-comp-path">src/media/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Security</div>
-            <div class="layer-comp-desc">Channel metadata audit, dangerous flag scanning, DM policy, external content scanning, skill scanning, secret comparison.</div>
-            <div class="layer-comp-path">src/security/</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Infra Utilities</div>
-            <div class="layer-comp-desc">Env management, port handling, file locks, device identity, Bonjour/mDNS, Tailscale, SSH tunnels, exec approvals, provider usage tracking.</div>
-            <div class="layer-comp-path">src/infra/</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="layer-connector"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5l5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-    <!-- Layer: Providers -->
-    <div class="layer-card" onclick="toggleLayer(this)">
-      <div class="layer-header">
-        <span class="layer-dot" style="background:var(--layer-providers);"></span>
-        <span class="layer-name">AI Model Providers</span>
-        <span class="layer-toggle">&#x25bc;</span>
-      </div>
-      <div class="layer-content">
-        <div class="layer-components">
-          <div class="layer-comp">
-            <div class="layer-comp-name">Anthropic</div>
-            <div class="layer-comp-desc">Claude models (Opus, Sonnet, Haiku). Primary agent provider.</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">OpenAI</div>
-            <div class="layer-comp-desc">GPT-5.4, o-series, embeddings.</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Google Gemini</div>
-            <div class="layer-comp-desc">Gemini 2.5/3.1 models via API or Vertex AI.</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">Ollama</div>
-            <div class="layer-comp-desc">Local model inference. Supports Llama, Mistral, Gemma, Qwen, and community models via ollama pull.</div>
-          </div>
-          <div class="layer-comp">
-            <div class="layer-comp-name">15+ More Providers</div>
-            <div class="layer-comp-desc">AWS Bedrock, vLLM, HuggingFace, Together, xAI, DeepSeek, Azure OpenAI, Groq, Fireworks, Perplexity, Cohere, Replicate, Mistral, and more.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <div class="section-header">
+    <span class="num">02</span>
+    <h2>Architecture Deep Dive</h2>
   </div>
-</div>
+  <p class="section-subtitle">Six layers of the OpenClaw stack. Click any section to expand component details, source paths, and descriptions.</p>
 
-<!-- ─── Section: Core Module Reference ─── -->
-<div class="section">
-  <h2 class="section-title">Core Module Reference</h2>
-  <p class="section-subtitle">Click any module to expand details. The main source directories under src/ and their responsibilities.</p>
-
-  <div class="module-grid">
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1e3a6a;">&#x1f5fa;&#xfe0f;</span>
-        <span class="module-card-name">CLI</span>
-        <span class="module-card-files">~100 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <!-- Layer cards as expandable sections -->
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1e3a6a;">&#x1f5a5;&#xfe0f;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">1. User-Facing Surfaces</div><div class="ref-c-count">CLI &bull; Web UI &bull; TUI &bull; macOS &bull; iOS &bull; Android</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Command-line interface wiring. Entry point parsing, Commander program setup, all CLI subcommands (gateway, config, channels, browser, etc.). Uses src/cli/program.ts as the root.</div>
-        <div class="module-card-path">src/cli/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Six entry points for interacting with OpenClaw. The CLI is the primary interface for power users; the Web UI provides a browser dashboard; native apps (macOS, iOS, Android) offer mobile node capabilities. All connect to the Gateway over WebSocket.</div>
+        <div class="ref-card-comps">
+          <div class="ref-card-comp">CLI &mdash; src/cli/ + src/commands/</div>
+          <div class="ref-card-comp">Web UI &mdash; ui/ (Lit + Vite)</div>
+          <div class="ref-card-comp">TUI &mdash; src/tui/</div>
+          <div class="ref-card-comp">macOS &mdash; apps/macos/ (SwiftUI)</div>
+          <div class="ref-card-comp">iOS &mdash; apps/ios/ (Swift)</div>
+          <div class="ref-card-comp">Android &mdash; apps/android/ (Kotlin)</div>
+        </div>
       </div>
     </div>
 
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1e3a6a;">&#x2699;&#xfe0f;</span>
-        <span class="module-card-name">Commands</span>
-        <span class="module-card-files">~200 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a4a6a;">&#x1f4e8;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">2. Messaging Channels</div><div class="ref-c-count">7 built-in + 21 extension channels</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Business logic for all CLI commands: onboarding, doctor, status, configure, sessions, agents management, model picking, sandbox, auth-choice, health checks.</div>
-        <div class="module-card-path">src/commands/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1a5a6a;">&#x1f310;</span>
-        <span class="module-card-name">Gateway</span>
-        <span class="module-card-files">~120 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">The core server. WebSocket + HTTP server, channel management, agent chat orchestration, OpenAI-compatible API, session management, auth, hooks, node events, model catalog.</div>
-        <div class="module-card-path">src/gateway/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Each channel is a platform-specific adapter that receives messages, normalizes them into OpenClaw's internal format, sends them to the Gateway, and formats responses back for the platform. Built-in channels live in src/; extensions live in extensions/.</div>
+        <div class="ref-card-comps">
+          <div class="ref-card-comp">WhatsApp &mdash; src/web/ (Baileys)</div>
+          <div class="ref-card-comp">Telegram &mdash; src/telegram/ (grammY)</div>
+          <div class="ref-card-comp">Discord &mdash; src/discord/ (Carbon)</div>
+          <div class="ref-card-comp">Slack &mdash; src/slack/ (Bolt)</div>
+          <div class="ref-card-comp">Signal &mdash; src/signal/</div>
+          <div class="ref-card-comp">iMessage &mdash; src/imessage/</div>
+          <div class="ref-card-comp">LINE &mdash; src/line/</div>
+          <div class="ref-card-comp">21 extensions: Teams, Matrix, IRC, Nostr, Feishu, Google Chat, Mattermost, Nextcloud, Zalo, Tlon, BlueBubbles &amp; more</div>
+        </div>
       </div>
     </div>
 
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1a5a5a;">&#x1f916;</span>
-        <span class="module-card-name">Agents</span>
-        <span class="module-card-files">~250 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a5a6a;">&#x1f310;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">3. Gateway Core Engine</div><div class="ref-c-count">~120 files across 5 subsystems</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">AI agent system: Pi-embedded runner, system prompts, tool definitions, tool policy, sandbox config, skills, subagent spawning/registry, model catalog, bash/browser tools, compaction, workspace management.</div>
-        <div class="module-card-path">src/agents/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1a4a6a;">&#x1f4e8;</span>
-        <span class="module-card-name">Channels</span>
-        <span class="module-card-files">~30 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Shared channel infrastructure: allow-lists, command gating, mention gating, session management, status reactions, typing indicators, draft stream controls, dock management.</div>
-        <div class="module-card-path">src/channels/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">The central nervous system. A single long-lived Node.js process that owns all connections and state. Routes messages, manages sessions, authenticates clients, and orchestrates the agent loop. Everything flows through the Gateway.</div>
+        <div class="ref-card-comps">
+          <div class="ref-card-comp">Server &mdash; Express 5 + WebSocket on :18789</div>
+          <div class="ref-card-comp">Routing &mdash; session key derivation, agent resolution</div>
+          <div class="ref-card-comp">Sessions &mdash; JSONL files per agent session</div>
+          <div class="ref-card-comp">Auth &mdash; shared-secret, Tailscale, trusted-proxy modes</div>
+          <div class="ref-card-comp">Hooks &mdash; event-driven extensibility</div>
+        </div>
+        <div class="ref-card-path">src/gateway/</div>
       </div>
     </div>
 
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f9e0;</span>
-        <span class="module-card-name">Memory</span>
-        <span class="module-card-files">~60 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a5a5a;">&#x1f916;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">4. AI Agent Runtime</div><div class="ref-c-count">~250 files &mdash; largest subsystem</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Vector memory system with SQLite-vec. Embedding management (OpenAI, Gemini, Voyage, local llama), hybrid search (semantic + keyword), batch operations, query expansion, temporal decay, MMR reranking.</div>
-        <div class="module-card-path">src/memory/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f4e6;</span>
-        <span class="module-card-name">Plugins</span>
-        <span class="module-card-files">~40 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Plugin runtime: discovery, loading (via jiti), installation (npm), manifest registry, hook system, tool/service registration, slot management (memory slot is exclusive).</div>
-        <div class="module-card-path">src/plugins/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">The Pi-embedded agent runner is the heart of OpenClaw. It assembles system prompts (drawn from skills, memory, and workspace), manages tool execution with policy gating, handles sub-agent spawning, and compacts context windows. The agent loop runs after every LLM response.</div>
+        <div class="ref-card-comps">
+          <div class="ref-card-comp">Pi Runner &mdash; agent loop, system prompts, compact</div>
+          <div class="ref-card-comp">Tools &mdash; Bash, Playwright browser, Canvas</div>
+          <div class="ref-card-comp">Skills &mdash; SKILL.md-driven, 50+ from ClawHub</div>
+          <div class="ref-card-comp">Sandbox &mdash; Docker isolation for tool exec</div>
+          <div class="ref-card-comp">Sub-Agents &mdash; parallel spawning, lifecycle mgmt</div>
+          <div class="ref-card-comp">Model Catalog &mdash; multi-provider routing</div>
+        </div>
+        <div class="ref-card-path">src/agents/</div>
       </div>
     </div>
 
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f527;</span>
-        <span class="module-card-name">Infra</span>
-        <span class="module-card-files">~130 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x2699;&#xfe0f;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">5. Infrastructure &amp; Storage</div><div class="ref-c-count">Memory, Config, Plugins, Media, Security</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Infrastructure utilities: env management, port handling, file locks, device identity, Bonjour/mDNS, Tailscale, SSH tunnels, update checking, heartbeat system, exec approvals, provider usage tracking.</div>
-        <div class="module-card-path">src/infra/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#1a3a5a;">&#x1f9f0;</span>
-        <span class="module-card-name">Routing</span>
-        <span class="module-card-files">~6 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Message routing: session key derivation, route resolution (which agent handles which message), account ID mapping.</div>
-        <div class="module-card-path">src/routing/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Persistence, extensibility, and safety layers. Memory uses SQLite-vec for hybrid semantic+keyword search. The plugin system loads extensions via jiti at runtime. Media pipeline handles transcoding and AI-based analysis. Security audits channels, configs, and skills.</div>
+        <div class="ref-card-comps">
+          <div class="ref-card-comp">Memory &mdash; SQLite-vec, hybrid search, MMR rerank</div>
+          <div class="ref-card-comp">Config &mdash; file loading, session store, profiles</div>
+          <div class="ref-card-comp">Plugins &mdash; jiti runtime, manifest registry</div>
+          <div class="ref-card-comp">Media &mdash; transcoding, format detection, AI analysis</div>
+          <div class="ref-card-comp">Security &mdash; metadata scan, DM policy, ACL</div>
+          <div class="ref-card-comp">Infra Utils &mdash; Tailscale, mDNS, heartbeat, exec approvals</div>
+        </div>
       </div>
     </div>
 
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f6e1;&#xfe0f;</span>
-        <span class="module-card-name">Security</span>
-        <span class="module-card-files">~20 files</span>
-        <span class="module-card-arrow">&#x25bc;</span>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#3a2a5a;">&#x1f9e0;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">6. AI Model Providers</div><div class="ref-c-count">22+ provider integrations</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
       </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Security auditing: channel metadata, dangerous config/tool flags, DM policy, external content scanning, skill scanning, secret comparison, Windows ACL.</div>
-        <div class="module-card-path">src/security/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f3ac;</span>
-        <span class="module-card-name">Media</span>
-        <span class="module-card-files">Core</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Media processing pipeline for images, audio, video, and documents. Handles transcoding, format detection, and media understanding via AI models.</div>
-        <div class="module-card-path">src/media/</div>
-      </div>
-    </div>
-
-    <div class="module-card" onclick="toggleCard(this)">
-      <div class="module-card-header">
-        <span class="module-card-icon" style="background:#2a3a5a;">&#x1f4c1;</span>
-        <span class="module-card-name">Config</span>
-        <span class="module-card-files">Core</span>
-        <span class="module-card-arrow">&#x25bc;</span>
-      </div>
-      <div class="module-card-body">
-        <div class="module-card-desc">Configuration management: config file loading/saving, session store, profile management. Data stored at ~/.openclaw/.</div>
-        <div class="module-card-path">src/config/</div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">OpenClaw supports every major LLM provider. Anthropic Claude is the primary (Pi agent runtime), with OpenAI GPT/o-series, Google Gemini, and Ollama for local models. Additional providers via Bedrock, vLLM, HuggingFace, Together, xAI, DeepSeek, Azure, Groq, Fireworks, Perplexity, Cohere, Replicate, Mistral, and more.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ─── Section: Extensions ─── -->
+<!-- ═══════════════════════ SECTION 3: MODULE REFERENCE ═══════════════════════ -->
 <div class="section">
-  <h2 class="section-title">Extensions (38 Plugins)</h2>
-  <p class="section-subtitle">Workspace packages under extensions/ that add channels, memory backends, AI tools, and integrations.</p>
-
-  <div class="ext-group">
-    <div class="ext-group-title">Messaging Channels (21)</div>
-    <div class="ext-grid">
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> MS Teams</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Matrix</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> IRC</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Nostr</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Twitch</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Feishu</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Google Chat</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Mattermost</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Nextcloud Talk</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Synology Chat</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Zalo</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Zalo User</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Tlon</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Telegram (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Discord (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Slack (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> Signal (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> WhatsApp (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> iMessage (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> LINE (ext)</div>
-      <div class="ext-chip"><span class="ico">&#x1f4e8;</span> BlueBubbles</div>
-    </div>
+  <div class="section-header">
+    <span class="num">03</span>
+    <h2>Core Module Reference</h2>
   </div>
+  <p class="section-subtitle">Main source directories under src/ with file counts, responsibilities, and source paths. Click to expand.</p>
 
-  <div class="ext-group">
-    <div class="ext-group-title">AI &amp; Agent Tools (8)</div>
-    <div class="ext-grid">
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> LLM Task</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Lobster</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Open Prose</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Voice Call</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Talk Voice</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Phone Control</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Thread Ownership</div>
-      <div class="ext-chip"><span class="ico">&#x1f916;</span> Diagnostics (OTel)</div>
+  <div class="ref-grid">
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1e3a6a;">&#x1f5fa;&#xfe0f;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">CLI</div><div class="ref-c-count">~100 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Entry point parsing, Commander program setup, all CLI subcommands (gateway, config, channels, browser, etc.). Uses src/cli/program.ts as the root.</div>
+        <div class="ref-card-path">src/cli/</div>
+      </div>
     </div>
-  </div>
 
-  <div class="ext-group">
-    <div class="ext-group-title">Memory &amp; Auth (7)</div>
-    <div class="ext-grid">
-      <div class="ext-chip"><span class="ico">&#x1f9e0;</span> Memory Core</div>
-      <div class="ext-chip"><span class="ico">&#x1f9e0;</span> Memory LanceDB</div>
-      <div class="ext-chip"><span class="ico">&#x1f512;</span> Copilot Proxy</div>
-      <div class="ext-chip"><span class="ico">&#x1f512;</span> Google Antigravity Auth</div>
-      <div class="ext-chip"><span class="ico">&#x1f512;</span> Google Gemini CLI Auth</div>
-      <div class="ext-chip"><span class="ico">&#x1f512;</span> Minimax Portal Auth</div>
-      <div class="ext-chip"><span class="ico">&#x1f512;</span> Qwen Portal Auth</div>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1e3a6a;">&#x2699;&#xfe0f;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Commands</div><div class="ref-c-count">~200 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Business logic for all CLI commands: onboarding, doctor, status, configure, sessions, agents management, model picking, sandbox, auth-choice, health checks.</div>
+        <div class="ref-card-path">src/commands/</div>
+      </div>
     </div>
-  </div>
 
-  <div class="ext-group">
-    <div class="ext-group-title">Other (2)</div>
-    <div class="ext-grid">
-      <div class="ext-chip"><span class="ico">&#x1f4f1;</span> Device Pair</div>
-      <div class="ext-chip"><span class="ico">&#x1f517;</span> Shared</div>
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a5a6a;">&#x1f310;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Gateway</div><div class="ref-c-count">~120 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">WebSocket + HTTP server. Channel management, agent chat orchestration, OpenAI-compatible API, session management, auth, hooks, node events, model catalog.</div>
+        <div class="ref-card-path">src/gateway/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a5a5a;">&#x1f916;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Agents</div><div class="ref-c-count">~250 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Pi-embedded runner. System prompts, tool definitions, tool policy, sandbox config, skills, subagent spawning, model catalog, bash/browser tools, compaction, workspace management.</div>
+        <div class="ref-card-path">src/agents/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a4a6a;">&#x1f4e8;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Channels</div><div class="ref-c-count">~30 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Shared channel infrastructure: allow-lists, command gating, mention gating, session management, status reactions, typing indicators, draft stream controls, dock management.</div>
+        <div class="ref-card-path">src/channels/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f9e0;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Memory</div><div class="ref-c-count">~60 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Vector memory with SQLite-vec. Embedding management (OpenAI, Gemini, Voyage, local llama), hybrid search, batch ops, query expansion, temporal decay, MMR reranking.</div>
+        <div class="ref-card-path">src/memory/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f4e6;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Plugins</div><div class="ref-c-count">~40 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Plugin runtime: discovery, loading (jiti), install (npm), manifest registry, hook system, tool/service registration, exclusive slot management.</div>
+        <div class="ref-card-path">src/plugins/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f527;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Infra</div><div class="ref-c-count">~130 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Env management, port handling, file locks, device identity, Bonjour/mDNS, Tailscale, SSH tunnels, update checking, heartbeat, exec approvals, provider usage tracking.</div>
+        <div class="ref-card-path">src/infra/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#1a3a5a;">&#x1f9f0;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Routing</div><div class="ref-c-count">~6 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Session key derivation, route resolution (which agent handles which message), account ID mapping.</div>
+        <div class="ref-card-path">src/routing/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f6e1;&#xfe0f;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Security</div><div class="ref-c-count">~20 files</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Channel metadata audit, dangerous config/tool flags, DM policy, external content scanning, skill scanning, secret comparison, Windows ACL.</div>
+        <div class="ref-card-path">src/security/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f3ac;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Media</div><div class="ref-c-count">Core module</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Media processing for images, audio, video, documents. Transcoding, format detection, AI-based media understanding.</div>
+        <div class="ref-card-path">src/media/</div>
+      </div>
+    </div>
+
+    <div class="ref-card" onclick="toggle(this)">
+      <div class="ref-card-header">
+        <span class="ref-c-icon" style="background:#2a3a5a;">&#x1f4c1;</span>
+        <div class="ref-c-meta"><div class="ref-c-name">Config</div><div class="ref-c-count">Core module</div></div>
+        <span class="ref-c-toggle">&#x25bc;</span>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-desc">Config file loading/saving, session store, profile management. Data stored at ~/.openclaw/.</div>
+        <div class="ref-card-path">src/config/</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ─── Section: Tech Stack ─── -->
+<!-- ═══════════════════════ SECTION 4: EXTENSIONS ═══════════════════════ -->
 <div class="section">
-  <h2 class="section-title">Technology Stack</h2>
-  <p class="section-subtitle">Languages, frameworks, and tools that power OpenClaw.</p>
+  <div class="section-header">
+    <span class="num">04</span>
+    <h2>Extensions &amp; Plugins</h2>
+  </div>
+  <p class="section-subtitle">38 workspace packages under extensions/ that add channels, AI tools, memory backends, and integrations.</p>
+
+  <div class="ext-group-label">Messaging Channels <span class="count">21</span></div>
+  <div class="ext-grid">
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> MS Teams</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Matrix</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> IRC</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Nostr</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Twitch</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Feishu</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Google Chat</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Mattermost</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Nextcloud Talk</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Synology Chat</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Zalo</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Zalo User</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Tlon</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Telegram (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Discord (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Slack (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> Signal (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> WhatsApp (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> iMessage (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> LINE (ext)</div>
+    <div class="ext-item"><span class="e-icon">&#x1f4e8;</span> BlueBubbles</div>
+  </div>
+
+  <div class="ext-group-label">AI &amp; Agent Tools <span class="count">8</span></div>
+  <div class="ext-grid">
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> LLM Task</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Lobster</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Open Prose</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Voice Call</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Talk Voice</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Phone Control</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Thread Ownership</div>
+    <div class="ext-item"><span class="e-icon">&#x1f916;</span> Diagnostics (OTel)</div>
+  </div>
+
+  <div class="ext-group-label">Memory &amp; Auth <span class="count">7</span></div>
+  <div class="ext-grid">
+    <div class="ext-item"><span class="e-icon">&#x1f9e0;</span> Memory Core</div>
+    <div class="ext-item"><span class="e-icon">&#x1f9e0;</span> Memory LanceDB</div>
+    <div class="ext-item"><span class="e-icon">&#x1f512;</span> Copilot Proxy</div>
+    <div class="ext-item"><span class="e-icon">&#x1f512;</span> Google Antigravity Auth</div>
+    <div class="ext-item"><span class="e-icon">&#x1f512;</span> Google Gemini CLI Auth</div>
+    <div class="ext-item"><span class="e-icon">&#x1f512;</span> Minimax Portal Auth</div>
+    <div class="ext-item"><span class="e-icon">&#x1f512;</span> Qwen Portal Auth</div>
+  </div>
+
+  <div class="ext-group-label">Other <span class="count">2</span></div>
+  <div class="ext-grid">
+    <div class="ext-item"><span class="e-icon">&#x1f4f1;</span> Device Pair</div>
+    <div class="ext-item"><span class="e-icon">&#x1f517;</span> Shared</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SECTION 5: TECH STACK ═══════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="num">05</span>
+    <h2>Technology Stack</h2>
+  </div>
+  <p class="section-subtitle">Languages, frameworks, and tools that power OpenClaw across the full stack.</p>
 
   <div class="stack-grid">
-    <div class="stack-item">
-      <span class="stack-area">Language</span>
-      <div class="stack-detail">
-        <div class="stack-name">TypeScript (ESM)</div>
-        <div class="stack-desc">Primary language. Strict typing, no any. Node 22+ runtime. Bun supported for dev.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Language</span>
-      <div class="stack-detail">
-        <div class="stack-name">Swift / SwiftUI</div>
-        <div class="stack-desc">macOS and iOS native apps. Uses Observation framework for state management.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Language</span>
-      <div class="stack-detail">
-        <div class="stack-name">Kotlin</div>
-        <div class="stack-desc">Android app under apps/android/. Gradle build system.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Build</span>
-      <div class="stack-detail">
-        <div class="stack-name">tsdown</div>
-        <div class="stack-desc">TypeScript bundler for building dist/. Fast, ESM-native.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Build</span>
-      <div class="stack-detail">
-        <div class="stack-name">pnpm (workspaces)</div>
-        <div class="stack-desc">Package manager with workspace support. Monorepo with root + ui + packages + extensions.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Test</span>
-      <div class="stack-detail">
-        <div class="stack-name">Vitest</div>
-        <div class="stack-desc">Testing framework. Multiple configs: unit, e2e, live, extensions, gateway. V8 coverage at 70% threshold.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Lint</span>
-      <div class="stack-detail">
-        <div class="stack-name">Oxlint + Oxfmt</div>
-        <div class="stack-desc">Rust-based linter and formatter. Fast, type-aware linting. SwiftLint/SwiftFormat for Swift.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">CLI</span>
-      <div class="stack-detail">
-        <div class="stack-name">Commander</div>
-        <div class="stack-desc">CLI framework. Program built in src/cli/program.ts with extensive subcommand tree.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Web</span>
-      <div class="stack-detail">
-        <div class="stack-name">Express 5 + WebSockets</div>
-        <div class="stack-desc">Gateway HTTP server with WebSocket support via ws. OpenAI-compatible API layer.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Web UI</span>
-      <div class="stack-detail">
-        <div class="stack-name">Lit + Vite</div>
-        <div class="stack-desc">Web component framework. Lightweight, standards-based UI under ui/.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Messaging</span>
-      <div class="stack-detail">
-        <div class="stack-name">Baileys (WhatsApp)</div>
-        <div class="stack-desc">WhatsApp Web protocol library for direct WhatsApp integration.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Messaging</span>
-      <div class="stack-detail">
-        <div class="stack-name">grammY (Telegram)</div>
-        <div class="stack-desc">Telegram Bot API framework with runner and throttler plugins.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Messaging</span>
-      <div class="stack-detail">
-        <div class="stack-name">Carbon (Discord)</div>
-        <div class="stack-desc">Discord bot framework. Voice support via @discordjs/voice.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Messaging</span>
-      <div class="stack-detail">
-        <div class="stack-name">Bolt (Slack)</div>
-        <div class="stack-desc">Official Slack app framework for events, commands, and interactive messages.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">AI</span>
-      <div class="stack-detail">
-        <div class="stack-name">Pi Agent (embedded)</div>
-        <div class="stack-desc">AI agent runtime from @mariozechner/pi-*. Powers the core agent loop, coding tools, TUI.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">AI</span>
-      <div class="stack-detail">
-        <div class="stack-name">Multi-Provider</div>
-        <div class="stack-desc">Anthropic, OpenAI, Google, Bedrock, Ollama, vLLM, HuggingFace, Together, xAI, and more.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Storage</span>
-      <div class="stack-detail">
-        <div class="stack-name">SQLite + sqlite-vec</div>
-        <div class="stack-desc">Vector database for memory. Embeddings stored locally. Hybrid semantic + keyword search.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Schema</span>
-      <div class="stack-detail">
-        <div class="stack-name">TypeBox + Zod</div>
-        <div class="stack-desc">Runtime schema validation. TypeBox for tool schemas (JSON Schema), Zod for general validation.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Browser</span>
-      <div class="stack-detail">
-        <div class="stack-name">Playwright</div>
-        <div class="stack-desc">Browser automation for agent tools. Headless browsing, screenshots, interaction.</div>
-      </div>
-    </div>
-    <div class="stack-item">
-      <span class="stack-area">Protocol</span>
-      <div class="stack-detail">
-        <div class="stack-name">ACP</div>
-        <div class="stack-desc">Agent Client Protocol. Standardized protocol for agent communication. SDK at @agentclientprotocol/sdk.</div>
-      </div>
-    </div>
+    <div class="stack-item"><span class="stack-area">Language</span><div><div class="stack-name">TypeScript (ESM)</div><div class="stack-desc">Primary. Strict typing, no any. Node 22+ runtime.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Language</span><div><div class="stack-name">Swift / SwiftUI</div><div class="stack-desc">macOS &amp; iOS native apps. Observation framework.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Language</span><div><div class="stack-name">Kotlin</div><div class="stack-desc">Android app. Gradle build system.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Build</span><div><div class="stack-name">tsdown + pnpm</div><div class="stack-desc">ESM-native bundler. pnpm workspaces monorepo.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Test</span><div><div class="stack-name">Vitest</div><div class="stack-desc">Unit, e2e, live, extensions configs. 70% coverage.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Lint</span><div><div class="stack-name">Oxlint + Oxfmt</div><div class="stack-desc">Rust-based linter/formatter. SwiftLint for Swift.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Web</span><div><div class="stack-name">Express 5 + ws</div><div class="stack-desc">HTTP + WebSocket server on :18789.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Web UI</span><div><div class="stack-name">Lit + Vite</div><div class="stack-desc">Standards-based web components.</div></div></div>
+    <div class="stack-item"><span class="stack-area">LLM</span><div><div class="stack-name">Pi Agent Runtime</div><div class="stack-desc">Embedded agent loop from @mariozechner/pi-*.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Browser</span><div><div class="stack-name">Playwright</div><div class="stack-desc">Headless browser for agent tools.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Storage</span><div><div class="stack-name">SQLite + sqlite-vec</div><div class="stack-desc">Vector DB for memory. Hybrid semantic+keyword.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Schema</span><div><div class="stack-name">TypeBox + Zod</div><div class="stack-desc">Tool schemas (TypeBox) + general validation (Zod).</div></div></div>
+    <div class="stack-item"><span class="stack-area">Protocol</span><div><div class="stack-name">ACP</div><div class="stack-desc">Agent Client Protocol for agent communication.</div></div></div>
+    <div class="stack-item"><span class="stack-area">Deploy</span><div><div class="stack-name">Docker + Fly.io</div><div class="stack-desc">Containerized deployment, multi-Dockerfile setup.</div></div></div>
+    <div class="stack-item"><span class="stack-area">CLI</span><div><div class="stack-name">Commander</div><div class="stack-desc">CLI framework with extensive subcommand tree.</div></div></div>
   </div>
 </div>
 
@@ -1279,18 +877,14 @@
 
 <!-- Footer -->
 <div class="footer">
-  <p>Built from the <a href="https://github.com/openclaw/openclaw">OpenClaw</a> codebase. Data sourced from the <a href="https://pincer.patrykgolabek.dev/openclaw-architecture/">Pincer Ops Architecture Explorer</a>.</p>
-  <p style="margin-top:4px;">OpenClaw Architecture Explorer &mdash; <a href="https://github.com/booyajones/openclaw-architecture-explorer">GitHub</a></p>
+  <p>Built from the <a href="https://github.com/openclaw/openclaw">OpenClaw</a> codebase. Original data from the <a href="https://pincer.patrykgolabek.dev/openclaw-architecture/">Pincer Ops Architecture Explorer</a> by Patryk Golabek.</p>
+  <p style="margin-top:4px;"><a href="https://github.com/booyajones/openclaw-architecture-explorer">GitHub &middot; booyajones/openclaw-architecture-explorer</a></p>
 </div>
 
 <script>
-function toggleLayer(el) {
-  el.classList.toggle('expanded');
-}
-function toggleCard(el) {
-  el.classList.toggle('expanded');
+function toggle(el) {
+  el.classList.toggle('open');
 }
 </script>
-
 </body>
 </html>
