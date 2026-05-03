@@ -8,10 +8,10 @@
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Geist+Mono:wght@400;500;700&display=swap');
 
   :root {
-    --gold: #9A7E35;
+    --gold: #7A6230;
     --gold-muted: #D4C5A9;
     --gold-light: #F5F0E6;
-    --gold-bg: rgba(154,126,53,0.06);
+    --gold-bg: rgba(122,98,48,0.06);
     --bg: #FFFFFF;
     --surface: #F8F9FA;
     --surface-raised: #F1F3F5;
@@ -560,6 +560,7 @@ function toggle(el) {
 function createExpandable(item) {
   const card = document.createElement('div');
   card.className = 'exp-card';
+  const bodyId = 'exp-' + Math.random().toString(36).slice(2,8);
   const btn = document.createElement('button');
   btn.className = 'exp-btn';
   btn.setAttribute('aria-expanded', 'false');
@@ -577,7 +578,6 @@ function createExpandable(item) {
   const chevron = document.createElement('span'); chevron.className = 'exp-chevron'; chevron.textContent = '▼';
   btn.append(icon, meta, chevron);
 
-  const bodyId = 'exp-' + Math.random().toString(36).slice(2,8);
   const body = document.createElement('div');
   body.className = 'exp-body';
   body.id = bodyId;
