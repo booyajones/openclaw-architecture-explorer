@@ -174,10 +174,11 @@
     font-size: 10px; color: var(--text-faint);
     transition: transform 0.2s; flex-shrink: 0;
   }
-  .exp-card[aria-expanded="true"] .exp-chevron { transform: rotate(180deg); }
+  .exp-card .exp-btn[aria-expanded="true"] + .exp-body { display: block; }
+.exp-card .exp-btn[aria-expanded="true"] .exp-chevron { transform: rotate(180deg); }
 
   .exp-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
-  .exp-card[aria-expanded="true"] .exp-body { display: block; }
+  
   .exp-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-top: 12px; }
   .exp-path { font-size: 11px; color: var(--text-muted); font-family: 'Geist Mono', 'SF Mono', monospace; margin-top: 8px; background: var(--surface-raised); padding: 6px 10px; border-radius: 4px; }
   .exp-comps { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
@@ -245,6 +246,7 @@
 </style>
 </head>
 <body>
+<a href="#main-content" class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" onfocus="this.style.position='fixed';this.style.width='auto';this.style.height='auto';this.style.padding='12px';this.style.margin='0';this.style.clip='auto';this.style.background='#B89A4D';this.style.color='#fff';this.style.zIndex='9999';this.style.fontSize='14px'" onblur="this.style.position='absolute';this.style.width='1px';this.style.height='1px';this.style.padding='0';this.style.margin='-1px';this.style.overflow='hidden';this.style.clip='rect(0,0,0,0)'">Skip to main content</a>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
   <defs>
     <symbol id="a-r" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -518,10 +520,10 @@ const DATA = {
   ],
 
   extensions: [
-    {group:"Messaging Channels", count:"21", items:["MS Teams","Matrix","IRC","Nostr","Twitch","Feishu","Google Chat","Mattermost","Nextcloud Talk","Synology Chat","Zalo","Zalo User","Tlon","Telegram (ext)","Discord (ext)","Slack (ext)","Signal (ext)","WhatsApp (ext)","iMessage (ext)","LINE (ext)","BlueBubbles"]},
-    {group:"AI & Agent Tools", count:"8", items:["LLM Task","Lobster","Open Prose","Voice Call","Talk Voice","Phone Control","Thread Ownership","Diagnostics (OTel)"]},
-    {group:"Memory & Auth", count:"7", items:["Memory Core","Memory LanceDB","Copilot Proxy","Google Antigravity Auth","Google Gemini CLI Auth","Minimax Portal Auth","Qwen Portal Auth"]},
-    {group:"Other", count:"2", items:["Device Pair","Shared"]}
+    {group:"Messaging Channels", items:["MS Teams","Matrix","IRC","Nostr","Twitch","Feishu","Google Chat","Mattermost","Nextcloud Talk","Synology Chat","Zalo","Zalo User","Tlon","Telegram (ext)","Discord (ext)","Slack (ext)","Signal (ext)","WhatsApp (ext)","iMessage (ext)","LINE (ext)","BlueBubbles"]},
+    {group:"AI & Agent Tools", items:["LLM Task","Lobster","Open Prose","Voice Call","Talk Voice","Phone Control","Thread Ownership","Diagnostics (OTel)"]},
+    {group:"Memory & Auth", items:["Memory Core","Memory LanceDB","Copilot Proxy","Google Antigravity Auth","Google Gemini CLI Auth","Minimax Portal Auth","Qwen Portal Auth"]},
+    {group:"Other", items:["Device Pair","Shared"]}
   ],
 
   stack: [
@@ -546,17 +548,15 @@ const DATA = {
 /* ═══════════════ RENDER ═══════════════ */
 
 function toggle(el) {
-  const next = el.getAttribute('aria-expanded') !== 'true';
-  el.setAttribute('aria-expanded', String(next));
   const btn = el.querySelector('.exp-btn');
-  if (btn) btn.setAttribute('aria-expanded', String(next));
+  if (!btn) return;
+  const next = btn.getAttribute('aria-expanded') !== 'true';
+  btn.setAttribute('aria-expanded', String(next));
 }
 
 function createExpandable(item) {
   const card = document.createElement('div');
   card.className = 'exp-card';
-  card.setAttribute('aria-expanded', 'false');
-
   const btn = document.createElement('button');
   btn.className = 'exp-btn';
   btn.setAttribute('aria-expanded', 'false');
@@ -575,15 +575,22 @@ function createExpandable(item) {
 
   const body = document.createElement('div');
   body.className = 'exp-body';
-  let html = '';
-  if (item.desc) html += `<div class="exp-desc">${item.desc}</div>`;
-  if (item.path) html += `<div class="exp-path">${item.path}</div>`;
-  if (item.comps && item.comps.length) {
-    html += '<div class="exp-comps">';
-    item.comps.forEach(c => { html += `<div class="exp-comp">${c}</div>`; });
-    html += '</div>';
+  if (item.desc) {
+    const d = document.createElement('div'); d.className = 'exp-desc'; d.textContent = item.desc;
+    body.appendChild(d);
   }
-  body.innerHTML = html;
+  if (item.path) {
+    const p = document.createElement('div'); p.className = 'exp-path'; p.textContent = item.path;
+    body.appendChild(p);
+  }
+  if (item.comps && item.comps.length) {
+    const g = document.createElement('div'); g.className = 'exp-comps';
+    item.comps.forEach(c => {
+      const e = document.createElement('div'); e.className = 'exp-comp'; e.textContent = c;
+      g.appendChild(e);
+    });
+    body.appendChild(g);
+  }
   card.appendChild(btn);
   card.appendChild(body);
   return card;
@@ -605,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     grp.className = 'ext-grp';
     const label = document.createElement('div');
     label.className = 'ext-group-head';
-    const labelSpan = document.createElement('span'); labelSpan.className = 'ext-count'; labelSpan.textContent = g.count;
+    const labelSpan = document.createElement('span'); labelSpan.className = 'ext-count'; labelSpan.textContent = String(g.items.length);
     label.textContent = g.group;
     label.appendChild(labelSpan);
     grp.appendChild(label);
