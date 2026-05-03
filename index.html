@@ -6,223 +6,251 @@
 <title>OpenClaw Architecture Explorer</title>
 <style>
   :root {
-    --bg: #0a0e17; --bg2: #111827; --bg3: #1a2332;
-    --border: #1e3048;
-    --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
-    --blue: #169ee3; --blue-dim: #0e6a9e; --accent: #38bdf8;
-    --green: #22c55e; --amber: #f59e0b; --purple: #a855f7;
+    --gold: #B89A4D;
+    --gold-muted: #D4C5A9;
+    --gold-light: #F5F0E6;
+    --gold-bg: rgba(184,154,77,0.06);
+    --bg: #FFFFFF;
+    --surface: #F8F9FA;
+    --surface-raised: #F1F3F5;
+    --border: #E9ECEF;
+    --border-subtle: #F0F1F3;
+    --text: #1A1D23;
+    --text-secondary: #495057;
+    --text-muted: #868E96;
+    --text-faint: #ADB5BD;
+    --accent-blue: #3B82F6;
+    --accent-green: #10B981;
+    --accent-amber: #F59E0B;
+    --accent-purple: #8B5CF6;
+    --accent-teal: #0D9488;
+    --gradient-start: #F8F9FA;
+    --gradient-end: #FFFFFF;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  /* Hairline grid background */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(var(--border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ─── Typography ─── */
+  .mono { font-family: 'Geist Mono', 'SF Mono', 'Cascadia Code', 'Menlo', monospace; }
+  .gold { color: var(--gold); }
+  .gold-line { height: 1px; background: linear-gradient(90deg, var(--gold-muted) 0%, transparent 100%); }
 
   /* ─── Stats Bar ─── */
   .stats-bar {
-    display: flex; flex-wrap: wrap; gap: 24px;
+    display: flex; flex-wrap: wrap; gap: 32px;
     justify-content: center; align-items: center;
-    padding: 16px 24px;
-    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 0%);
+    padding: 20px 24px;
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
   }
   .stat { text-align: center; }
-  .stat-value { font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1.1; }
-  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.1; font-family: 'Geist Mono', 'SF Mono', monospace; }
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
 
   /* ─── Hero ─── */
-  .hero { text-align: center; padding: 48px 24px 0; }
-  .hero h1 {
-    font-size: 42px; font-weight: 800;
-    background: linear-gradient(135deg, var(--accent), var(--blue));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .hero p { margin-top: 12px; font-size: 16px; color: var(--text2); max-width: 600px; margin: 12px auto 0; }
-  .hero-tagline { display: flex; justify-content: center; gap: 8px; margin-top: 16px; font-size: 13px; color: var(--text3); flex-wrap: wrap; }
-  .hero-tagline span { background: var(--bg3); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+  .hero { text-align: center; padding: 56px 24px 0; }
+  .hero h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); }
+  .hero p { margin-top: 12px; font-size: 16px; color: var(--text-secondary); max-width: 540px; margin: 12px auto 0; line-height: 1.7; }
+  .hero-tags { display: flex; justify-content: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .hero-tag { font-size: 11px; font-weight: 600; color: var(--gold); background: var(--gold-bg); padding: 4px 14px; border-radius: 100px; border: 1px solid var(--gold-muted); letter-spacing: 0.02em; }
+
+  /* ─── Divider ─── */
+  .divider { margin: 0 auto; height: 1px; max-width: 1100px; background: linear-gradient(90deg, transparent 0%, var(--border) 30%, var(--border) 70%, transparent 100%); }
 
   /* ─── Executive Summary Diagram ─── */
-  .diagram-section { margin: 40px auto; max-width: 1000px; }
-  .diagram-section h2 { font-size: 18px; font-weight: 700; color: var(--text); text-align: center; margin-bottom: 20px; }
+  .diagram-section { margin: 40px auto; max-width: 960px; }
+  .diagram-section h2 { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 24px; color: var(--text); }
 
-  .arch-diagram {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 16px; padding: 28px 24px; overflow-x: auto;
-    position: relative;
+  .arch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 20px;
+    overflow-x: auto;
   }
 
-  .diagram-row { display: flex; align-items: center; gap: 0; flex-shrink: 0; }
-  .diagram-box {
+  .layer-row { display: flex; align-items: center; gap: 0; flex-shrink: 0; justify-content: center; }
+  .layer-box {
     display: flex; flex-direction: column; align-items: center;
-    gap: 3px; padding: 12px 14px; border-radius: 10px;
-    min-width: 100px; text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 3px; padding: 10px 14px; border-radius: 8px;
+    min-width: 96px; text-align: center;
+    background: var(--bg); border: 1px solid var(--border);
+    transition: all 0.15s;
     cursor: default;
   }
-  .diagram-box:hover, .diagram-box:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(22,158,227,0.18);
-    outline: 2px solid var(--accent); outline-offset: 2px;
-  }
-  .d-icon { font-size: 20px; line-height: 1; }
-  .d-title { font-size: 12px; font-weight: 700; white-space: nowrap; }
-  .d-sub { font-size: 10px; color: rgba(255,255,255,0.6); white-space: nowrap; }
-  .d-arrow { display: flex; align-items: center; padding: 0 4px; flex-shrink: 0; }
-  .d-layer-label { text-align: center; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); padding: 6px 0 2px; border-top: 1px dashed var(--border); margin-top: 2px; }
-  .d-connect { display: flex; justify-content: center; padding: 2px 0; }
+  .layer-box:hover { border-color: var(--gold-muted); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .lt { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .ls { font-size: 9px; color: var(--text-muted); white-space: nowrap; margin-top: 1px; }
+  .la { display: flex; align-items: center; padding: 0 4px; flex-shrink: 0; }
 
-  .d-surfaces { background: #1e3a6a; } .d-channels { background: #1a4a6a; }
-  .d-routing  { background: #1a3a5a; } .d-gateway  { background: #1a5a6a; }
-  .d-agent    { background: #1a5a5a; } .d-llm      { background: #3a2a5a; }
-  .d-sandbox  { background: #2a3a2a; } .d-infra    { background: #2a3a5a; }
+  .layer-label {
+    text-align: center;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-faint);
+    padding: 6px 0 3px;
+    border-top: 1px solid var(--border);
+  }
+  .layer-connect { display: flex; justify-content: center; padding: 1px 0; }
 
   /* ─── Section ─── */
   .section { margin: 48px 0; }
-  .section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 20px; }
-  .section-header h2 { font-size: 24px; font-weight: 700; }
-  .section-header .num { font-size: 14px; font-weight: 700; color: var(--blue); background: rgba(22,158,227,0.1); padding: 2px 10px; border-radius: 6px; }
-  .section-subtitle { font-size: 14px; color: var(--text3); margin-bottom: 24px; line-height: 1.5; }
+  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .section-num { font-size: 12px; font-weight: 700; color: var(--gold); font-family: 'Geist Mono', monospace; background: var(--gold-bg); padding: 2px 10px; border-radius: 6px; letter-spacing: 0.05em; }
+  .section-head h2 { font-size: 22px; font-weight: 700; }
+  .section-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
 
-  /* ─── Process Flow ─── */
-  .flow-container { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 28px 24px; overflow-x: auto; }
-  .flow-block { margin-bottom: 28px; }
+  /* ─── Flow ─── */
+  .flow-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
+  .flow-block { margin-bottom: 24px; }
   .flow-block:last-child { margin-bottom: 0; }
-  .flow-block-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
-  .flow-block-title .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .flow-row { display: flex; align-items: center; flex-wrap: nowrap; gap: 4px; min-width: min-content; }
-  .flow-step { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 12px; border-radius: 8px; min-width: 72px; text-align: center; border: 1px solid rgba(255,255,255,0.08); }
-  .f-icon { font-size: 16px; } .f-label { font-size: 11px; font-weight: 600; white-space: nowrap; } .f-sub { font-size: 9px; color: var(--text3); white-space: nowrap; }
-  .flow-arr { flex-shrink: 0; display: flex; align-items: center; }
+  .flow-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
+  .flow-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .flow-row { display: flex; align-items: center; flex-wrap: nowrap; gap: 3px; min-width: min-content; }
+  .flow-step {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; padding: 8px 12px; border-radius: 6px;
+    min-width: 68px; text-align: center;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .f-label { font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text); }
+  .f-sub { font-size: 9px; color: var(--text-faint); white-space: nowrap; }
+  .fa { flex-shrink: 0; display: flex; align-items: center; }
 
   /* ─── Expandable Cards ─── */
-  .card-wrapper { display: flex; flex-direction: column; gap: 14px; }
-  .expandable {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .expandable:hover { border-color: var(--blue-dim); }
-  .expandable:focus-within { border-color: var(--accent); }
+  .card-stack { display: flex; flex-direction: column; gap: 12px; }
 
-  .expandable-head {
+  .exp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .exp-card:hover { border-color: var(--gold-muted); }
+  .exp-card:has(:focus-visible) { border-color: var(--gold); }
+
+  .exp-btn {
     display: flex; align-items: center; gap: 12px;
-    padding: 16px 18px; cursor: pointer;
+    padding: 16px; cursor: pointer;
     user-select: none; background: none; border: none;
     width: 100%; text-align: left; color: inherit;
     font: inherit; line-height: inherit;
     -webkit-appearance: none; appearance: none;
   }
-  .expandable-head:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: -2px;
-    border-radius: 12px;
-  }
-  .expandable-head::-moz-focus-inner { border: 0; }
+  .exp-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; border-radius: 10px; }
 
   .exp-icon {
-    width: 36px; height: 36px; border-radius: 8px;
+    width: 34px; height: 34px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
+    flex-shrink: 0;
+    font-size: 14px; font-weight: 700;
+    background: var(--gold-light);
+    color: var(--gold);
   }
-  .exp-meta { flex: 1; min-width: 0; }
-  .exp-name { font-size: 15px; font-weight: 700; }
-  .exp-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .exp-toggle {
-    font-size: 12px; color: var(--text3);
-    transition: transform 0.25s; flex-shrink: 0;
-  }
-  .expandable[aria-expanded="true"] .exp-toggle { transform: rotate(180deg); }
 
-  .expandable-body {
-    display: none; padding: 0 18px 16px;
-    border-top: 1px solid var(--border);
+  .exp-meta { flex: 1; min-width: 0; }
+  .exp-name { font-size: 14px; font-weight: 700; }
+  .exp-tagline { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .exp-chevron {
+    font-size: 10px; color: var(--text-faint);
+    transition: transform 0.2s; flex-shrink: 0;
   }
-  .expandable[aria-expanded="true"] .expandable-body { display: block; }
-  .exp-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-top: 14px; }
-  .exp-path { font-size: 11px; color: var(--text3); font-family: 'SF Mono', 'Cascadia Code', 'Menlo', monospace; margin-top: 8px; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; }
+  .exp-card[aria-expanded="true"] .exp-chevron { transform: rotate(180deg); }
+
+  .exp-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
+  .exp-card[aria-expanded="true"] .exp-body { display: block; }
+  .exp-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-top: 12px; }
+  .exp-path { font-size: 11px; color: var(--text-muted); font-family: 'Geist Mono', 'SF Mono', monospace; margin-top: 8px; background: var(--surface-raised); padding: 6px 10px; border-radius: 4px; }
   .exp-comps { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
-  .exp-comp { font-size: 11px; color: var(--text2); padding: 4px 8px; background: rgba(255,255,255,0.02); border-radius: 4px; }
+  .exp-comp { font-size: 11px; color: var(--text-secondary); padding: 5px 8px; background: var(--bg); border: 1px solid var(--border-subtle); border-radius: 4px; }
 
   /* ─── Module Grid ─── */
-  .mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
   /* ─── Extensions ─── */
-  .ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 20px; }
-  .ext-group-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-  .ext-group-label .count { font-size: 11px; color: var(--text3); font-weight: 400; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px; }
-  .ext-item { display: flex; align-items: center; gap: 6px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 12px; transition: border-color 0.15s; }
-  .ext-item:hover { border-color: var(--blue-dim); }
-  .ext-item .e-icon { font-size: 13px; }
+  .ext-group { margin-bottom: 24px; }
+  .ext-group-head { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .ext-count { font-size: 10px; color: var(--text-faint); font-weight: 500; background: var(--surface-raised); padding: 1px 6px; border-radius: 4px; }
+  .ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .ext-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 12px; color: var(--text-secondary); transition: border-color 0.15s; }
+  .ext-item:hover { border-color: var(--gold-muted); }
 
   /* ─── Tech Stack ─── */
   .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
-  .stack-item { display: flex; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-  .stack-area { font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.5px; min-width: 72px; flex-shrink: 0; }
+  .stack-item { display: flex; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .stack-area { font-size: 9px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; min-width: 68px; flex-shrink: 0; }
   .stack-name { font-size: 13px; font-weight: 600; }
-  .stack-desc { font-size: 11px; color: var(--text3); line-height: 1.4; margin-top: 2px; }
+  .stack-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 2px; }
 
   /* ─── Footer ─── */
-  .footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); margin-top: 48px; color: var(--text3); font-size: 12px; }
-  .footer a { color: var(--accent); text-decoration: none; }
+  .footer { text-align: center; padding: 32px 24px; margin-top: 48px; border-top: 1px solid var(--border); }
+  .footer p { font-size: 12px; color: var(--text-faint); }
+  .footer a { color: var(--gold); text-decoration: none; font-weight: 600; }
   .footer a:hover { text-decoration: underline; }
 
   /* ─── Responsive ─── */
-  @media (max-width: 900px) {
-    .diagram-box { min-width: 72px; padding: 8px 10px; }
-    .d-icon { font-size: 16px; }
-    .d-title { font-size: 10px; }
-    .d-sub { display: none; }
+  @media (max-width: 860px) {
+    .section-num { font-size: 10px; }
+    .layer-box { min-width: 72px; padding: 8px 10px; }
+    .lt { font-size: 10px; }
+    .ls { display: none; }
+    .exp-comps { grid-template-columns: 1fr; }
   }
-  @media (max-width: 700px) {
-    .arch-diagram { padding: 16px 12px; border-radius: 10px; }
-    .diagram-row { flex-wrap: wrap; justify-content: center; gap: 6px; }
-    .diagram-box { min-width: 60px; padding: 6px 8px; }
-    .d-icon { font-size: 14px; }
-    .d-title { font-size: 9px; }
-    .d-arrow { transform: scale(0.7); }
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
     .hero h1 { font-size: 28px; }
+    .stats-bar { gap: 20px; padding: 16px; }
     .stat-value { font-size: 22px; }
-    .stats-bar { gap: 16px; }
-    .flow-step { min-width: 60px; padding: 8px; }
+    .arch-card { padding: 16px 12px; }
+    .layer-box { min-width: 60px; padding: 6px 8px; }
+    .lt { font-size: 9px; }
+    .la { transform: scale(0.7); }
+    .layer-connect { transform: scale(0.8); }
+    .flow-step { min-width: 56px; padding: 6px 8px; }
     .f-label { font-size: 10px; }
     .f-sub { display: none; }
     .mod-grid { grid-template-columns: 1fr; }
-    .exp-comps { grid-template-columns: 1fr; }
-    .ext-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    .ext-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     .stack-grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 480px) {
-    .container { padding: 0 12px; }
-    .stats-bar { padding: 12px; gap: 10px; }
+  @media (max-width: 400px) {
+    .layer-box { min-width: 50px; padding: 5px 6px; }
+    .lt { font-size: 8px; }
+    .la { transform: scale(0.6); }
+    .stats-bar { gap: 14px; }
     .stat-value { font-size: 18px; }
-    .stat-label { font-size: 9px; }
-    .arch-diagram { padding: 12px 8px; }
-    .diagram-box { min-width: 52px; padding: 5px 6px; border-radius: 6px; }
-    .d-icon { font-size: 12px; }
-    .d-title { font-size: 8px; }
-    .d-layer-label { font-size: 8px; letter-spacing: 0.5px; }
-    .d-arrow { transform: scale(0.6); }
-    .d-connect { transform: scale(0.8); }
-    .flow-container { padding: 16px 10px; }
-    .flow-step { min-width: 52px; padding: 6px; }
-    .f-icon { font-size: 14px; }
-    .f-label { font-size: 9px; }
-    .section-header h2 { font-size: 18px; }
-    .section-header .num { font-size: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .diagram-box { transition: none; }
-    .exp-toggle { transition: none; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
 <body>
+<div class="bg-grid" aria-hidden="true"></div>
 
-<div role="region" aria-label="Key statistics about the OpenClaw codebase" class="stats-bar">
+<div class="stats-bar">
   <div class="stat"><div class="stat-value">378K</div><div class="stat-label">Lines of Source</div></div>
   <div class="stat"><div class="stat-value">2,188</div><div class="stat-label">Source Files</div></div>
   <div class="stat"><div class="stat-value">38</div><div class="stat-label">Extensions</div></div>
@@ -237,194 +265,196 @@
 <div class="hero">
   <h1>OpenClaw Architecture</h1>
   <p>A self-hosted AI gateway that connects your messaging apps to agentic AI. One process, many channels, your rules.</p>
-  <div class="hero-tagline" role="list">
-    <span role="listitem">Gateway Daemon</span>
-    <span role="listitem">Multi-Channel</span>
-    <span role="listitem">Agent Runtime</span>
-    <span role="listitem">Self-Hosted</span>
-    <span role="listitem">MIT Licensed</span>
+  <div class="hero-tags">
+    <span class="hero-tag">Gateway Daemon</span>
+    <span class="hero-tag">Multi-Channel</span>
+    <span class="hero-tag">Agent Runtime</span>
+    <span class="hero-tag">Self-Hosted</span>
+    <span class="hero-tag">MIT Licensed</span>
   </div>
 </div>
 
-<!-- ═══════════ EXECUTIVE SUMMARY DIAGRAM ═══════════ -->
-<div class="diagram-section" role="region" aria-label="Executive summary architecture diagram showing all system layers">
-  <h2>Executive Summary &mdash; System Architecture at a Glance</h2>
+<div class="divider" style="margin-top:40px;" aria-hidden="true"></div>
 
-  <div class="arch-diagram" role="img" aria-label="Architecture diagram: six layers stacked vertically. Layer 1 User Surfaces (CLI, Web UI, Mobile, macOS App). Layer 2 Messaging Channels (WhatsApp, Telegram, Discord, Slack, Signal, plus 20 extensions). Layer 3 Gateway Core Engine (Server, Routing, Auth, Sessions, Hooks). Layer 4 AI Agent Runtime (Pi Runner, Tool Policy, Sandbox, Skills, Sub-Agents). Layer 5 Infrastructure and Storage (Memory, Config, Plugins, Media, Security). Layer 6 AI Model Providers (Anthropic, OpenAI, Google, Local Ollama, 15 more). Arrows between layers show data flowing downward through the stack.">
-
-    <!-- Layer 1: User Surfaces -->
-    <div class="d-layer-label">User-Facing Surfaces</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-surfaces" tabindex="0" role="figure" aria-label="CLI - Commander framework"><span class="d-icon" aria-hidden="true">&#x1f5a5;&#xfe0f;</span><span class="d-title">CLI</span><span class="d-sub">Commander</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-surfaces" tabindex="0" role="figure" aria-label="Web UI - Lit and Vite"><span class="d-icon" aria-hidden="true">&#x1f310;</span><span class="d-title">Web UI</span><span class="d-sub">Lit + Vite</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-surfaces" tabindex="0" role="figure" aria-label="Mobile apps - iOS and Android"><span class="d-icon" aria-hidden="true">&#x1f4f1;</span><span class="d-title">Mobile</span><span class="d-sub">iOS/Android</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-surfaces" tabindex="0" role="figure" aria-label="macOS app built with SwiftUI"><span class="d-icon" aria-hidden="true">&#x1f5a5;&#xfe0f;</span><span class="d-title">macOS App</span><span class="d-sub">SwiftUI</span></div>
+<!-- ═══════════ EXECUTIVE SUMMARY ═══════════ -->
+<div class="diagram-section">
+  <h2>Executive Summary — System Architecture at a Glance</h2>
+  <div class="arch-card">
+    <div class="layer-label">User-Facing Surfaces</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">CLI</span><span class="ls">Commander</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Web UI</span><span class="ls">Lit + Vite</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Mobile</span><span class="ls">iOS/Android</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">macOS App</span><span class="ls">SwiftUI</span></div>
     </div>
-    <div class="d-connect" aria-hidden="true"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="layer-connect"><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-    <!-- Layer 2: Channels -->
-    <div class="d-layer-label">Messaging Channels</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="WhatsApp via Baileys"><span class="d-icon" aria-hidden="true">&#x1f4e8;</span><span class="d-title">WhatsApp</span><span class="d-sub">Baileys</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="Telegram via grammY"><span class="d-icon" aria-hidden="true">&#x2709;&#xfe0f;</span><span class="d-title">Telegram</span><span class="d-sub">grammY</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="Discord via Carbon"><span class="d-icon" aria-hidden="true">&#x1f535;</span><span class="d-title">Discord</span><span class="d-sub">Carbon</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="Slack via Bolt"><span class="d-icon" aria-hidden="true">&#x1f4ac;</span><span class="d-title">Slack</span><span class="d-sub">Bolt</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="Signal with E2E encryption"><span class="d-icon" aria-hidden="true">&#x1f4f6;</span><span class="d-title">Signal</span><span class="d-sub">E2E</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-channels" tabindex="0" role="figure" aria-label="20 extension channels including Matrix and Teams"><span class="d-icon" aria-hidden="true">&#x2795;</span><span class="d-title">+20 Ext</span><span class="d-sub">Matrix, Teams&hellip;</span></div>
+    <div class="layer-label">Messaging Channels</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">WhatsApp</span><span class="ls">Baileys</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Telegram</span><span class="ls">grammY</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Discord</span><span class="ls">Carbon</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Slack</span><span class="ls">Bolt</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Signal</span><span class="ls">E2E</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">+20 Ext</span><span class="ls">Matrix, Teams...</span></div>
     </div>
-    <div class="d-connect" aria-hidden="true"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="layer-connect"><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-    <!-- Layer 3: Gateway -->
-    <div class="d-layer-label">Gateway Core Engine</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-gateway" tabindex="0" role="figure" aria-label="Server - Express plus WebSocket"><span class="d-icon" aria-hidden="true">&#x1f310;</span><span class="d-title">Server</span><span class="d-sub">Express + WS</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-gateway" tabindex="0" role="figure" aria-label="Routing - session key derivation"><span class="d-icon" aria-hidden="true">&#x1f9f0;</span><span class="d-title">Routing</span><span class="d-sub">Session Keys</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-gateway" tabindex="0" role="figure" aria-label="Auth - token and trusted proxy modes"><span class="d-icon" aria-hidden="true">&#x1f512;</span><span class="d-title">Auth</span><span class="d-sub">Token + Proxy</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-gateway" tabindex="0" role="figure" aria-label="Sessions - JSONL file storage"><span class="d-icon" aria-hidden="true">&#x1f4cb;</span><span class="d-title">Sessions</span><span class="d-sub">JSONL</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-gateway" tabindex="0" role="figure" aria-label="Hooks - event system"><span class="d-icon" aria-hidden="true">&#x1f517;</span><span class="d-title">Hooks</span><span class="d-sub">Events</span></div>
+    <div class="layer-label">Gateway Core Engine</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">Server</span><span class="ls">Express + WS</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Routing</span><span class="ls">Session Keys</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Auth</span><span class="ls">Token + Proxy</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Sessions</span><span class="ls">JSONL</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Hooks</span><span class="ls">Events</span></div>
     </div>
-    <div class="d-connect" aria-hidden="true"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="layer-connect"><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-    <!-- Layer 4: Agent -->
-    <div class="d-layer-label">AI Agent Runtime</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-agent" tabindex="0" role="figure" aria-label="Pi Runner - agent loop"><span class="d-icon" aria-hidden="true">&#x1f916;</span><span class="d-title">Pi Runner</span><span class="d-sub">Agent Loop</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-agent" tabindex="0" role="figure" aria-label="Tool Policy - permission checks"><span class="d-icon" aria-hidden="true">&#x1f6e1;&#xfe0f;</span><span class="d-title">Tool Policy</span><span class="d-sub">Permissions</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-sandbox" tabindex="0" role="figure" aria-label="Sandbox - Docker isolation"><span class="d-icon" aria-hidden="true">&#x1f9ea;</span><span class="d-title">Sandbox</span><span class="d-sub">Docker</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-agent" tabindex="0" role="figure" aria-label="Skills - from ClawHub marketplace"><span class="d-icon" aria-hidden="true">&#x1f4e6;</span><span class="d-title">Skills</span><span class="d-sub">ClawHub</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="20" height="14" viewBox="0 0 20 14"><path d="M2 7h14l-4-4m4 4-4 4" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-agent" tabindex="0" role="figure" aria-label="Sub-Agents - parallel spawning"><span class="d-icon" aria-hidden="true">&#x1f9f1;</span><span class="d-title">Sub-Agents</span><span class="d-sub">Parallel</span></div>
+    <div class="layer-label">AI Agent Runtime</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">Pi Runner</span><span class="ls">Agent Loop</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Tool Policy</span><span class="ls">Permissions</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Sandbox</span><span class="ls">Docker</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Skills</span><span class="ls">ClawHub</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Sub-Agents</span><span class="ls">Parallel</span></div>
     </div>
-    <div class="d-connect" aria-hidden="true"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="layer-connect"><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-    <!-- Layer 5: Infrastructure -->
-    <div class="d-layer-label">Infrastructure &amp; Storage</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-infra" tabindex="0" role="figure" aria-label="Memory - SQLite vec"><span class="d-icon" aria-hidden="true">&#x1f9e0;</span><span class="d-title">Memory</span><span class="d-sub">SQLite-vec</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-infra" tabindex="0" role="figure" aria-label="Config - YAML JSON"><span class="d-icon" aria-hidden="true">&#x1f4c1;</span><span class="d-title">Config</span><span class="d-sub">YAML/JSON</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-infra" tabindex="0" role="figure" aria-label="Plugins - jiti runtime"><span class="d-icon" aria-hidden="true">&#x1f4e6;</span><span class="d-title">Plugins</span><span class="d-sub">jiti</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-infra" tabindex="0" role="figure" aria-label="Media pipeline"><span class="d-icon" aria-hidden="true">&#x1f3ac;</span><span class="d-title">Media</span><span class="d-sub">Pipeline</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-infra" tabindex="0" role="figure" aria-label="Security audit"><span class="d-icon" aria-hidden="true">&#x1f6e1;&#xfe0f;</span><span class="d-title">Security</span><span class="d-sub">Audit</span></div>
+    <div class="layer-label">Infrastructure &amp; Storage</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">Memory</span><span class="ls">SQLite-vec</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Config</span><span class="ls">YAML/JSON</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Plugins</span><span class="ls">jiti</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Media</span><span class="ls">Pipeline</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Security</span><span class="ls">Audit</span></div>
     </div>
-    <div class="d-connect" aria-hidden="true"><svg width="16" height="20" viewBox="0 0 16 20"><path d="M8 0v16l-5-5m5 5 5-5" stroke="#169ee3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="layer-connect"><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-    <!-- Layer 6: Providers -->
-    <div class="d-layer-label">AI Model Providers</div>
-    <div class="diagram-row">
-      <div class="diagram-box d-llm" tabindex="0" role="figure" aria-label="Anthropic Claude"><span class="d-icon" aria-hidden="true">&#x1f9e0;</span><span class="d-title">Anthropic</span><span class="d-sub">Claude</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-llm" tabindex="0" role="figure" aria-label="OpenAI GPT and o series"><span class="d-icon" aria-hidden="true">&#x1f9e0;</span><span class="d-title">OpenAI</span><span class="d-sub">GPT/o</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-llm" tabindex="0" role="figure" aria-label="Google Gemini"><span class="d-icon" aria-hidden="true">&#x1f9e0;</span><span class="d-title">Google</span><span class="d-sub">Gemini</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-llm" tabindex="0" role="figure" aria-label="Local models via Ollama"><span class="d-icon" aria-hidden="true">&#x1f5bf;&#xfe0f;</span><span class="d-title">Local</span><span class="d-sub">Ollama</span></div>
-      <div class="d-arrow" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 16 14"><path d="M2 7h10l-3-3m3 3-3 3" stroke="#64748b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="diagram-box d-llm" tabindex="0" role="figure" aria-label="15 more providers including Bedrock and vLLM"><span class="d-icon" aria-hidden="true">&#x2795;</span><span class="d-title">15+ More</span><span class="d-sub">Bedrock, vLLM&hellip;</span></div>
+    <div class="layer-label">AI Model Providers</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">Anthropic</span><span class="ls">Claude</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">OpenAI</span><span class="ls">GPT/o</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Google</span><span class="ls">Gemini</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">Local</span><span class="ls">Ollama</span></div>
+      <span class="la"><svg width="16" height="12" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="layer-box"><span class="lt">15+ More</span><span class="ls">Bedrock, vLLM...</span></div>
     </div>
   </div>
 </div>
+
+<div class="divider" aria-hidden="true"></div>
 
 <!-- ═══════════ 01: MESSAGE LIFECYCLE ═══════════ -->
-<section class="section" aria-labelledby="sec01">
-  <div class="section-header"><span class="num" aria-hidden="true">01</span><h2 id="sec01">Message Lifecycle</h2></div>
-  <p class="section-subtitle">How a user message travels through the system and returns as an AI response. Three distinct phases: inbound routing, tool execution, and response delivery.</p>
+<section class="section" aria-labelledby="s01">
+  <div class="section-head"><span class="section-num">01</span><h2 id="s01">Message Lifecycle</h2></div>
+  <p class="section-sub">How a user message travels through the system and returns as an AI response. Three phases: inbound routing, tool execution, and response delivery.</p>
 
-  <div class="flow-container">
+  <div class="flow-card">
     <div class="flow-block">
-      <h3 class="flow-block-title"><span class="dot" style="background:var(--blue);" aria-hidden="true"></span> Inbound &mdash; User Message to LLM</h3>
+      <div class="flow-label"><span class="dot" style="background:var(--gold);"></span> Inbound — User Message to LLM</div>
       <div class="flow-row">
-        <div class="flow-step" style="background:#1e3a6a;"><span class="f-icon" aria-hidden="true">&#x1f464;</span><span class="f-label">User</span><span class="f-sub">any channel</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a4a6a;"><span class="f-icon" aria-hidden="true">&#x1f4e8;</span><span class="f-label">Channel</span><span class="f-sub">receive &amp; parse</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a3a5a;"><span class="f-icon" aria-hidden="true">&#x1f9f0;</span><span class="f-label">Routing</span><span class="f-sub">allow-list + session</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a5a6a;"><span class="f-icon" aria-hidden="true">&#x1f310;</span><span class="f-label">Gateway</span><span class="f-sub">WS server, auth</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon" aria-hidden="true">&#x1f916;</span><span class="f-label">Agent</span><span class="f-sub">prompt assembly</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#3a2a5a;"><span class="f-icon" aria-hidden="true">&#x1f9e0;</span><span class="f-label">LLM</span><span class="f-sub">inference</span></div>
+        <div class="flow-step"><span class="f-label">User</span><span class="f-sub">any channel</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Channel</span><span class="f-sub">receive &amp; parse</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Routing</span><span class="f-sub">allow-list + session</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Gateway</span><span class="f-sub">WS server, auth</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">prompt assembly</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">LLM</span><span class="f-sub">inference</span></div>
       </div>
     </div>
 
     <div class="flow-block">
-      <h3 class="flow-block-title"><span class="dot" style="background:var(--amber);" aria-hidden="true"></span> Tool Execution Loop</h3>
+      <div class="flow-label"><span class="dot" style="background:var(--gold);opacity:0.6;"></span> Tool Execution Loop</div>
       <div class="flow-row">
-        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon" aria-hidden="true">&#x1f916;</span><span class="f-label">Agent</span><span class="f-sub">decides to use tool</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#3a2a3a;"><span class="f-icon" aria-hidden="true">&#x1f6e1;&#xfe0f;</span><span class="f-label">Tool Policy</span><span class="f-sub">permission check</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#2a3a2a;"><span class="f-icon" aria-hidden="true">&#x1f9ea;</span><span class="f-label">Sandbox</span><span class="f-sub">Docker / exec</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a3a3a;"><span class="f-icon" aria-hidden="true">&#x1f4ca;</span><span class="f-label">Result</span><span class="f-sub">back to context</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a5a5a;"><span class="f-icon" aria-hidden="true">&#x1f504;</span><span class="f-label">Agent</span><span class="f-sub">continues or responds</span></div>
+        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">decides to use tool</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Tool Policy</span><span class="f-sub">permission check</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Sandbox</span><span class="f-sub">Docker / exec</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Result</span><span class="f-sub">back to context</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">continues or responds</span></div>
       </div>
     </div>
 
     <div class="flow-block">
-      <h3 class="flow-block-title"><span class="dot" style="background:var(--purple);" aria-hidden="true"></span> Outbound &mdash; LLM Response to User</h3>
+      <div class="flow-label"><span class="dot" style="background:var(--gold);opacity:0.3;"></span> Outbound — LLM Response to User</div>
       <div class="flow-row">
-        <div class="flow-step" style="background:#3a2a5a;"><span class="f-icon" aria-hidden="true">&#x1f9e0;</span><span class="f-label">LLM</span><span class="f-sub">streamed tokens</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#2a2a4a;"><span class="f-icon" aria-hidden="true">&#x1f4e1;</span><span class="f-label">Subscribe</span><span class="f-sub">stream processing</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a5a6a;"><span class="f-icon" aria-hidden="true">&#x1f310;</span><span class="f-label">Gateway</span><span class="f-sub">broadcast to clients</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1a4a6a;"><span class="f-icon" aria-hidden="true">&#x1f4e8;</span><span class="f-label">Channel</span><span class="f-sub">format for platform</span></div>
-        <div class="flow-arr" aria-hidden="true"><svg width="22" height="14" viewBox="0 0 22 14"><path d="M2 7h16l-4-4m4 4-4 4" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step" style="background:#1e3a6a;"><span class="f-icon" aria-hidden="true">&#x1f464;</span><span class="f-label">User</span><span class="f-sub">receives reply</span></div>
+        <div class="flow-step"><span class="f-label">LLM</span><span class="f-sub">streamed tokens</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Subscribe</span><span class="f-sub">stream processing</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Gateway</span><span class="f-sub">broadcast to clients</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">Channel</span><span class="f-sub">format for platform</span></div>
+        <span class="fa"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M2 6h12l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="flow-step"><span class="f-label">User</span><span class="f-sub">receives reply</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ 02: ARCHITECTURE DEEP DIVE ═══════════ -->
-<section class="section" aria-labelledby="sec02">
-  <div class="section-header"><span class="num" aria-hidden="true">02</span><h2 id="sec02">Architecture Deep Dive</h2></div>
-  <p class="section-subtitle">Six layers of the OpenClaw stack. Click any section to expand component details, source paths, and descriptions.</p>
+<div class="divider" aria-hidden="true"></div>
 
-  <div class="card-wrapper" id="deep-dive-cards"></div>
+<!-- ═══════════ 02: ARCHITECTURE DEEP DIVE ═══════════ -->
+<section class="section" aria-labelledby="s02">
+  <div class="section-head"><span class="section-num">02</span><h2 id="s02">Architecture Deep Dive</h2></div>
+  <p class="section-sub">Six layers of the OpenClaw stack. Click any section to expand component details, source paths, and descriptions.</p>
+  <div class="card-stack" id="deep-dive-cards"></div>
 </section>
 
+<div class="divider" aria-hidden="true"></div>
+
 <!-- ═══════════ 03: MODULE REFERENCE ═══════════ -->
-<section class="section" aria-labelledby="sec03">
-  <div class="section-header"><span class="num" aria-hidden="true">03</span><h2 id="sec03">Core Module Reference</h2></div>
-  <p class="section-subtitle">Main source directories under src/ with file counts, responsibilities, and source paths. Click to expand.</p>
+<section class="section" aria-labelledby="s03">
+  <div class="section-head"><span class="section-num">03</span><h2 id="s03">Core Module Reference</h2></div>
+  <p class="section-sub">Main source directories under src/ with file counts, responsibilities, and source paths. Click to expand.</p>
   <div class="mod-grid" id="module-grid"></div>
 </section>
 
-<!-- ═══════════ 04: EXTENSIONS ═══════════ -->
-<section class="section" aria-labelledby="sec04">
-  <div class="section-header"><span class="num" aria-hidden="true">04</span><h2 id="sec04">Extensions &amp; Plugins</h2></div>
-  <p class="section-subtitle">38 workspace packages under extensions/ that add channels, AI tools, memory backends, and integrations. Data accurate as of May 2026.</p>
+<div class="divider" aria-hidden="true"></div>
 
+<!-- ═══════════ 04: EXTENSIONS ═══════════ -->
+<section class="section" aria-labelledby="s04">
+  <div class="section-head"><span class="section-num">04</span><h2 id="s04">Extensions &amp; Plugins</h2></div>
+  <p class="section-sub">38 workspace packages that add channels, AI tools, memory backends, and integrations. Data as of May 2026.</p>
   <div id="extensions-root"></div>
 </section>
 
+<div class="divider" aria-hidden="true"></div>
+
 <!-- ═══════════ 05: TECH STACK ═══════════ -->
-<section class="section" aria-labelledby="sec05">
-  <div class="section-header"><span class="num" aria-hidden="true">05</span><h2 id="sec05">Technology Stack</h2></div>
-  <p class="section-subtitle">Languages, frameworks, and tools that power OpenClaw across the full stack. Updated from the OpenClaw main branch, May 2026.</p>
+<section class="section" aria-labelledby="s05">
+  <div class="section-head"><span class="section-num">05</span><h2 id="s05">Technology Stack</h2></div>
+  <p class="section-sub">Languages, frameworks, and tools that power OpenClaw across the full stack.</p>
   <div class="stack-grid" id="stack-grid"></div>
 </section>
 
@@ -438,53 +468,50 @@
 
 <script>
 /* ═══════════════ DATA LAYER ═══════════════ */
-/* Source of truth for all content. Update this JSON blob to refresh content. */
-/* Stats last verified: May 2026 from openclaw/openclaw main branch. */
-
 const DATA = {
   deepDive: [
-    {name:"1. User-Facing Surfaces", icon:"🖥️", color:"#1e3a6a", sub:"CLI • Web UI • TUI • macOS • iOS • Android",
+    {name:"1. User-Facing Surfaces", icon:"S", color:"var(--gold-light)", tagline:"CLI, Web UI, TUI, macOS, iOS, Android",
      desc:"Six entry points for interacting with OpenClaw. The CLI is the primary interface for power users; the Web UI provides a browser dashboard; native apps (macOS, iOS, Android) offer mobile node capabilities. All connect to the Gateway over WebSocket.",
      comps:["CLI — src/cli/ + src/commands/","Web UI — ui/ (Lit + Vite)","TUI — src/tui/","macOS — apps/macos/ (SwiftUI)","iOS — apps/ios/ (Swift)","Android — apps/android/ (Kotlin)"]},
-    {name:"2. Messaging Channels", icon:"📨", color:"#1a4a6a", sub:"7 built-in + 21 extension channels",
+    {name:"2. Messaging Channels", icon:"M", color:"var(--gold-light)", tagline:"7 built-in + 21 extension channels",
      desc:"Each channel is a platform-specific adapter that receives messages, normalizes them into OpenClaw's internal format, sends them to the Gateway, and formats responses back for the platform. Built-in channels live in src/; extensions live in extensions/.",
-     comps:["WhatsApp — src/web/ (Baileys)","Telegram — src/telegram/ (grammY)","Discord — src/discord/ (Carbon)","Slack — src/slack/ (Bolt)","Signal — src/signal/","iMessage, LINE + 21 extensions"]},
-    {name:"3. Gateway Core Engine", icon:"🌐", color:"#1a5a6a", sub:"~120 files across 5 subsystems",
+     comps:["WhatsApp — src/web/ (Baileys)","Telegram — src/telegram/ (grammY)","Discord — src/discord/ (Carbon)","Slack — src/slack/ (Bolt)","Signal — src/signal/","iMessage, LINE + 21 extensions (Matrix, Teams, IRC...)"]},
+    {name:"3. Gateway Core Engine", icon:"G", color:"var(--gold-light)", tagline:"~120 files across 5 subsystems",
      desc:"The central nervous system. A single long-lived Node.js process that owns all connections and state. Routes messages, manages sessions, authenticates clients, and orchestrates the agent loop.",
-     comps:["Server — Express 5 + WebSocket on :18789","Routing — session key derivation, agent resolution","Sessions — JSONL files per agent","Auth — shared-secret, Tailscale, trusted-proxy","Hooks — event-driven extensibility"],
+     comps:["Server — Express 5 + WebSocket on :18789","Routing — session key derivation, agent resolution","Sessions — JSONL files per agent session","Auth — shared-secret, Tailscale, trusted-proxy","Hooks — event-driven extensibility"],
      path:"src/gateway/"},
-    {name:"4. AI Agent Runtime", icon:"🤖", color:"#1a5a5a", sub:"~250 files — largest subsystem",
+    {name:"4. AI Agent Runtime", icon:"A", color:"var(--gold-light)", tagline:"~250 files — largest subsystem",
      desc:"The Pi-embedded agent runner is the heart of OpenClaw. It assembles system prompts (drawn from skills, memory, and workspace), manages tool execution with policy gating, handles sub-agent spawning, and compacts context windows.",
      comps:["Pi Runner — agent loop, system prompts, compact","Tools — Bash, Playwright browser, Canvas","Skills — SKILL.md-driven, 50+ from ClawHub","Sandbox — Docker isolation for tool exec","Sub-Agents — parallel spawning, lifecycle mgmt","Model Catalog — multi-provider routing"],
      path:"src/agents/"},
-    {name:"5. Infrastructure & Storage", icon:"⚙️", color:"#2a3a5a", sub:"Memory, Config, Plugins, Media, Security",
+    {name:"5. Infrastructure & Storage", icon:"I", color:"var(--gold-light)", tagline:"Memory, Config, Plugins, Media, Security",
      desc:"Persistence, extensibility, and safety layers. Memory uses SQLite-vec for hybrid semantic+keyword search. The plugin system loads extensions via jiti at runtime. Media pipeline handles transcoding and AI-based analysis.",
      comps:["Memory — SQLite-vec, hybrid search, MMR rerank","Config — file loading, session store, profiles","Plugins — jiti runtime, manifest registry","Media — transcoding, format detection, AI analysis","Security — metadata scan, DM policy, ACL","Infra Utils — Tailscale, mDNS, heartbeat"]},
-    {name:"6. AI Model Providers", icon:"🧠", color:"#3a2a5a", sub:"22+ provider integrations",
-     desc:"OpenClaw supports every major LLM provider. Anthropic Claude is the primary (Pi agent runtime), with OpenAI GPT/o-series, Google Gemini, and Ollama for local models. Additional providers: Bedrock, vLLM, HuggingFace, Together, xAI, DeepSeek, Azure, Groq, Fireworks, Perplexity, Cohere, Replicate, Mistral, and more.",
+    {name:"6. AI Model Providers", icon:"P", color:"var(--gold-light)", tagline:"22+ provider integrations",
+     desc:"OpenClaw supports every major LLM provider. Anthropic Claude is the primary (Pi agent runtime), with OpenAI GPT/o-series, Google Gemini, and Ollama for local models. Additional providers include Bedrock, vLLM, HuggingFace, Together, xAI, DeepSeek, Azure, Groq, Fireworks, Perplexity, Cohere, Replicate, Mistral, and more.",
      comps:[]}
   ],
 
   modules: [
-    {name:"CLI", icon:"🗺️", color:"#1e3a6a", files:"~100 files", desc:"Entry point parsing, Commander program setup, all CLI subcommands (gateway, config, channels, browser, etc.). Uses src/cli/program.ts as the root.", path:"src/cli/"},
-    {name:"Commands", icon:"⚙️", color:"#1e3a6a", files:"~200 files", desc:"Business logic for all CLI commands: onboarding, doctor, status, configure, sessions, agents management, model picking, sandbox, auth-choice, health checks.", path:"src/commands/"},
-    {name:"Gateway", icon:"🌐", color:"#1a5a6a", files:"~120 files", desc:"WebSocket + HTTP server. Channel management, agent chat orchestration, OpenAI-compatible API, session management, auth, hooks, node events, model catalog.", path:"src/gateway/"},
-    {name:"Agents", icon:"🤖", color:"#1a5a5a", files:"~250 files", desc:"Pi-embedded runner. System prompts, tool definitions, tool policy, sandbox config, skills, subagent spawning, model catalog, bash/browser tools, compaction, workspace management.", path:"src/agents/"},
-    {name:"Channels", icon:"📨", color:"#1a4a6a", files:"~30 files", desc:"Shared channel infrastructure: allow-lists, command gating, mention gating, session management, status reactions, typing indicators, draft stream controls, dock management.", path:"src/channels/"},
-    {name:"Memory", icon:"🧠", color:"#2a3a5a", files:"~60 files", desc:"Vector memory with SQLite-vec. Embedding management (OpenAI, Gemini, Voyage, local llama), hybrid search, batch ops, query expansion, temporal decay, MMR reranking.", path:"src/memory/"},
-    {name:"Plugins", icon:"📦", color:"#2a3a5a", files:"~40 files", desc:"Plugin runtime: discovery, loading (jiti), install (npm), manifest registry, hook system, tool/service registration, exclusive slot management.", path:"src/plugins/"},
-    {name:"Infra", icon:"🔧", color:"#2a3a5a", files:"~130 files", desc:"Env management, port handling, file locks, device identity, Bonjour/mDNS, Tailscale, SSH tunnels, update checking, heartbeat, exec approvals, provider usage tracking.", path:"src/infra/"},
-    {name:"Routing", icon:"🧰", color:"#1a3a5a", files:"~6 files", desc:"Session key derivation, route resolution (which agent handles which message), account ID mapping.", path:"src/routing/"},
-    {name:"Security", icon:"🛡️", color:"#2a3a5a", files:"~20 files", desc:"Channel metadata audit, dangerous config/tool flags, DM policy, external content scanning, skill scanning, secret comparison, Windows ACL.", path:"src/security/"},
-    {name:"Media", icon:"🎬", color:"#2a3a5a", files:"Core module", desc:"Media processing for images, audio, video, documents. Transcoding, format detection, AI-based media understanding.", path:"src/media/"},
-    {name:"Config", icon:"📁", color:"#2a3a5a", files:"Core module", desc:"Config file loading/saving, session store, profile management. Data stored at ~/.openclaw/.", path:"src/config/"}
+    {name:"CLI", files:"~100 files", desc:"Entry point parsing, Commander program setup, all CLI subcommands (gateway, config, channels, browser, etc.). Uses src/cli/program.ts as root.", path:"src/cli/"},
+    {name:"Commands", files:"~200 files", desc:"Business logic for all CLI commands: onboarding, doctor, status, configure, sessions, agents, model picking, sandbox, auth, health checks.", path:"src/commands/"},
+    {name:"Gateway", files:"~120 files", desc:"WebSocket + HTTP server. Channel management, agent chat orchestration, OpenAI-compatible API, session management, auth, hooks, node events, model catalog.", path:"src/gateway/"},
+    {name:"Agents", files:"~250 files", desc:"Pi-embedded runner. System prompts, tools, tool policy, sandbox, skills, subagent spawning, model catalog, bash/browser, compaction, workspace.", path:"src/agents/"},
+    {name:"Channels", files:"~30 files", desc:"Shared channel infrastructure: allow-lists, command gating, mention gating, session management, status reactions, typing indicators, dock management.", path:"src/channels/"},
+    {name:"Memory", files:"~60 files", desc:"Vector memory with SQLite-vec. Embedding management (OpenAI, Gemini, Voyage, local), hybrid search, batch ops, temporal decay, MMR reranking.", path:"src/memory/"},
+    {name:"Plugins", files:"~40 files", desc:"Plugin runtime: discovery, loading (jiti), install (npm), manifest registry, hook system, tool/service registration, exclusive slot management.", path:"src/plugins/"},
+    {name:"Infra", files:"~130 files", desc:"Env management, port handling, file locks, device identity, Bonjour/mDNS, Tailscale, SSH, updates, heartbeat, exec approvals, provider tracking.", path:"src/infra/"},
+    {name:"Routing", files:"~6 files", desc:"Session key derivation, route resolution (which agent handles which message), account ID mapping.", path:"src/routing/"},
+    {name:"Security", files:"~20 files", desc:"Channel metadata audit, dangerous config/tool flags, DM policy, external content scanning, skill scanning, secret comparison, Windows ACL.", path:"src/security/"},
+    {name:"Media", files:"Core module", desc:"Media processing for images, audio, video, documents. Transcoding, format detection, AI-based media understanding.", path:"src/media/"},
+    {name:"Config", files:"Core module", desc:"Config file loading/saving, session store, profile management. Data stored at ~/.openclaw/.", path:"src/config/"}
   ],
 
   extensions: [
-    {group:"Messaging Channels", count:"21", icon:"📨", items:["MS Teams","Matrix","IRC","Nostr","Twitch","Feishu","Google Chat","Mattermost","Nextcloud Talk","Synology Chat","Zalo","Zalo User","Tlon","Telegram (ext)","Discord (ext)","Slack (ext)","Signal (ext)","WhatsApp (ext)","iMessage (ext)","LINE (ext)","BlueBubbles"]},
-    {group:"AI & Agent Tools", count:"8", icon:"🤖", items:["LLM Task","Lobster","Open Prose","Voice Call","Talk Voice","Phone Control","Thread Ownership","Diagnostics (OTel)"]},
-    {group:"Memory & Auth", count:"7", icon:"🔒", items:["Memory Core","Memory LanceDB","Copilot Proxy","Google Antigravity Auth","Google Gemini CLI Auth","Minimax Portal Auth","Qwen Portal Auth"]},
-    {group:"Other", count:"2", icon:"🔗", items:["Device Pair","Shared"]}
+    {group:"Messaging Channels", count:"21", items:["MS Teams","Matrix","IRC","Nostr","Twitch","Feishu","Google Chat","Mattermost","Nextcloud Talk","Synology Chat","Zalo","Zalo User","Tlon","Telegram (ext)","Discord (ext)","Slack (ext)","Signal (ext)","WhatsApp (ext)","iMessage (ext)","LINE (ext)","BlueBubbles"]},
+    {group:"AI & Agent Tools", count:"8", items:["LLM Task","Lobster","Open Prose","Voice Call","Talk Voice","Phone Control","Thread Ownership","Diagnostics (OTel)"]},
+    {group:"Memory & Auth", count:"7", items:["Memory Core","Memory LanceDB","Copilot Proxy","Google Antigravity Auth","Google Gemini CLI Auth","Minimax Portal Auth","Qwen Portal Auth"]},
+    {group:"Other", count:"2", items:["Device Pair","Shared"]}
   ],
 
   stack: [
@@ -506,29 +533,28 @@ const DATA = {
   ]
 };
 
-/* ═══════════════ RENDER FUNCTIONS ═══════════════ */
+/* ═══════════════ RENDER ═══════════════ */
 
 function toggle(el) {
   const expanded = el.getAttribute('aria-expanded') === 'true';
-  el.setAttribute('aria-expanded', !expanded);
+  el.setAttribute('aria-expanded', String(!expanded));
 }
 
-function createExpandableCard(item) {
+function createExpandable(item) {
   const card = document.createElement('div');
-  card.className = 'expandable';
+  card.className = 'exp-card';
   card.setAttribute('aria-expanded', 'false');
 
-  const head = document.createElement('button');
-  head.className = 'expandable-head';
-  head.setAttribute('role', 'button');
-  head.setAttribute('aria-expanded', 'false');
-  head.onclick = () => toggle(card);
-  head.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(card); } };
+  const btn = document.createElement('button');
+  btn.className = 'exp-btn';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.onclick = () => toggle(card);
+  btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(card); } };
 
-  head.innerHTML = `<span class="exp-icon" style="background:${item.color}" aria-hidden="true">${item.icon}</span><div class="exp-meta"><div class="exp-name">${item.name}</div><div class="exp-sub">${item.sub || ''}</div></div><span class="exp-toggle" aria-hidden="true">▼</span>`;
+  btn.innerHTML = `<span class="exp-icon">${item.icon||'·'}</span><div class="exp-meta"><div class="exp-name">${item.name}</div>${item.tagline||item.files?'<div class="exp-tagline">'+(item.tagline||item.files)+'</div>':''}</div><span class="exp-chevron">▼</span>`;
 
   const body = document.createElement('div');
-  body.className = 'expandable-body';
+  body.className = 'exp-body';
   let html = '';
   if (item.desc) html += `<div class="exp-desc">${item.desc}</div>`;
   if (item.path) html += `<div class="exp-path">${item.path}</div>`;
@@ -538,59 +564,46 @@ function createExpandableCard(item) {
     html += '</div>';
   }
   body.innerHTML = html;
-  card.appendChild(head);
+  card.appendChild(btn);
   card.appendChild(body);
   return card;
 }
 
-function renderDeepDive() {
-  const root = document.getElementById('deep-dive-cards');
-  DATA.deepDive.forEach(item => root.appendChild(createExpandableCard(item)));
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // Deep Dive
+  const dd = document.getElementById('deep-dive-cards');
+  DATA.deepDive.forEach(item => dd.appendChild(createExpandable(item)));
 
-function renderModules() {
-  const grid = document.getElementById('module-grid');
-  DATA.modules.forEach(m => {
-    const card = createExpandableCard(m);
-    grid.appendChild(card);
-  });
-}
+  // Modules
+  const mg = document.getElementById('module-grid');
+  DATA.modules.forEach(m => mg.appendChild(createExpandable(m)));
 
-function renderExtensions() {
-  const root = document.getElementById('extensions-root');
+  // Extensions
+  const ex = document.getElementById('extensions-root');
   DATA.extensions.forEach(g => {
     const label = document.createElement('div');
-    label.className = 'ext-group-label';
-    label.innerHTML = `<span aria-hidden="true">${g.icon}</span> ${g.group} <span class="count">${g.count}</span>`;
-    root.appendChild(label);
+    label.className = 'ext-group-head';
+    label.innerHTML = `${g.group} <span class="ext-count">${g.count}</span>`;
+    ex.appendChild(label);
     const grid = document.createElement('div');
     grid.className = 'ext-grid';
     g.items.forEach(name => {
       const el = document.createElement('div');
       el.className = 'ext-item';
-      el.innerHTML = `<span class="e-icon" aria-hidden="true">${g.icon}</span> ${name}`;
+      el.textContent = name;
       grid.appendChild(el);
     });
-    root.appendChild(grid);
+    ex.appendChild(grid);
   });
-}
 
-function renderStack() {
-  const grid = document.getElementById('stack-grid');
+  // Stack
+  const sg = document.getElementById('stack-grid');
   DATA.stack.forEach(s => {
     const el = document.createElement('div');
     el.className = 'stack-item';
     el.innerHTML = `<span class="stack-area">${s.area}</span><div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div></div>`;
-    grid.appendChild(el);
+    sg.appendChild(el);
   });
-}
-
-/* ═══════════════ INIT ═══════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  renderDeepDive();
-  renderModules();
-  renderExtensions();
-  renderStack();
 });
 </script>
 </body>
