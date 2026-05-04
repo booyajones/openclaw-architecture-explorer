@@ -514,6 +514,9 @@
   .st-ongoing { background: var(--warn-bg); color: var(--warn); }
   .st-archive { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-muted); }
   .proj-item-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .proj-item-detail { font-size: 11px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px; padding: 8px 10px; background: var(--surface-raised); border-radius: 4px; border-left: 2px solid var(--gold-muted); display: none; }
+  .proj-item[aria-expanded="true"] .proj-item-detail { display: block; }
+  .proj-item[aria-expanded="true"] { border-color: var(--gold-muted); }
   @media (max-width: 640px) { .proj-items { grid-template-columns: 1fr; } }
 </style>
 <section class="section" aria-labelledby="s06">
@@ -609,65 +612,65 @@ const DATA = {
   ],
 
   projects: [
-    {cat:"Finexio Operations", tag:"FINEXIO", desc:"Ongoing CSO work: dashboards, reporting, pipeline analysis, marketing campaigns, and platform maintenance.", items:[
-      {name:"BDR Executive Dashboard v2", status:"active", desc:"Sales pipeline, call analytics, rep heatmaps. Vercel Next.js."},
-      {name:"BDR Executive Reports", status:"ongoing", desc:"Weekly/monthly performance reports with call analysis."},
-      {name:"Data Engine", status:"active", desc:"BigQuery to Salesforce to Power BI semantic layer."},
-      {name:"Marketing Dashboard", status:"active", desc:"Campaign metrics, HubSpot email stats, content tracking."},
-      {name:"Finexio ROI Calculator", status:"active", desc:"Prospect-facing ROI model on finexio.com."},
-      {name:"Finexio Website", status:"ongoing", desc:"Webflow CMS pages, collections, assets."},
-      {name:"Brand Assets", status:"archive", desc:"Color palette, logos, brand guidelines."}
+    {cat:"Finexio Operations", tag:"FINEXIO", desc:"Ongoing CSO work: dashboards, reporting, pipeline analysis, marketing campaigns, and platform maintenance at Finexio.", items:[
+      {name:"BDR Executive Dashboard v2", status:"active", desc:"Sales pipeline, call analytics, rep heatmaps, disposition tracking.", detail:"Vercel-hosted Next.js dashboard connected to Salesforce and BigQuery. Custom analytics on call volume, disposition stats, rep performance. Built with shadcn/ui, Tremor, and Tremor charts."},
+      {name:"BDR Executive Reports", status:"ongoing", desc:"Weekly/monthly BDR performance reports.", detail:"Automated report generation with pipeline analysis, call activity summaries, and actionable insights for the BDR team."},
+      {name:"Data Engine", status:"active", desc:"BigQuery to Salesforce to Power BI semantic layer.", detail:"Custom SQL queries, analysis scripts, and data validation workflows. Bridges finexio-prod BigQuery data with Power BI dashboards."},
+      {name:"Marketing Dashboard", status:"active", desc:"Campaign metrics, HubSpot stats, content performance.", detail:"Aggregates HubSpot email stats, content engagement metrics, and pipeline attribution into a single view."},
+      {name:"Finexio ROI Calculator", status:"active", desc:"Prospect-facing ROI model on finexio.com.", detail:"Interactive web calculator showing cost savings projections for prospective Finexio customers."},
+      {name:"Finexio Website", status:"ongoing", desc:"finexio.com Webflow CMS management.", detail:"Pages, collections, assets, and custom scripts via Webflow MCP integration."},
+      {name:"Brand Assets", status:"archive", desc:"Color palette, logos, brand guidelines.", detail:"Documented Finexio brand standards including primary navy #043886, bright blue #169ee3, and gold accents."}
     ]},
-    {cat:"Diligence & M&A", tag:"FINEXIO", desc:"M&A advisory supporting the Finexio acquisition process.", items:[
-      {name:"Project Franklin", status:"active", desc:"Blackstone/M3 acquisition — deal structure, economics, narrative."},
-      {name:"Blackstone Diligence", status:"active", desc:"PE diligence responses, QA sessions, data room analysis."},
-      {name:"M3 Payments Analysis", status:"active", desc:"M3 platform economics, payment rail displacement."},
-      {name:"Birchstreet Analysis", status:"archive", desc:"Buyer analysis, fee structures, penetration modeling."},
-      {name:"Visa BYOC & VARM", status:"active", desc:"BYOC and VARM program diligence and integration planning."}
+    {cat:"Diligence & M&A", tag:"FINEXIO", desc:"Discrete M&A advisory projects supporting the Finexio acquisition process.", items:[
+      {name:"Project Franklin", status:"active", desc:"Blackstone/M3 acquisition of Finexio.", detail:"Deal structure, economics modeling, narrative positioning, and adversarial diligence prep across 6-week engagement."},
+      {name:"Blackstone Diligence", status:"active", desc:"PE diligence responses and QA sessions.", detail:"Multiple rounds of data room requests, adversarial QA, financial modeling, and positioning memos."},
+      {name:"M3 Payments Analysis", status:"active", desc:"M3 platform economics and payment rail displacement.", detail:"Analysis of M3's ~8,000 hotel properties, AvidXchange displacement opportunity, and blended pricing strategy."},
+      {name:"Birchstreet Analysis", status:"archive", desc:"Buyer analysis and penetration modeling.", detail:"Birchstreet buyer data extraction, fee structure analysis, and penetration visualization for BGX diligence."},
+      {name:"Visa BYOC & VARM", status:"active", desc:"Visa BYOC and VARM program diligence.", detail:"Visa bring-your-own-card and Visa Accounts Receivable Match integration analysis and planning."}
     ]},
-    {cat:"Project Phoenix", tag:"FINEXIO", desc:"Internal restructuring analysis completed April 2026. Retained as reference.", items:[
-      {name:"Headcount Model", status:"archive", desc:"Staffing optimization, cost scenarios for restructuring."},
-      {name:"Decision Memos", status:"archive", desc:"Executive memos and board-level communications."},
-      {name:"Manifesto", status:"archive", desc:"Strategic vision document for Finexio's next chapter."}
+    {cat:"Project Phoenix", tag:"FINEXIO", desc:"Internal restructuring analysis completed April 2026. Retained for reference.", items:[
+      {name:"Headcount Model", status:"archive", desc:"Staffing optimization and cost scenarios.", detail:"Scenario modeling for Finexio headcount restructuring with cost impact analysis across multiple org scenarios."},
+      {name:"Decision Memos", status:"archive", desc:"Executive memos and board communications.", detail:"Multiple iterations of decision memos with CFO-ready financial analysis and board-level communication."},
+      {name:"Manifesto", status:"archive", desc:"Strategic vision document.", detail:"Long-form strategic vision for Finexio's next chapter post-restructuring."}
     ]},
-    {cat:"Personal Brand & Content", tag:"PERSONAL", desc:"Public writing, LinkedIn presence, personal websites.", items:[
-      {name:"LinkedIn Newsletter", status:"ongoing", desc:"3 weekly crons: Sunday deep-dive, Monday, Friday newsletter."},
-      {name:"Executive Site", status:"active", desc:"chriswyatt.dev — personal brand site on Vercel/Next.js."},
-      {name:"Intel Dashboard", status:"active", desc:"intel.chriswyatt.dev — thought leadership content hub."},
-      {name:"Industry Research", status:"active", desc:"Healthcare fintech research, trend analysis, long-form."}
+    {cat:"Personal Brand & Content", tag:"PERSONAL", desc:"Public writing, LinkedIn presence, and personal websites. Weekly content pipeline.", items:[
+      {name:"LinkedIn Newsletter", status:"ongoing", desc:"3 weekly crons: Sunday deep-dive, Monday rapid-fire, Friday newsletter.", detail:"Full research-to-post pipeline with gauntlet quality gates. Topics: autonomous finance, B2B payments, healthcare fintech, AI."},
+      {name:"Executive Site", status:"active", desc:"chriswyatt.dev personal brand site.", detail:"Next.js site with Framer Motion, premium UI, and integrated content pipeline."},
+      {name:"Intel Dashboard", status:"active", desc:"intel.chriswyatt.dev thought leadership hub.", detail:"Content aggregation and thought leadership dashboard for Chris's public presence."},
+      {name:"Industry Research", status:"active", desc:"Healthcare fintech research and long-form writing.", detail:"Ongoing market research, trend analysis, and long-form thought leadership at the intersection of healthcare and fintech."}
     ]},
-    {cat:"Job Search", tag:"PERSONAL", desc:"Executive transition: C-level at healthcare+fintech intersection.", items:[
-      {name:"Target Company Watcher", status:"active", desc:"Automated monitoring of 20 target companies."},
-      {name:"Weekly Briefing", status:"active", desc:"Sunday synthesis of market intel and positioning."},
-      {name:"Resume & Materials", status:"active", desc:"Ramp doc, executive summaries, positioning docs."},
-      {name:"Network Outreach", status:"active", desc:"Active networking for C-level opportunities."}
+    {cat:"Job Search", tag:"PERSONAL", desc:"Executive transition search for C-level role at healthcare+fintech intersection.", items:[
+      {name:"Target Company Watcher", status:"active", desc:"Automated monitoring of 20 target companies.", detail:"Tue/Thu cron job monitoring news, funding, leadership changes, and job postings at target companies."},
+      {name:"Weekly Briefing", status:"active", desc:"Sunday synthesis of market intel and positioning.", detail:"Weekly summary of market intelligence, company updates, and positioning recommendations."},
+      {name:"Resume & Materials", status:"active", desc:"Ramp doc, executive summaries, positioning.", detail:"Ongoing refinement of resume, executive summaries, and positioning documents for executive search."},
+      {name:"Network Outreach", status:"active", desc:"Active networking for C-level opportunities.", detail:"Targeted outreach to executive recruiters, board members, and industry connections."}
     ]},
-    {cat:"ErrorCodeFixes.com", tag:"PERSONAL", desc:"Monetized content site on Cloudflare Pages.", items:[
-      {name:"Site Maintenance", status:"ongoing", desc:"Cloudflare Pages deployment, cache management."},
-      {name:"SEO & Content", status:"ongoing", desc:"Content priority, SEO audit, article pipeline."},
-      {name:"Affiliate Monetization", status:"ongoing", desc:"Impact.com affiliate network integration."},
-      {name:"GA4 Analytics", status:"ongoing", desc:"Traffic tracking and content performance."},
-      {name:"Brand & Redesign", status:"archive", desc:"Brand identity, redesign plan, screenshot QA."}
+    {cat:"ErrorCodeFixes.com", tag:"PERSONAL", desc:"Monetized content site on Cloudflare Pages. Maintenance mode with periodic updates.", items:[
+      {name:"Site Maintenance", status:"ongoing", desc:"Cloudflare Pages deployment and cache management.", detail:"Deploy script, cache purge workflow, and DNS management via Cloudflare API."},
+      {name:"SEO & Content", status:"ongoing", desc:"Content priority and article pipeline.", detail:"SEO audit, content priority queue, and automated article pipeline for errorcodefixes.com."},
+      {name:"Affiliate Monetization", status:"ongoing", desc:"Impact.com affiliate network.", detail:"Product links, tracking, and commission management through Impact.com Mediapartner API."},
+      {name:"GA4 Analytics", status:"ongoing", desc:"Traffic tracking and content performance.", detail:"Google Analytics 4 Data API integration for traffic monitoring and content optimization."},
+      {name:"Brand & Redesign", status:"archive", desc:"Brand identity and redesign plan.", detail:"Brand assets, logo development, and site redesign mockups (completed)."}
     ]},
-    {cat:"OpenClaw Infrastructure", tag:"PERSONAL", desc:"AI gateway operations, architecture, and tooling.", items:[
-      {name:"Architecture Explorer", status:"active", desc:"This page — deployment documentation on Vercel."},
-      {name:"Wiki & Memory System", status:"active", desc:"Obsidian vault, LanceDB, knowledge graph maintenance."},
-      {name:"Gateway Operations", status:"ongoing", desc:"Upgrades, MCP config, cron management, monitoring."},
-      {name:"Skills & Tools", status:"ongoing", desc:"49 skills from ClawHub, custom skill dev."},
-      {name:"Claude Code Integration", status:"active", desc:"Desktop app, CLI, cowork mode setup."},
-      {name:"Gauntlet / Council", status:"ongoing", desc:"Dual-LLM evaluation pipeline for quality gating."}
+    {cat:"OpenClaw Infrastructure", tag:"PERSONAL", desc:"AI gateway operations, architecture documentation, and tooling.", items:[
+      {name:"Architecture Explorer", status:"active", desc:"This page — deployment documentation.", detail:"Single-file static HTML documenting the full OpenClaw deployment. Hosted on Vercel, code on GitHub."},
+      {name:"Wiki & Memory System", status:"active", desc:"Obsidian vault, LanceDB, knowledge graph.", detail:"Karpathy-style Obsidian wiki vault with entities, concepts, syntheses, and 8 project pages."},
+      {name:"Gateway Operations", status:"ongoing", desc:"Upgrades, MCP config, cron management.", detail:"OpenClaw gateway management: NSSM service, version upgrades, MCP server configuration, and 19 cron jobs."},
+      {name:"Skills & Tools", status:"ongoing", desc:"49 skills from ClawHub, custom development.", detail:"Skills ecosystem management including gauntlet, stop-slop, finexio-sheets, pdf-deck-engine, and meeting-prep."},
+      {name:"Claude Code Integration", status:"active", desc:"Claude Desktop and CLI setup.", detail:"Claude Desktop v1.5354 with cowork mode. Claude Code CLI v2.1.47 accessible via exec pipe."},
+      {name:"Gauntlet / Council", status:"ongoing", desc:"Dual-LLM evaluation pipeline.", detail:"Claude Opus + GPT-5.4 blind evaluation with Gemini chairman synthesis. 30+ runs across all content types."}
     ]},
-    {cat:"Finexio Analysis", tag:"FINEXIO", desc:"Deep-dive data analysis supporting Finexio decisions.", items:[
-      {name:"Financial Analysis", status:"active", desc:"Revenue, volume, fee, customer deep-dives."},
-      {name:"PBIP Data Model", status:"active", desc:"Power BI semantic model reverse-engineering."},
-      {name:"Contract Inventory", status:"active", desc:"Supplier contract terms extraction and analysis."},
-      {name:"Forecast Model", status:"ongoing", desc:"Revenue forecasting model maintenance."},
-      {name:"Supplier Opportunity", status:"archive", desc:"Supplier-level opportunity assessment."}
+    {cat:"Finexio Analysis", tag:"FINEXIO", desc:"Deep-dive data analysis projects supporting Finexio business decisions.", items:[
+      {name:"Financial Analysis", status:"active", desc:"Revenue, volume, fee, and customer deep-dives.", detail:"BigQuery-powered analysis of payment volumes, fee revenue, customer economics, and rail mix."},
+      {name:"PBIP Data Model", status:"active", desc:"Power BI semantic model analysis.", detail:"Reverse-engineering and documentation of Finexio's Power BI data models for better understanding of metric definitions."},
+      {name:"Contract Inventory", status:"active", desc:"Supplier contract terms extraction.", detail:"Extraction and analysis of pricing terms, fee schedules, and volume commitments from Finexio supplier contracts."},
+      {name:"Forecast Model", status:"ongoing", desc:"Revenue forecasting model.", detail:"Finexio revenue forecast model with scenario planning, sensitivity analysis, and monthly updates."},
+      {name:"Supplier Opportunity", status:"archive", desc:"Supplier-level opportunity assessment.", detail:"Assessment of supplier payment volume opportunity across Finexio's customer base (completed)."}
     ]},
-    {cat:"Research & Writing", tag:"PERSONAL", desc:"Independent research, analysis, and quality evaluation.", items:[
-      {name:"Competitor Watch", status:"ongoing", desc:"Automated competitive intelligence tracking."},
-      {name:"Gauntlet Evaluations", status:"ongoing", desc:"30+ dual-LLM evaluations across all content types."},
-      {name:"SOTA Model Tracking", status:"ongoing", desc:"State-of-the-art model comparison and readiness."}
+    {cat:"Research & Writing", tag:"PERSONAL", desc:"Independent research, competitive intelligence, and quality evaluation.", items:[
+      {name:"Competitor Watch", status:"ongoing", desc:"Automated competitive intelligence tracking.", detail:"Tue/Thu cron monitoring news, funding, product launches, and personnel changes across B2B payments landscape."},
+      {name:"Gauntlet Evaluations", status:"ongoing", desc:"30+ dual-LLM evaluations across content types.", detail:"Quality gate for decks, plans, writing, and decisions using Claude Opus + GPT-5.4 blind judging."},
+      {name:"SOTA Model Tracking", status:"ongoing", desc:"State-of-the-art model comparison.", detail:"Tracking releases from OpenAI, Anthropic, Google, DeepSeek, Meta across coding, reasoning, and writing benchmarks."}
     ]}
   ]
 
@@ -745,6 +748,10 @@ document.addEventListener('DOMContentLoaded', () => {
     g.items.forEach(p => {
       const card = document.createElement('div');
       card.className = 'proj-item';
+      card.style.cursor = 'pointer';
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-expanded', 'false');
       const nameEl = document.createElement('div');
       nameEl.className = 'proj-item-name';
       nameEl.textContent = p.name;
@@ -757,6 +764,22 @@ document.addEventListener('DOMContentLoaded', () => {
       descEl.className = 'proj-item-desc';
       descEl.textContent = p.desc;
       card.appendChild(descEl);
+      if (p.detail) {
+        const detailBody = document.createElement('div');
+        detailBody.className = 'proj-item-detail';
+        detailBody.textContent = p.detail;
+        card.appendChild(detailBody);
+      }
+      card.addEventListener('click', () => {
+        const expanded = card.getAttribute('aria-expanded') === 'true';
+        card.setAttribute('aria-expanded', String(!expanded));
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
       items.appendChild(card);
     });
     group.appendChild(items);
