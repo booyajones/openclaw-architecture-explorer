@@ -359,6 +359,8 @@
 </div>
 
 <main id="main-content">
+<button class="back-top" id="back-top" aria-label="Back to top">↑</button>
+
 <div class="container">
 
 <div class="hero">
@@ -1195,6 +1197,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
     secs.forEach(function(s) { obs.observe(s.el); });
+  })();
+
+  // Back to top
+  (function() {
+    var btn = document.getElementById('back-top');
+    if (!btn) return;
+    window.addEventListener('scroll', function() {
+      btn.classList.toggle('visible', window.scrollY > 400);
+    });
+    btn.addEventListener('click', function() { window.scrollTo({top: 0, behavior: 'smooth'}); });
   })();
 
 </script>
