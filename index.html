@@ -495,9 +495,38 @@
 
 <div class="divider" aria-hidden="true"></div>
 
-<!-- ═══════════ 06: TECH STACK ═══════════ -->
+<!-- ═══════════ 06: PROJECTS ═══════════ -->
+<style>
+  .proj-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .proj-group { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .proj-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .proj-group-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
+  .tag-ops { background: #043886; color: white; }
+  .tag-per { background: var(--gold); color: white; }
+  .tag-mix { background: var(--text); color: white; }
+  .proj-group-name { font-size: 15px; font-weight: 700; }
+  .proj-group-desc { font-size: 11px; color: var(--text-muted); }
+  .proj-items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .proj-item { background: var(--bg); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 10px; font-size: 12px; }
+  .proj-item-name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .proj-item-status { font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+  .st-active { background: var(--green-bg); color: var(--green); }
+  .st-ongoing { background: var(--warn-bg); color: var(--warn); }
+  .st-archive { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-muted); }
+  .proj-item-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  @media (max-width: 640px) { .proj-items { grid-template-columns: 1fr; } }
+</style>
 <section class="section" aria-labelledby="s06">
-  <div class="section-head"><span class="section-num">06</span><h2 id="s06">Technical Stack</h2></div>
+  <div class="section-head"><span class="section-num">06</span><h2 id="s06">Projects</h2></div>
+  <p class="section-sub">Every active workstream, analysis, and initiative. Tagged FINEXIO (Finexio CSO work), PERSONAL (Chris's independent projects), or MIXED.</p>
+  <div class="proj-grid" id="proj-grid"></div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ═══════════ 07: TECH STACK ═══════════ -->
+<section class="section" aria-labelledby="s07">
+  <div class="section-head"><span class="section-num">07</span><h2 id="s07">Technical Stack</h2></div>
   <p class="section-sub">What's actually installed and running on this server.</p>
 
   <div class="stack-grid" id="stack-grid"></div>
@@ -577,8 +606,70 @@ const DATA = {
     {area:"Monorepo", name:"pnpm workspaces", desc:"Extensions, skills, MCPs"},
     {area:"Schema", name:"TypeBox", desc:"Tool input/output schemas, runtime validation"},
     {area:"Multi-Channel", name:"Bolt (Slack) + grammY (Telegram)", desc:"Socket mode + webhook polling"}
+  ],
+
+  projects: [
+    {cat:"Finexio Operations", tag:"FINEXIO", desc:"Ongoing CSO work: dashboards, reporting, pipeline analysis, marketing campaigns, and platform maintenance.", items:[
+      {name:"BDR Executive Dashboard v2", status:"active", desc:"Sales pipeline, call analytics, rep heatmaps. Vercel Next.js."},
+      {name:"BDR Executive Reports", status:"ongoing", desc:"Weekly/monthly performance reports with call analysis."},
+      {name:"Data Engine", status:"active", desc:"BigQuery to Salesforce to Power BI semantic layer."},
+      {name:"Marketing Dashboard", status:"active", desc:"Campaign metrics, HubSpot email stats, content tracking."},
+      {name:"Finexio ROI Calculator", status:"active", desc:"Prospect-facing ROI model on finexio.com."},
+      {name:"Finexio Website", status:"ongoing", desc:"Webflow CMS pages, collections, assets."},
+      {name:"Brand Assets", status:"archive", desc:"Color palette, logos, brand guidelines."}
+    ]},
+    {cat:"Diligence & M&A", tag:"FINEXIO", desc:"M&A advisory supporting the Finexio acquisition process.", items:[
+      {name:"Project Franklin", status:"active", desc:"Blackstone/M3 acquisition — deal structure, economics, narrative."},
+      {name:"Blackstone Diligence", status:"active", desc:"PE diligence responses, QA sessions, data room analysis."},
+      {name:"M3 Payments Analysis", status:"active", desc:"M3 platform economics, payment rail displacement."},
+      {name:"Birchstreet Analysis", status:"archive", desc:"Buyer analysis, fee structures, penetration modeling."},
+      {name:"Visa BYOC & VARM", status:"active", desc:"BYOC and VARM program diligence and integration planning."}
+    ]},
+    {cat:"Project Phoenix", tag:"FINEXIO", desc:"Internal restructuring analysis completed April 2026. Retained as reference.", items:[
+      {name:"Headcount Model", status:"archive", desc:"Staffing optimization, cost scenarios for restructuring."},
+      {name:"Decision Memos", status:"archive", desc:"Executive memos and board-level communications."},
+      {name:"Manifesto", status:"archive", desc:"Strategic vision document for Finexio's next chapter."}
+    ]},
+    {cat:"Personal Brand & Content", tag:"PERSONAL", desc:"Public writing, LinkedIn presence, personal websites.", items:[
+      {name:"LinkedIn Newsletter", status:"ongoing", desc:"3 weekly crons: Sunday deep-dive, Monday, Friday newsletter."},
+      {name:"Executive Site", status:"active", desc:"chriswyatt.dev — personal brand site on Vercel/Next.js."},
+      {name:"Intel Dashboard", status:"active", desc:"intel.chriswyatt.dev — thought leadership content hub."},
+      {name:"Industry Research", status:"active", desc:"Healthcare fintech research, trend analysis, long-form."}
+    ]},
+    {cat:"Job Search", tag:"PERSONAL", desc:"Executive transition: C-level at healthcare+fintech intersection.", items:[
+      {name:"Target Company Watcher", status:"active", desc:"Automated monitoring of 20 target companies."},
+      {name:"Weekly Briefing", status:"active", desc:"Sunday synthesis of market intel and positioning."},
+      {name:"Resume & Materials", status:"active", desc:"Ramp doc, executive summaries, positioning docs."},
+      {name:"Network Outreach", status:"active", desc:"Active networking for C-level opportunities."}
+    ]},
+    {cat:"ErrorCodeFixes.com", tag:"PERSONAL", desc:"Monetized content site on Cloudflare Pages.", items:[
+      {name:"Site Maintenance", status:"ongoing", desc:"Cloudflare Pages deployment, cache management."},
+      {name:"SEO & Content", status:"ongoing", desc:"Content priority, SEO audit, article pipeline."},
+      {name:"Affiliate Monetization", status:"ongoing", desc:"Impact.com affiliate network integration."},
+      {name:"GA4 Analytics", status:"ongoing", desc:"Traffic tracking and content performance."},
+      {name:"Brand & Redesign", status:"archive", desc:"Brand identity, redesign plan, screenshot QA."}
+    ]},
+    {cat:"OpenClaw Infrastructure", tag:"PERSONAL", desc:"AI gateway operations, architecture, and tooling.", items:[
+      {name:"Architecture Explorer", status:"active", desc:"This page — deployment documentation on Vercel."},
+      {name:"Wiki & Memory System", status:"active", desc:"Obsidian vault, LanceDB, knowledge graph maintenance."},
+      {name:"Gateway Operations", status:"ongoing", desc:"Upgrades, MCP config, cron management, monitoring."},
+      {name:"Skills & Tools", status:"ongoing", desc:"49 skills from ClawHub, custom skill dev."},
+      {name:"Claude Code Integration", status:"active", desc:"Desktop app, CLI, cowork mode setup."},
+      {name:"Gauntlet / Council", status:"ongoing", desc:"Dual-LLM evaluation pipeline for quality gating."}
+    ]},
+    {cat:"Finexio Analysis", tag:"FINEXIO", desc:"Deep-dive data analysis supporting Finexio decisions.", items:[
+      {name:"Financial Analysis", status:"active", desc:"Revenue, volume, fee, customer deep-dives."},
+      {name:"PBIP Data Model", status:"active", desc:"Power BI semantic model reverse-engineering."},
+      {name:"Contract Inventory", status:"active", desc:"Supplier contract terms extraction and analysis."},
+      {name:"Forecast Model", status:"ongoing", desc:"Revenue forecasting model maintenance."},
+      {name:"Supplier Opportunity", status:"archive", desc:"Supplier-level opportunity assessment."}
+    ]},
+    {cat:"Research & Writing", tag:"PERSONAL", desc:"Independent research, analysis, and quality evaluation.", items:[
+      {name:"Competitor Watch", status:"ongoing", desc:"Automated competitive intelligence tracking."},
+      {name:"Gauntlet Evaluations", status:"ongoing", desc:"30+ dual-LLM evaluations across all content types."},
+      {name:"SOTA Model Tracking", status:"ongoing", desc:"State-of-the-art model comparison and readiness."}
+    ]}
   ]
-};
 
 document.addEventListener('DOMContentLoaded', () => {
   // Integrations
@@ -627,6 +718,49 @@ document.addEventListener('DOMContentLoaded', () => {
     el.className = 'stack-item';
     el.innerHTML = `<span class="stack-area">${s.area}</span><div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div></div>`;
     sg.appendChild(el);
+  });
+
+  // Projects
+  const pg = document.getElementById('proj-grid');
+  if (pg) DATA.projects.forEach(g => {
+    const group = document.createElement('div');
+    group.className = 'proj-group';
+
+    const head = document.createElement('div');
+    head.className = 'proj-group-head';
+    const tag = document.createElement('span');
+    tag.className = 'proj-group-tag tag-' + g.tag.toLowerCase().substring(0,3);
+    tag.textContent = g.tag;
+    const name = document.createElement('span');
+    name.className = 'proj-group-name';
+    name.textContent = g.cat;
+    const desc = document.createElement('span');
+    desc.className = 'proj-group-desc';
+    desc.textContent = g.desc;
+    head.append(tag, name, desc);
+    group.appendChild(head);
+
+    const items = document.createElement('div');
+    items.className = 'proj-items';
+    g.items.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'proj-item';
+      const nameEl = document.createElement('div');
+      nameEl.className = 'proj-item-name';
+      nameEl.textContent = p.name;
+      const st = document.createElement('span');
+      st.className = 'proj-item-status st-' + p.status;
+      st.textContent = p.status;
+      nameEl.appendChild(st);
+      card.appendChild(nameEl);
+      const descEl = document.createElement('div');
+      descEl.className = 'proj-item-desc';
+      descEl.textContent = p.desc;
+      card.appendChild(descEl);
+      items.appendChild(card);
+    });
+    group.appendChild(items);
+    pg.appendChild(group);
   });
 });
 </script>
