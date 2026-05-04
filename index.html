@@ -268,7 +268,7 @@
   <div class="stat" role="listitem"><div class="stat-value">1</div><div class="stat-label">Server Instance</div></div>
   <div class="stat" role="listitem"><div class="stat-value">2</div><div class="stat-label">Active Channels</div></div>
   <div class="stat" role="listitem"><div class="stat-value">6</div><div class="stat-label">LLM Providers</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">16</div><div class="stat-label">Integrations</div></div>
+  <div class="stat" role="listitem"><div class="stat-value">19</div><div class="stat-label">Integrations</div></div>
   <div class="stat" role="listitem"><div class="stat-value">19</div><div class="stat-label">Cron Jobs</div></div>
   <div class="stat" role="listitem"><div class="stat-value">49</div><div class="stat-label">Skills</div></div>
 </div>
@@ -278,7 +278,7 @@
 
 <div class="hero">
   <h1>OpenClaw &middot; Wyatt Deployment</h1>
-  <p>Chris Wyatt's personal AI gateway. One Node.js process on EC2, connecting Slack to agentic AI with 16 data integrations and nearly 50 skills.</p>
+  <p>Chris Wyatt's personal AI gateway. One Node.js process on EC2, connecting Slack to agentic AI with 19 integrations, nearly 50 skills, and an Obsidian wiki vault.</p>
   <div class="hero-tags">
     <span class="hero-tag">EC2 Windows</span>
     <span class="hero-tag">DeepSeek V4 Flash</span>
@@ -368,10 +368,22 @@
       <div class="layer-box"><span class="lt">Skills</span><span class="ls">49 from ClawHub</span></div>
       <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
       <div class="layer-box"><span class="lt">Sub-Agents</span><span class="ls">ACP parallel</span></div>
+      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
+      <div class="layer-box"><span class="lt">Gauntlet</span><span class="ls">Dual-LLM eval</span></div>
     </div>
     <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
 
-    <div class="layer-label">Integrations</div>
+    <div class="layer-label">Memory &amp; Knowledge</div>
+    <div class="layer-row">
+      <div class="layer-box"><span class="lt">LanceDB</span><span class="ls">Vector store</span></div>
+      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
+      <div class="layer-box"><span class="lt">Obsidian Wiki</span><span class="ls">Knowledge graph</span></div>
+      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
+      <div class="layer-box"><span class="lt">Daily Files</span><span class="ls">Session logs</span></div>
+    </div>
+    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
+
+    <div class="layer-label">Integrations &amp; MCPs</div>
     <div class="layer-row">
       <div class="layer-box"><span class="lt">Salesforce</span><span class="ls">Finexio CRM</span></div>
       <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
@@ -381,7 +393,7 @@
       <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
       <div class="layer-box"><span class="lt">HubSpot</span><span class="ls">Marketing</span></div>
       <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">+12 More</span><span class="ls">LinkedIn, Webflow...</span></div>
+      <div class="layer-box"><span class="lt">MCPs</span><span class="ls">Playwright, Applitools...</span></div>
     </div>
     <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
 
@@ -517,7 +529,10 @@ const DATA = {
     {name:"Cloudflare", type:"Infra", desc:"errorcodefixes.com — Pages deploy + cache purge."},
     {name:"Vercel", type:"Infra", desc:"chriswyatt.dev, finexio-bdr-v2, projects deploy management."},
     {name:"Impact.com", type:"Affiliate", desc:"errorcodefixes.com affiliate network, product links."},
-    {name:"Bland AI", type:"Voice", desc:"AI outbound calls — phone agent for demos + outreach."}
+    {name:"Bland AI", type:"Voice", desc:"AI outbound calls — phone agent for demos + outreach."},
+    {name:"Obsidian Wiki", type:"Knowledge", desc:"Memory wiki vault at wiki/ — entities, concepts, syntheses, projects, Karpathy-style knowledge graph."},
+    {name:"MCP Servers", type:"Infra", desc:"7 servers: Playwright, Applitools, Firecrawl, Docfork, Exa, Webflow, Code Review."},
+    {name:"GitHub", type:"Code", desc:"booyajones account — 30+ repos: dashboards, fix sites, branding, analysis, LLM council."}
   ],
 
   crons: [
