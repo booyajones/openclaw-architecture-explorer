@@ -110,7 +110,8 @@
     white-space: nowrap;
   }
   .nav-link:hover { color: var(--gold); background: var(--gold-glow); }
-  .nav-link-muted { opacity: 0.5; }
+  . { opacity: 0.5; }
+  .nav-link.nav-active { color: var(--gold); background: var(--gold-glow); font-weight: 700; }
   .section { scroll-margin-top: 140px; }
 
 
@@ -381,49 +382,13 @@
   <a href="#s05" class="nav-link">Providers</a>
   <a href="#s06" class="nav-link">Projects</a>
   <a href="#s07" class="nav-link">Stack</a>
-  <a href="#s00" class="nav-link nav-link-muted">Deployment</a>
+  <a href="#s07" class="nav-link ">Deployment</a>
 </nav>
 
 <div class="divider" style="margin-top:24px;" aria-hidden="true"></div>
 
 <!-- ═══════════ 00: DEPLOYMENT SNAPSHOT ═══════════ -->
-<section class="section" aria-labelledby="s00">
-  <div class="section-head"><span class="section-num">00</span><h2 id="s00">Deployment Snapshot</h2></div>
-  <p class="section-sub">One server running 24/7 on AWS EC2 (t3.medium Windows Server). Everything connects through a single NSSM-managed gateway process.</p>
 
-  <div class="deploy-grid">
-    <div class="deploy-card">
-      <div class="deploy-label">Host</div>
-      <div class="deploy-val">EC2AMAZ-A3SN2DH</div>
-      <div class="deploy-desc">AWS EC2 t3.medium &middot; Windows Server 2022 &middot; us-east-1</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Runtime</div>
-      <div class="deploy-val">Node.js v24.13.1</div>
-      <div class="deploy-desc">OpenClaw v2026.4.15 (npm global) &middot; NSSM service</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Primary Model</div>
-      <div class="deploy-val">DeepSeek V4 Flash</div>
-      <div class="deploy-desc">Fallback: Claude Sonnet 4.6 → GPT-5.4</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Memory</div>
-      <div class="deploy-val">LanceDB</div>
-      <div class="deploy-desc">Vector + keyword hybrid search &middot; file-based workspace</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Channel Access</div>
-      <div class="deploy-val">Open (all #general)</div>
-      <div class="deploy-desc">Mention-gated in Slack &middot; allowlist on Telegram</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Agent Mode</div>
-      <div class="deploy-val">Pi-embedded runner</div>
-      <div class="deploy-desc">ACP sub-agents &middot; 2-deep max &middot; Tool policy gated</div>
-    </div>
-  </div>
-</section>
 
 <div class="divider" aria-hidden="true"></div>
 
@@ -682,7 +647,8 @@
     white-space: nowrap;
   }
   .nav-link:hover { color: var(--gold); background: var(--gold-glow); }
-  .nav-link-muted { opacity: 0.5; }
+  . { opacity: 0.5; }
+  .nav-link.nav-active { color: var(--gold); background: var(--gold-glow); font-weight: 700; }
   .section { scroll-margin-top: 140px; }
 
 
@@ -920,6 +886,44 @@
   <div class="stack-grid" id="stack-grid"></div>
 </section>
 
+
+<section class="section" aria-labelledby="s00">
+  <div class="section-head"><span class="section-num">07</span><h2 id="s07">Deployment Snapshot</h2></div>
+  <p class="section-sub">One server running 24/7 on AWS EC2 (t3.medium Windows Server). Everything connects through a single NSSM-managed gateway process.</p>
+
+  <div class="deploy-grid">
+    <div class="deploy-card">
+      <div class="deploy-label">Host</div>
+      <div class="deploy-val">EC2AMAZ-A3SN2DH</div>
+      <div class="deploy-desc">AWS EC2 t3.medium &middot; Windows Server 2022 &middot; us-east-1</div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-label">Runtime</div>
+      <div class="deploy-val">Node.js v24.13.1</div>
+      <div class="deploy-desc">OpenClaw v2026.4.15 (npm global) &middot; NSSM service</div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-label">Primary Model</div>
+      <div class="deploy-val">DeepSeek V4 Flash</div>
+      <div class="deploy-desc">Fallback: Claude Sonnet 4.6 → GPT-5.4</div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-label">Memory</div>
+      <div class="deploy-val">LanceDB</div>
+      <div class="deploy-desc">Vector + keyword hybrid search &middot; file-based workspace</div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-label">Channel Access</div>
+      <div class="deploy-val">Open (all #general)</div>
+      <div class="deploy-desc">Mention-gated in Slack &middot; allowlist on Telegram</div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-label">Agent Mode</div>
+      <div class="deploy-val">Pi-embedded runner</div>
+      <div class="deploy-desc">ACP sub-agents &middot; 2-deep max &middot; Tool policy gated</div>
+    </div>
+  </div>
+</section>
 </div><!-- /container -->
 
 <footer class="footer">
@@ -1172,6 +1176,27 @@ document.addEventListener('DOMContentLoaded', () => {
     pg.appendChild(group);
   });
 });
+  // Active nav link via scroll position
+  (function() {
+    var links = document.querySelectorAll('.nav-link');
+    var secs = [];
+    links.forEach(function(l) {
+      var id = l.getAttribute('href').replace('#', '');
+      var el = document.getElementById(id);
+      if (el) secs.push({el: el, link: l});
+    });
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          links.forEach(function(l) { l.classList.remove('nav-active'); });
+          var target = document.querySelector('.nav-link[href="#' + e.target.id + '"]');
+          if (target) target.classList.add('nav-active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    secs.forEach(function(s) { obs.observe(s.el); });
+  })();
+
 </script>
 </body>
 </html>
