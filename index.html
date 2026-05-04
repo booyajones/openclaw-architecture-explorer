@@ -707,8 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Providers
-  const pg = document.getElementById('prov-grid');
-  if (pg) DATA.providers.forEach(p => {
+  const pvg = document.getElementById('prov-grid');
+  if (pvg) DATA.providers.forEach(p => {
     const c = document.createElement('div');
     c.className = 'prov-card';
     c.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-models">${p.models}</div>`;
