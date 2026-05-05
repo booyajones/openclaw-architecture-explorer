@@ -4,1211 +4,887 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenClaw · Chris Wyatt Deployment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Geist+Mono:wght@400;500;700&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --gold: #9A7E35;
-    --gold-light: #E8DCC8;
-    --gold-muted: #C4B088;
-    --gold-glow: rgba(154,126,53,0.08);
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
-    --surface-raised: #F2F0ED;
-    --border: #E8E4DF;
-    --border-subtle: rgba(232,228,223,0.5);
-    --text: #1C1B1A;
-    --text-secondary: #4A4845;
-    --text-muted: #8A8782;
-    --text-faint: #B8B4AE;
-    --warn: #B8860B;
-    --warn-bg: rgba(184,134,11,0.06);
-    --green: #3A7D5C;
-    --green-bg: rgba(58,125,92,0.06);
-    --radius: 10px;
-    --radius-sm: 6px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-    --shadow-hover: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
-    --transition: 0.2s ease;
-  }
-  /* ��� Collapsible Sections ��� */
-  .section-details { margin-top: 4px; }
-  .section-details[open] { margin-bottom: 0; }
-  .section-summary {
-    font-size: 12px; font-weight: 600; color: var(--gold);
-    cursor: pointer; padding: 8px 12px; border-radius: var(--radius-sm);
-    background: var(--gold-glow); border: 1px solid var(--gold-muted);
-    transition: all var(--transition);
-    user-select: none; list-style: none;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-summary::-webkit-details-marker { display: none; }
-  .section-summary::before {
-    content: '▶'; font-size: 9px; transition: transform var(--transition);
-  }
-  .section-details[open] .section-summary::before { transform: rotate(90deg); }
-  .section-summary:hover { background: var(--gold-light); }
-  .summary-label { flex: 1; }
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D5A5;
+  --gold-muted: #A68B3C;
+  --gold-glow: rgba(201, 168, 76, 0.12);
+  --gold-subtle: rgba(201, 168, 76, 0.04);
+  --bg-deep: #0A0A0F;
+  --bg: #0E0E16;
+  --bg-raised: #12121E;
+  --surface: rgba(18, 18, 30, 0.8);
+  --surface-hover: rgba(25, 25, 40, 0.9);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.10);
+  --text: #E8E6E0;
+  --text-secondary: #A8A6A0;
+  --text-muted: #6E6C66;
+  --text-faint: #4A4844;
+  --green: #3CCF7E;
+  --green-bg: rgba(60, 207, 126, 0.08);
+  --amber: #F4A940;
+  --amber-bg: rgba(244, 169, 64, 0.08);
+  --tag-fin: #2563EB;
+  --tag-fin-bg: rgba(37, 99, 235, 0.15);
+  --tag-per: #C9A84C;
+  --tag-per-bg: rgba(201, 168, 76, 0.15);
+  --tag-mix: #8B5CF6;
+  --tag-mix-bg: rgba(139, 92, 246, 0.15);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+html { scroll-behavior: smooth; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-  body {
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+::selection { background: var(--gold-glow); color: var(--gold); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
-  ::selection { background: var(--gold-glow); color: var(--gold); }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+/* ─── Ambient Background ─── */
+.ambient-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+}
+.ambient-bg::before {
+  content: ''; position: absolute;
+  width: 600px; height: 600px;
+  top: -200px; left: -200px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.03) 0%, transparent 70%);
+  animation: ambientDrift 20s ease-in-out infinite alternate;
+}
+.ambient-bg::after {
+  content: ''; position: absolute;
+  width: 500px; height: 500px;
+  bottom: -150px; right: -150px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.03) 0%, transparent 70%);
+  animation: ambientDrift 25s ease-in-out infinite alternate-reverse;
+}
+@keyframes ambientDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(80px, 60px) scale(1.15); }
+}
 
-  .bg-gradient {
-    position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(154,126,53,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,0,0,0.02) 0%, transparent 50%);
-  }
+/* ─── Grid Overlay ─── */
+.grid-overlay {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent 70%);
+}
 
-  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-  .mono { font-family: 'Geist Mono', 'SF Mono', 'Cascadia Code', 'Menlo', monospace; }
-  .gold { color: var(--gold); }
-  .fade-in { animation: fadeIn 0.6s ease both; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* ─── Sidebar ─── */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 200px;
+  z-index: 100; padding: 32px 20px;
+  display: flex; flex-direction: column; gap: 4px;
+  border-right: 1px solid var(--border);
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow-y: auto;
+}
+.sidebar-brand {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+  margin-bottom: 24px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-brand .icon { font-size: 20px; color: var(--gold); }
+.sidebar-brand span { background: linear-gradient(135deg, var(--text), var(--text-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-  /* ─── Notice Bar ─── */
-  .notice-bar {
-    background: linear-gradient(135deg, var(--gold-light) 0%, #F5F0E6 100%);
-    border-bottom: 1px solid var(--gold-muted);
-    padding: 10px 24px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 500;
-  }
-  .notice-bar a { color: var(--gold); font-weight: 600; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: all var(--transition);
+  cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { color: var(--text); background: var(--bg-raised); }
+.nav-item.active { color: var(--gold); background: var(--gold-subtle); }
+.nav-item .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); min-width: 18px; }
 
-  /* ��� Navigation ��� */
-  .section-nav {
-    display: flex; justify-content: center; gap: 4px;
-    padding: 14px 16px; flex-wrap: wrap;
-    position: sticky; top: 74px; z-index: 9;
-    background: rgba(250,250,248,0.9);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-link {
-    font-size: 11px; font-weight: 600; text-decoration: none;
-    color: var(--text-muted); padding: 4px 10px; border-radius: 6px;
-    transition: all var(--transition);
-    white-space: nowrap;
-  }
-  .nav-link:hover { color: var(--gold); background: var(--gold-glow); }
-  . { opacity: 0.5; }
-  .nav-link.nav-active { color: var(--gold); background: var(--gold-glow); font-weight: 700; }
-  .section { scroll-margin-top: 140px; }
+/* ─── Main Content ─── */
+.main { margin-left: 200px; padding: 48px 64px 80px; max-width: 900px; min-height: 100vh; }
 
+/* ─── Hero ─── */
+.hero {
+  margin-bottom: 64px; padding-top: 12px;
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 56px); font-weight: 800;
+  letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;
+}
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p {
+  font-size: 16px; color: var(--text-muted); max-width: 600px; line-height: 1.7;
+}
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.hero-stat-value {
+  font-size: 28px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.5px;
+}
+.hero-stat-label {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
 
-  /* ─── Stats Bar ─── */
-  .stats-bar {
-    display: flex; flex-wrap: wrap; gap: 28px;
-    justify-content: center; align-items: center;
-    padding: 24px 24px;
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 10;
-  }
-  .stat { text-align: center; }
-  .stat-value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; font-family: 'Geist Mono', monospace; letter-spacing: -0.03em; }
-  .stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
+/* ─── Section ─── */
+.section { margin-bottom: 56px; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--gold); font-weight: 600;
+}
+.section-title {
+  font-size: 20px; font-weight: 700; letter-spacing: -0.3px;
+}
+.section-sub {
+  font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6;
+}
 
-  /* ─── Hero ─── */
-  .hero { text-align: center; padding: 56px 24px 0; }
-  .hero h1 { font-size: 38px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1.15; }
-  .hero h1 span { color: var(--gold); }
-  .hero p { font-size: 15px; color: var(--text-secondary); max-width: 520px; margin: 12px auto 0; line-height: 1.7; }
-  .hero-tags { display: flex; justify-content: center; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
-  .hero-tag { font-size: 10px; font-weight: 600; color: var(--gold); background: var(--gold-glow); padding: 3px 14px; border-radius: 100px; border: 1px solid var(--gold-muted); letter-spacing: 0.02em; }
+/* ─── Architecture Diagram ─── */
+.arch-diagram {
+  display: flex; flex-direction: column; gap: 0; position: relative;
+  padding: 0; margin-bottom: 16px;
+}
+.arch-layer {
+  display: flex; align-items: stretch; gap: 0;
+  position: relative;
+}
+.arch-label {
+  width: 110px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 12px 16px 12px 0;
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); text-align: right;
+}
+.arch-cards {
+  flex: 1; display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--gold-muted);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  backdrop-filter: blur(8px);
+}
+.arch-chip {
+  padding: 5px 10px; border-radius: 4px;
+  font-size: 11px; font-weight: 500;
+  background: var(--bg-raised); color: var(--text-secondary);
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.arch-chip:hover { color: var(--gold); border-color: var(--gold-muted); background: var(--gold-subtle); }
+.arch-chip.gold { color: var(--gold); border-color: var(--gold-muted); background: var(--gold-glow); }
+.arch-connector {
+  width: 100%; height: 12px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.arch-connector::before {
+  content: ''; position: absolute;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, var(--border-light) 0%, transparent 100%);
+  left: 126px;
+}
+.arch-connector .dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--border-light); position: absolute; left: 124px;
+}
 
-  /* ─── Divider ─── */
-  .divider { margin: 0 auto; height: 1px; max-width: 960px; background: linear-gradient(90deg, transparent 0%, var(--border) 30%, var(--border) 70%, transparent 100%); }
+/* ─── Integration Grid ─── */
+.integ-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.integ-card {
+  padding: 16px 18px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  transition: all var(--transition);
+  cursor: default;
+}
+.integ-card:hover {
+  background: var(--surface-hover); border-color: var(--border-light);
+  transform: translateY(-1px);
+}
+.integ-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.integ-name { font-size: 14px; font-weight: 600; }
+.integ-type {
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 2px 7px; border-radius: 3px;
+  background: var(--gold-subtle); color: var(--gold-muted);
+}
+.integ-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-  /* ─── Section ─── */
-  .section { margin: 52px 0; }
-  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .section-num { font-size: 11px; font-weight: 700; color: var(--gold); font-family: 'Geist Mono', monospace; background: var(--gold-glow); padding: 2px 10px; border-radius: 6px; letter-spacing: 0.05em; }
-  .section-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-  .section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; max-width: 640px; }
+/* ─── Cron Table ─── */
+.cron-table {
+  display: flex; flex-direction: column; gap: 3px;
+}
+.cron-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.cron-row:hover { border-color: var(--border-light); background: var(--surface-hover); }
+.cron-status {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.cron-status.ok { background: var(--green); box-shadow: 0 0 6px rgba(60, 207, 126, 0.4); }
+.cron-name { flex: 1; font-size: 13px; font-weight: 500; }
+.cron-tag {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px 7px; border-radius: 3px;
+}
+.cron-tag-finexio { background: var(--tag-fin-bg); color: var(--tag-fin); }
+.cron-tag-personal { background: var(--tag-per-bg); color: var(--tag-per); }
+.cron-tag-mixed { background: var(--tag-mix-bg); color: var(--tag-mix); }
+.cron-sched {
+  font-size: 11px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace;
+  min-width: 100px; text-align: right;
+}
 
-  /* ─── Deployment Snapshot ─── */
-  .deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .deploy-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .deploy-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .deploy-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 6px; }
-  .deploy-val { font-size: 14px; font-weight: 600; }
-  .deploy-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
+/* ─── Provider Grid ─── */
+.prov-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.prov-card {
+  padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.prov-card:hover {
+  background: var(--surface-hover); border-color: var(--border-light);
+  transform: translateY(-1px);
+}
+.prov-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.prov-models { font-size: 11px; color: var(--text-muted); line-height: 1.6; }
 
-  /* ─── Architecture Diagram ─── */
-  .arch-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    overflow-x: auto;
-    box-shadow: var(--shadow);
-  }
-  .layer-row { display: flex; align-items: center; gap: 0; flex-shrink: 0; justify-content: center; flex-wrap: nowrap; }
-  .layer-box {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 2px; padding: 10px 14px; border-radius: 8px;
-    min-width: 90px; text-align: center;
-    background: var(--bg); border: 1px solid var(--border);
-    transition: all var(--transition);
-  }
-  .layer-box:hover { border-color: var(--gold-muted); box-shadow: var(--shadow-hover); }
-  .lt { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; }
-  .ls { font-size: 9px; color: var(--text-muted); white-space: nowrap; margin-top: 1px; }
-  .la { display: flex; align-items: center; padding: 0 3px; flex-shrink: 0; }
-  .layer-label {
-    text-align: center; font-size: 9px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.12em; color: var(--text-faint);
-    padding: 5px 0 3px;
-    border-top: 1px solid var(--border);
-  }
-  .layer-connect { display: flex; justify-content: center; padding: 1px 0; }
+/* ─── Stack Grid ─── */
+.stack-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.stack-card {
+  padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.stack-card:hover {
+  background: var(--surface-hover); border-color: var(--border-light);
+  transform: translateY(-1px);
+}
+.stack-area {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gold-muted); margin-bottom: 4px;
+}
+.stack-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.stack-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
 
-  /* ─── Message Flow ─── */
-  .flow-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; overflow-x: auto; box-shadow: var(--shadow); }
-  .flow-block { margin-bottom: 20px; }
-  .flow-block:last-child { margin-bottom: 0; }
-  .flow-label { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
-  .flow-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .flow-row { display: flex; align-items: center; flex-wrap: nowrap; gap: 2px; min-width: min-content; }
-  .flow-step {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 2px; padding: 8px 10px; border-radius: 6px;
-    min-width: 64px; text-align: center;
-    background: var(--bg); border: 1px solid var(--border);
-    transition: all var(--transition);
-  }
-  .flow-step:hover { border-color: var(--gold-muted); box-shadow: var(--shadow-hover); }
-  .f-label { font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text); }
-  .f-sub { font-size: 8px; color: var(--text-faint); white-space: nowrap; }
-  .fa { flex-shrink: 0; display: flex; align-items: center; }
+/* ─── Projects ─── */
+.proj-cat {
+  margin-bottom: 28px;
+}
+.proj-cat-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.proj-cat-header h3 { font-size: 15px; font-weight: 600; }
+.proj-cat-tag {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px 7px; border-radius: 3px;
+}
+.proj-cat-desc {
+  font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;
+}
+.proj-grid {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.proj-card {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  cursor: pointer; transition: all var(--transition);
+}
+.proj-card:hover { border-color: var(--border-light); background: var(--surface-hover); }
+.proj-card-top {
+  display: flex; align-items: center; gap: 8px;
+}
+.proj-status {
+  width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+}
+.proj-status.active { background: var(--green); box-shadow: 0 0 5px rgba(60, 207, 126, 0.3); }
+.proj-status.ongoing { background: var(--amber); box-shadow: 0 0 5px rgba(244, 169, 64, 0.3); }
+.proj-status.archive { background: var(--text-faint); }
+.proj-name { font-size: 13px; font-weight: 600; flex: 1; }
+.proj-chevron { font-size: 10px; color: var(--text-faint); transition: transform var(--transition); }
+.proj-card.open .proj-chevron { transform: rotate(90deg); }
+.proj-detail {
+  display: none; margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-muted); line-height: 1.6;
+}
+.proj-card.open .proj-detail { display: block; }
 
-  /* ─── Integration Cards ─── */
-  .int-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .int-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .int-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .int-name { font-size: 13px; font-weight: 700; }
-  .int-type { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
-  .int-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 2px; }
+/* ─── Animations ─── */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.05s; }
+.reveal-delay-2 { transition-delay: 0.1s; }
+.reveal-delay-3 { transition-delay: 0.15s; }
+.reveal-delay-4 { transition-delay: 0.2s; }
+.reveal-delay-5 { transition-delay: 0.25s; }
+.reveal-delay-6 { transition-delay: 0.3s; }
+.reveal-delay-7 { transition-delay: 0.35s; }
 
-  /* ─── Cron Grid ─── */
-  .cron-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
-  .cron-row {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 8px 12px; font-size: 12px;
-    transition: box-shadow var(--transition);
-  }
-  .cron-row:hover { box-shadow: var(--shadow); }
-  .cron-tag { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; }
-  .cron-tag-finexio { background: #2A4A7F; color: white; }
-  .cron-tag-personal { background: var(--gold); color: white; }
-  .cron-tag-mixed { background: var(--text); color: white; }
-  .cron-name { font-weight: 600; flex: 1; }
-  .cron-sched { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--text-muted); }
-  .cron-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 32px 20px 80px; }
+  .hero h1 { font-size: 32px; }
+  .integ-grid, .prov-grid, .stack-grid { grid-template-columns: 1fr; }
+  .cron-row { flex-wrap: wrap; gap: 6px; }
+  .cron-name { min-width: 120px; }
+  .cron-sched { min-width: auto; }
+  .arch-label { width: 70px; font-size: 8px; padding: 8px 8px 8px 0; }
+  .arch-cards { padding: 8px 10px; }
+  .arch-chip { font-size: 10px; padding: 3px 7px; }
+  .hero-stats { gap: 20px; }
+}
 
-  /* ─── Provider Cards ─── */
-  .prov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
-  .prov-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .prov-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .prov-name { font-size: 13px; font-weight: 700; }
-  .prov-models { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; font-family: 'Geist Mono', monospace; }
+/* ─── Floating Mobile Nav ─── */
+.mobile-nav {
+  display: none; position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 100;
+  background: rgba(14, 14, 22, 0.92); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 8px 16px; gap: 8px; flex-wrap: wrap; justify-content: center;
+  max-width: calc(100vw - 32px);
+}
+.mobile-nav a {
+  padding: 6px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: all var(--transition);
+  white-space: nowrap;
+}
+.mobile-nav a:hover, .mobile-nav a.active { color: var(--gold); background: var(--gold-subtle); }
+@media (max-width: 768px) {
+  .mobile-nav { display: flex; }
+}
 
-  /* ─── Projects ─── */
-  .proj-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .proj-group { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
-  .proj-group:hover { box-shadow: var(--shadow-hover); }
-  .proj-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .proj-group-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
-  .tag-fin { background: #2A4A7F; color: white; }
-  .tag-per { background: var(--gold); color: white; }
-  .tag-mix { background: var(--text); color: white; }
-  .proj-group-name { font-size: 15px; font-weight: 700; }
-  .proj-group-desc { font-size: 11px; color: var(--text-muted); }
-  .proj-items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
-  .proj-item { background: var(--bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px; transition: all var(--transition); }
-  .proj-item:hover { border-color: var(--gold-muted); box-shadow: var(--shadow); }
-  .proj-item[aria-expanded="true"] { border-color: var(--gold-muted); }
-  .proj-item-name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
-  .proj-item-status { font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 2px; font-weight: 600; }
-  .st-active { background: var(--green-bg); color: var(--green); }
-  .st-ongoing { background: var(--warn-bg); color: var(--warn); }
-  .st-archive { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-muted); }
-  .proj-item-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-  .proj-item-detail { font-size: 11px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px; padding: 8px 10px; background: var(--surface-raised); border-radius: 4px; border-left: 2px solid var(--gold-muted); display: none; }
-  .proj-item[aria-expanded="true"] .proj-item-detail { display: block; }
-
-  /* ─── Tech Stack ─── */
-  .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
-  .stack-item { display: flex; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
-  .stack-item:hover { box-shadow: var(--shadow-hover); }
-  .stack-area { font-size: 8px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; min-width: 60px; flex-shrink: 0; }
-  .stack-name { font-size: 12px; font-weight: 600; }
-  .stack-desc { font-size: 10px; color: var(--text-muted); line-height: 1.5; margin-top: 1px; }
-
-  /* ─── Footer ─── */
-  .footer { text-align: center; padding: 32px 24px; margin-top: 52px; border-top: 1px solid var(--border); }
-  .footer p { font-size: 12px; color: var(--text-faint); }
-  .footer a { color: var(--gold); text-decoration: none; font-weight: 600; transition: opacity var(--transition); }
-  .footer a:hover { opacity: 0.7; }
-
-  /* ─── Focus / Accessibility ─── */
-  a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-  .sr-only:focus { position: fixed; width: auto; height: auto; padding: 12px; margin: 0; clip: auto; background: var(--gold); color: #fff; z-index: 9999; font-size: 14px; text-decoration: none; }
-
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-
-  @media (max-width: 860px) {
-    .deploy-grid { grid-template-columns: 1fr; }
-    .layer-box { min-width: 72px; padding: 8px 10px; }
-    .lt { font-size: 10px; }
-    .ls { display: none; }
-  }
-  @media (max-width: 640px) {
-    .container { padding: 0 16px; }
-    .hero h1 { font-size: 28px; }
-    .stats-bar { gap: 18px; padding: 16px; position: static; backdrop-filter: none; }
-    .stat-value { font-size: 20px; }
-    .arch-card { padding: 16px 12px; }
-    .layer-box { min-width: 60px; padding: 6px 8px; }
-    .lt { font-size: 9px; }
-    .la { transform: scale(0.7); }
-    .layer-connect { transform: scale(0.8); }
-    .flow-step { min-width: 52px; padding: 6px 8px; }
-    .f-label { font-size: 10px; }
-    .f-sub { display: none; }
-    .int-grid { grid-template-columns: 1fr 1fr; }
-    .proj-items { grid-template-columns: 1fr; }
-    .prov-grid { grid-template-columns: 1fr 1fr; }
-    .stack-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 400px) {
-    .int-grid { grid-template-columns: 1fr; }
-    .prov-grid { grid-template-columns: 1fr; }
-    .layer-box { min-width: 48px; padding: 4px 6px; }
-    .lt { font-size: 8px; }
-    .la { transform: scale(0.5); }
-  }
+/* ─── Message Flow ─── */
+.flow-diagram {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; backdrop-filter: blur(8px);
+  position: relative; overflow: hidden;
+}
+.flow-diagram::before {
+  content: ''; position: absolute; top: 0; left: 50%; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--gold-muted) 20%, var(--gold-muted) 80%, transparent);
+  opacity: 0.3;
+}
+.flow-step {
+  display: flex; align-items: center; gap: 16px;
+  padding: 8px 0; position: relative;
+}
+.flow-step:not(:last-child) { border-bottom: 1px solid var(--border); }
+.flow-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+  background: var(--bg-raised); border: 1px solid var(--border);
+}
+.flow-icon.primary { background: var(--gold-glow); border-color: var(--gold-muted); }
+.flow-content { flex: 1; }
+.flow-title { font-size: 13px; font-weight: 600; }
+.flow-desc { font-size: 11px; color: var(--text-muted); }
+.flow-arrow { color: var(--text-faint); font-size: 12px; padding: 0 4px; }
 </style>
 </head>
 <body>
-<a href="#main-content" class="sr-only">Skip to main content</a>
-<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
-  <defs>
-    <symbol id="a-r" viewBox="0 0 16 12"><path d="M2 6h10l-3-3m3 3-3 3" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="a-d" viewBox="0 0 12 16"><path d="M6 0v12l-4-4m4 4 4-4" stroke="#B89A4D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="a-l" viewBox="0 0 18 12"><path d="M2 6h14l-4-4m4 4-4 4" stroke="#D4C5A9" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  </defs>
-</svg>
-<div class="bg-gradient" aria-hidden="true"></div>
 
-<div class="notice-bar">
-  <strong>&#9679; Live deployment</strong> &middot; EC2 Windows Server &middot; Updated May 2026 &middot; <a href="https://github.com/openclaw/openclaw" style="color:var(--gold);font-weight:600;">OpenClaw</a> gateway v2026.4.15
-</div>
+<div class="ambient-bg"></div>
+<div class="grid-overlay"></div>
 
-<div class="stats-bar" role="list">
-  <div class="stat" role="listitem"><div class="stat-value">1</div><div class="stat-label">Server Instance</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">2</div><div class="stat-label">Active Channels</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">6</div><div class="stat-label">LLM Providers</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">19</div><div class="stat-label">Integrations</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">19</div><div class="stat-label">Cron Jobs</div></div>
-  <div class="stat" role="listitem"><div class="stat-value">49</div><div class="stat-label">Skills</div></div>
-</div>
-
-<main id="main-content">
-<button class="back-top" id="back-top" aria-label="Back to top">↑</button>
-
-<div class="container">
-
-<div class="hero">
-  <h1>OpenClaw &middot; Wyatt Deployment</h1>
-  <p>Chris Wyatt's personal AI gateway. One Node.js process on EC2, connecting Slack to agentic AI with 19 integrations, nearly 50 skills, and an Obsidian wiki vault.</p>
-  <div class="hero-tags">
-    <span class="hero-tag">EC2 Windows</span>
-    <span class="hero-tag">DeepSeek V4 Flash</span>
-    <span class="hero-tag">Slack Primary</span>
-    <span class="hero-tag">19 Crons</span>
-    <span class="hero-tag">Finexio + Personal</span>
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="icon">&#9670;</span>
+    <span>openclaw</span>
   </div>
-</div>
-
-<!-- ��� NAVIGATION ��� -->
-<nav class="section-nav" aria-label="Section navigation">
-  <a href="#s01" class="nav-link">Architecture</a>
-  <a href="#s02" class="nav-link">Message Flow</a>
-  <a href="#s03" class="nav-link">Integrations</a>
-  <a href="#s04" class="nav-link">Crons</a>
-  <a href="#s05" class="nav-link">Providers</a>
-  <a href="#s06" class="nav-link">Projects</a>
-  <a href="#s07" class="nav-link">Stack</a>
-  <a href="#s07" class="nav-link ">Deployment</a>
+  <a class="nav-item" href="#hero" data-section="hero"><span class="num">&#9679;</span> Overview</a>
+  <a class="nav-item" href="#flow" data-section="flow"><span class="num">01</span> Message Flow</a>
+  <a class="nav-item" href="#integrations" data-section="integrations"><span class="num">02</span> Integrations</a>
+  <a class="nav-item" href="#crons" data-section="crons"><span class="num">03</span> Crons</a>
+  <a class="nav-item" href="#providers" data-section="providers"><span class="num">04</span> Providers</a>
+  <a class="nav-item" href="#projects" data-section="projects"><span class="num">05</span> Projects</a>
+  <a class="nav-item" href="#stack" data-section="stack"><span class="num">06</span> Stack</a>
+  <a class="nav-item" href="#arch" data-section="arch"><span class="num">07</span> Architecture</a>
 </nav>
 
-<div class="divider" style="margin-top:24px;" aria-hidden="true"></div>
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#hero">Overview</a>
+  <a href="#flow">Flow</a>
+  <a href="#integrations">Integrations</a>
+  <a href="#crons">Crons</a>
+  <a href="#projects">Projects</a>
+  <a href="#stack">Stack</a>
+</div>
 
-<!-- ═══════════ 00: DEPLOYMENT SNAPSHOT ═══════════ -->
+<!-- Main Content -->
+<main class="main">
 
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 01: ARCHITECTURE ═══════════ -->
-<section class="section" aria-labelledby="s01">
-  <div class="section-head"><span class="section-num">01</span><h2 id="s01">Architecture at a Glance</h2></div>
-  <p class="section-sub">Five active layers. Data flows up from user channels and down from LLMs through the same gateway process.</p>
-
-  <div class="arch-card" role="img" aria-label="Architecture diagram: five stacked layers connected by arrows — User Channels, Gateway, Agent Runtime, Integrations, and LLM Providers">
-    <div class="layer-label">User Channels</div>
-    <div class="layer-row">
-      <div class="layer-box" style="border-color:var(--gold-muted);background:var(--gold-light);"><span class="lt" style="color:var(--gold);">Slack</span><span class="ls">Socket mode</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Telegram</span><span class="ls">Allowlisted</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box" style="border-style:dashed;"><span class="lt" style="color:var(--text-faint);">(CLI)</span><span class="ls">Exec via agent</span></div>
+  <!-- Hero -->
+  <section id="hero" class="hero reveal">
+    <h1>One Gateway.<br><span class="highlight">Everything Connected.</span></h1>
+    <p>Chris Wyatt's personal AI infrastructure — a single Node.js process on EC2 running OpenClaw, connecting Slack to a network of models, CRMs, data warehouses, and automation crons. All live, all talking to each other.</p>
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat"><span class="hero-stat-value gold" data-count="49">0</span><span class="hero-stat-label">Skills</span></div>
+      <div class="hero-stat"><span class="hero-stat-value" data-count="19">0</span><span class="hero-stat-label">Cron Jobs</span></div>
+      <div class="hero-stat"><span class="hero-stat-value" data-count="19">0</span><span class="hero-stat-label">Integrations</span></div>
+      <div class="hero-stat"><span class="hero-stat-value" data-count="8">0</span><span class="hero-stat-label">Project Categories</span></div>
+      <div class="hero-stat"><span class="hero-stat-value" data-count="5">0</span><span class="hero-stat-label">LLM Providers</span></div>
     </div>
-    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
+  </section>
 
-    <div class="layer-label">Gateway Core</div>
-    <div class="layer-row">
-      <div class="layer-box"><span class="lt">Gateway</span><span class="ls">Express + WS</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Sessions</span><span class="ls">JSONL logs</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Routing</span><span class="ls">Agent dispatch</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Auth</span><span class="ls">Shared secret</span></div>
+  <!-- Message Flow -->
+  <section id="flow" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Message Lifecycle</h2>
     </div>
-    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
-
-    <div class="layer-label">Agent Runtime</div>
-    <div class="layer-row">
-      <div class="layer-box"><span class="lt">Pi Agent</span><span class="ls">Loop + prompt</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Tools</span><span class="ls">Exec, browser</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Skills</span><span class="ls">49 from ClawHub</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Sub-Agents</span><span class="ls">ACP parallel</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Gauntlet</span><span class="ls">Dual-LLM eval</span></div>
-    </div>
-    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
-
-    <div class="layer-label">Memory &amp; Knowledge</div>
-    <div class="layer-row">
-      <div class="layer-box"><span class="lt">LanceDB</span><span class="ls">Vector store</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Obsidian Wiki</span><span class="ls">Knowledge graph</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Daily Files</span><span class="ls">Session logs</span></div>
-    </div>
-    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
-
-    <div class="layer-label">Integrations &amp; MCPs</div>
-    <div class="layer-row">
-      <div class="layer-box"><span class="lt">Salesforce</span><span class="ls">Finexio CRM</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">BigQuery</span><span class="ls">Data warehouse</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Google</span><span class="ls">Sheets, Drive</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">HubSpot</span><span class="ls">Marketing</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">MCPs</span><span class="ls">Playwright, Applitools...</span></div>
-    </div>
-    <div class="layer-connect"><svg width="12" height="16"><use href="#a-d"/></svg></div>
-
-    <div class="layer-label">LLM Providers</div>
-    <div class="layer-row">
-      <div class="layer-box"><span class="lt">DeepSeek</span><span class="ls">Primary</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Anthropic</span><span class="ls">Claude fallback</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">OpenAI</span><span class="ls">GPT fallback</span></div>
-      <span class="la"><svg width="16" height="12"><use href="#a-r"/></svg></span>
-      <div class="layer-box"><span class="lt">Google</span><span class="ls">Gauntlet</span></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 02: MESSAGE LIFECYCLE ═══════════ -->
-<section class="section" aria-labelledby="s02">
-  <div class="section-head"><span class="section-num">02</span><h2 id="s02">Message Lifecycle</h2></div>
-  <p class="section-sub">How a Slack message from Chris becomes an AI response. Three phases: inbound routing, tool execution (when needed), and response delivery.</p>
-
-  <div class="flow-card">
-    <div class="flow-block">
-      <div class="flow-label"><span class="dot" style="background:var(--gold);"></span> Inbound — Message to LLM</div>
-      <div class="flow-row">
-        <div class="flow-step"><span class="f-label">Slack</span><span class="f-sub">#general</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Slack SDK</span><span class="f-sub">socket mode</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Gateway</span><span class="f-sub">parse, auth</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">prompt assembly</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">LLM</span><span class="f-sub">inference</span></div>
+    <p class="section-sub">From Chris typing in Slack to a response coming back — the full path through the gateway.</p>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="flow-icon">S</div>
+        <div class="flow-content">
+          <div class="flow-title">Slack Message</div>
+          <div class="flow-desc">Chris sends a message in #general or a DM</div>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon primary">W</div>
+        <div class="flow-content">
+          <div class="flow-title">WebSocket Gateway</div>
+          <div class="flow-desc">OpenClaw receives via Bolt socket mode on :18789</div>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">P</div>
+        <div class="flow-content">
+          <div class="flow-title">Pi Agent Runtime</div>
+          <div class="flow-desc">Agent loop constructs prompt, resolves skills, builds tool list</div>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon primary">L</div>
+        <div class="flow-content">
+          <div class="flow-title">LLM Inference</div>
+          <div class="flow-desc">DeepSeek V4 Flash (primary) processes the prompt with tool schemas</div>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">T</div>
+        <div class="flow-content">
+          <div class="flow-title">Tool Execution</div>
+          <div class="flow-desc">Playwright, exec, web_fetch, Salesforce, BigQuery — whatever the task needs</div>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">R</div>
+        <div class="flow-content">
+          <div class="flow-title">Response Delivery</div>
+          <div class="flow-desc">LLM output routed back through gateway to Slack channel</div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="flow-block">
-      <div class="flow-label"><span class="dot" style="background:var(--gold);opacity:0.6;"></span> Tool Execution Loop <span class="tag tag-warn">When needed</span></div>
-      <div class="flow-row">
-        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">decides tool</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Exec</span><span class="f-sub">shell/cmd</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Result</span><span class="f-sub">to context</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Agent</span><span class="f-sub">continues</span></div>
-      </div>
+  <!-- Integrations -->
+  <section id="integrations" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Integrations</h2>
     </div>
+    <p class="section-sub">Every external system the gateway can read from, write to, or act on. Grouped by purpose.</p>
+    <div class="integ-grid" id="integGrid"></div>
+  </section>
 
-    <div class="flow-block">
-      <div class="flow-label"><span class="dot" style="background:var(--gold);opacity:0.3;"></span> Outbound — LLM Response to Slack</div>
-      <div class="flow-row">
-        <div class="flow-step"><span class="f-label">LLM</span><span class="f-sub">tokens stream</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Subscribe</span><span class="f-sub">stream pipe</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Gateway</span><span class="f-sub">broadcast</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Slack SDK</span><span class="f-sub">mrkdwn format</span></div>
-        <span class="fa"><svg width="18" height="12"><use href="#a-l"/></svg></span>
-        <div class="flow-step"><span class="f-label">Slack</span><span class="f-sub">#general</span></div>
-      </div>
+  <!-- Crons -->
+  <section id="crons" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Cron Jobs</h2>
     </div>
-  </div>
-</section>
+    <p class="section-sub">Automated routines keeping data fresh, content scheduled, and the system healthy.</p>
+    <div class="cron-table" id="cronTable"></div>
+  </section>
 
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 03: INTEGRATIONS ═══════════ -->
-<section class="section" aria-labelledby="s03">
-  <div class="section-head"><span class="section-num">03</span><h2 id="s03">Integrations</h2></div>
-  <p class="section-sub">Every external system this deployment can read from, write to, or act on. Grouped by purpose.</p>
-
-  <details class="section-details" open>
-    <summary class="section-summary"><span class="summary-label">Show 19 integrations</span></summary>
-    <div class="int-grid" id="int-grid"></div>
-  </details>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 04: CRON JOBS ═══════════ -->
-<section class="section" aria-labelledby="s04">
-  <div class="section-head"><span class="section-num">04</span><h2 id="s04">Cron Jobs</h2></div>
-  <p class="section-sub">19 scheduled tasks keeping the system running. FINEXIO-tagged = finexio.com assets, PERSONAL = Chris's independent work, MIXED = both.</p>
-
-  <div class="cron-grid" id="cron-grid"></div>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 05: LLM PROVIDERS ═══════════ -->
-<section class="section" aria-labelledby="s05">
-  <div class="section-head"><span class="section-num">05</span><h2 id="s05">LLM Providers</h2></div>
-  <p class="section-sub">Every model this deployment can access. DeepSeek V4 Flash is primary for cost + speed; Claude is hot standby for complex work.</p>
-
-  <div class="prov-grid" id="prov-grid"></div>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 06: PROJECTS ═══════════ -->
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Geist+Mono:wght@400;500;700&display=swap');
-
-  :root {
-    --gold: #9A7E35;
-    --gold-light: #E8DCC8;
-    --gold-muted: #C4B088;
-    --gold-glow: rgba(154,126,53,0.08);
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
-    --surface-raised: #F2F0ED;
-    --border: #E8E4DF;
-    --border-subtle: rgba(232,228,223,0.5);
-    --text: #1C1B1A;
-    --text-secondary: #4A4845;
-    --text-muted: #8A8782;
-    --text-faint: #B8B4AE;
-    --warn: #B8860B;
-    --warn-bg: rgba(184,134,11,0.06);
-    --green: #3A7D5C;
-    --green-bg: rgba(58,125,92,0.06);
-    --radius: 10px;
-    --radius-sm: 6px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-    --shadow-hover: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
-    --transition: 0.2s ease;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::selection { background: var(--gold-glow); color: var(--gold); }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
-
-  .bg-gradient {
-    position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(154,126,53,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,0,0,0.02) 0%, transparent 50%);
-  }
-
-  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-  .mono { font-family: 'Geist Mono', 'SF Mono', 'Cascadia Code', 'Menlo', monospace; }
-  .gold { color: var(--gold); }
-  .fade-in { animation: fadeIn 0.6s ease both; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* ─── Notice Bar ─── */
-  .notice-bar {
-    background: linear-gradient(135deg, var(--gold-light) 0%, #F5F0E6 100%);
-    border-bottom: 1px solid var(--gold-muted);
-    padding: 10px 24px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 500;
-  }
-  .notice-bar a { color: var(--gold); font-weight: 600; }
-
-  /* ��� Navigation ��� */
-  .section-nav {
-    display: flex; justify-content: center; gap: 4px;
-    padding: 14px 16px; flex-wrap: wrap;
-    position: sticky; top: 74px; z-index: 9;
-    background: rgba(250,250,248,0.9);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-link {
-    font-size: 11px; font-weight: 600; text-decoration: none;
-    color: var(--text-muted); padding: 4px 10px; border-radius: 6px;
-    transition: all var(--transition);
-    white-space: nowrap;
-  }
-  .nav-link:hover { color: var(--gold); background: var(--gold-glow); }
-  . { opacity: 0.5; }
-  .nav-link.nav-active { color: var(--gold); background: var(--gold-glow); font-weight: 700; }
-  .section { scroll-margin-top: 140px; }
-
-
-  /* ─── Stats Bar ─── */
-  .stats-bar {
-    display: flex; flex-wrap: wrap; gap: 28px;
-    justify-content: center; align-items: center;
-    padding: 24px 24px;
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 10;
-  }
-  .stat { text-align: center; }
-  .stat-value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; font-family: 'Geist Mono', monospace; letter-spacing: -0.03em; }
-  .stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
-
-  /* ─── Hero ─── */
-  .hero { text-align: center; padding: 56px 24px 0; }
-  .hero h1 { font-size: 38px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1.15; }
-  .hero h1 span { color: var(--gold); }
-  .hero p { font-size: 15px; color: var(--text-secondary); max-width: 520px; margin: 12px auto 0; line-height: 1.7; }
-  .hero-tags { display: flex; justify-content: center; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
-  .hero-tag { font-size: 10px; font-weight: 600; color: var(--gold); background: var(--gold-glow); padding: 3px 14px; border-radius: 100px; border: 1px solid var(--gold-muted); letter-spacing: 0.02em; }
-
-  /* ─── Divider ─── */
-  .divider { margin: 0 auto; height: 1px; max-width: 960px; background: linear-gradient(90deg, transparent 0%, var(--border) 30%, var(--border) 70%, transparent 100%); }
-
-  /* ─── Section ─── */
-  .section { margin: 52px 0; }
-  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .section-num { font-size: 11px; font-weight: 700; color: var(--gold); font-family: 'Geist Mono', monospace; background: var(--gold-glow); padding: 2px 10px; border-radius: 6px; letter-spacing: 0.05em; }
-  .section-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-  .section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; max-width: 640px; }
-
-  /* ─── Deployment Snapshot ─── */
-  .deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .deploy-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .deploy-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .deploy-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 6px; }
-  .deploy-val { font-size: 14px; font-weight: 600; }
-  .deploy-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
-
-  /* ─── Architecture Diagram ─── */
-  .arch-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    overflow-x: auto;
-    box-shadow: var(--shadow);
-  }
-  .layer-row { display: flex; align-items: center; gap: 0; flex-shrink: 0; justify-content: center; flex-wrap: nowrap; }
-  .layer-box {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 2px; padding: 10px 14px; border-radius: 8px;
-    min-width: 90px; text-align: center;
-    background: var(--bg); border: 1px solid var(--border);
-    transition: all var(--transition);
-  }
-  .layer-box:hover { border-color: var(--gold-muted); box-shadow: var(--shadow-hover); }
-  .lt { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; }
-  .ls { font-size: 9px; color: var(--text-muted); white-space: nowrap; margin-top: 1px; }
-  .la { display: flex; align-items: center; padding: 0 3px; flex-shrink: 0; }
-  .layer-label {
-    text-align: center; font-size: 9px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.12em; color: var(--text-faint);
-    padding: 5px 0 3px;
-    border-top: 1px solid var(--border);
-  }
-  .layer-connect { display: flex; justify-content: center; padding: 1px 0; }
-
-  /* ─── Message Flow ─── */
-  .flow-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; overflow-x: auto; box-shadow: var(--shadow); }
-  .flow-block { margin-bottom: 20px; }
-  .flow-block:last-child { margin-bottom: 0; }
-  .flow-label { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
-  .flow-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .flow-row { display: flex; align-items: center; flex-wrap: nowrap; gap: 2px; min-width: min-content; }
-  .flow-step {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 2px; padding: 8px 10px; border-radius: 6px;
-    min-width: 64px; text-align: center;
-    background: var(--bg); border: 1px solid var(--border);
-    transition: all var(--transition);
-  }
-  .flow-step:hover { border-color: var(--gold-muted); box-shadow: var(--shadow-hover); }
-  .f-label { font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text); }
-  .f-sub { font-size: 8px; color: var(--text-faint); white-space: nowrap; }
-  .fa { flex-shrink: 0; display: flex; align-items: center; }
-
-  /* ─── Integration Cards ─── */
-  .int-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .int-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .int-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .int-name { font-size: 13px; font-weight: 700; }
-  .int-type { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
-  .int-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 2px; }
-
-  /* ─── Cron Grid ─── */
-  .cron-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
-  .cron-row {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 8px 12px; font-size: 12px;
-    transition: box-shadow var(--transition);
-  }
-  .cron-row:hover { box-shadow: var(--shadow); }
-  .cron-tag { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; }
-  .cron-tag-finexio { background: #2A4A7F; color: white; }
-  .cron-tag-personal { background: var(--gold); color: white; }
-  .cron-tag-mixed { background: var(--text); color: white; }
-  .cron-name { font-weight: 600; flex: 1; }
-  .cron-sched { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--text-muted); }
-  .cron-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-  /* ─── Provider Cards ─── */
-  .prov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
-  .prov-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    box-shadow: var(--shadow);
-    transition: box-shadow var(--transition), transform var(--transition);
-  }
-  .prov-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-  .prov-name { font-size: 13px; font-weight: 700; }
-  .prov-models { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; font-family: 'Geist Mono', monospace; }
-
-  /* ─── Projects ─── */
-  .proj-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .proj-group { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
-  .proj-group:hover { box-shadow: var(--shadow-hover); }
-  .proj-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .proj-group-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
-  .tag-fin { background: #2A4A7F; color: white; }
-  .tag-per { background: var(--gold); color: white; }
-  .tag-mix { background: var(--text); color: white; }
-  .proj-group-name { font-size: 15px; font-weight: 700; }
-  .proj-group-desc { font-size: 11px; color: var(--text-muted); }
-  .proj-items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
-  .proj-item { background: var(--bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px; transition: all var(--transition); }
-  .proj-item:hover { border-color: var(--gold-muted); box-shadow: var(--shadow); }
-  .proj-item[aria-expanded="true"] { border-color: var(--gold-muted); }
-  .proj-item-name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
-  .proj-item-status { font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 2px; font-weight: 600; }
-  .st-active { background: var(--green-bg); color: var(--green); }
-  .st-ongoing { background: var(--warn-bg); color: var(--warn); }
-  .st-archive { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-muted); }
-  .proj-item-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-  .proj-item-detail { font-size: 11px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px; padding: 8px 10px; background: var(--surface-raised); border-radius: 4px; border-left: 2px solid var(--gold-muted); display: none; }
-  .proj-item[aria-expanded="true"] .proj-item-detail { display: block; }
-
-  /* ─── Tech Stack ─── */
-  .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
-  .stack-item { display: flex; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
-  .stack-item:hover { box-shadow: var(--shadow-hover); }
-  .stack-area { font-size: 8px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; min-width: 60px; flex-shrink: 0; }
-  .stack-name { font-size: 12px; font-weight: 600; }
-  .stack-desc { font-size: 10px; color: var(--text-muted); line-height: 1.5; margin-top: 1px; }
-
-  /* ─── Footer ─── */
-  .footer { text-align: center; padding: 32px 24px; margin-top: 52px; border-top: 1px solid var(--border); }
-  .footer p { font-size: 12px; color: var(--text-faint); }
-  .footer a { color: var(--gold); text-decoration: none; font-weight: 600; transition: opacity var(--transition); }
-  .footer a:hover { opacity: 0.7; }
-
-  /* ─── Focus / Accessibility ─── */
-  a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-  .sr-only:focus { position: fixed; width: auto; height: auto; padding: 12px; margin: 0; clip: auto; background: var(--gold); color: #fff; z-index: 9999; font-size: 14px; text-decoration: none; }
-
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-
-  @media (max-width: 860px) {
-    .deploy-grid { grid-template-columns: 1fr; }
-    .layer-box { min-width: 72px; padding: 8px 10px; }
-    .lt { font-size: 10px; }
-    .ls { display: none; }
-  }
-  @media (max-width: 640px) {
-    .container { padding: 0 16px; }
-    .hero h1 { font-size: 28px; }
-    .stats-bar { gap: 18px; padding: 16px; position: static; backdrop-filter: none; }
-    .stat-value { font-size: 20px; }
-    .arch-card { padding: 16px 12px; }
-    .layer-box { min-width: 60px; padding: 6px 8px; }
-    .lt { font-size: 9px; }
-    .la { transform: scale(0.7); }
-    .layer-connect { transform: scale(0.8); }
-    .flow-step { min-width: 52px; padding: 6px 8px; }
-    .f-label { font-size: 10px; }
-    .f-sub { display: none; }
-    .int-grid { grid-template-columns: 1fr 1fr; }
-    .proj-items { grid-template-columns: 1fr; }
-    .prov-grid { grid-template-columns: 1fr 1fr; }
-    .stack-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 400px) {
-    .int-grid { grid-template-columns: 1fr; }
-    .prov-grid { grid-template-columns: 1fr; }
-    .layer-box { min-width: 48px; padding: 4px 6px; }
-    .lt { font-size: 8px; }
-    .la { transform: scale(0.5); }
-  }
-</style>
-<section class="section" aria-labelledby="s06">
-  <div class="section-head"><span class="section-num">06</span><h2 id="s06">Projects</h2></div>
-  <p class="section-sub">Every active workstream, analysis, and initiative. Tagged FINEXIO (Finexio CSO work), PERSONAL (Chris's independent projects), or MIXED.</p>
-  <div class="proj-grid" id="proj-grid"></div>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
-<!-- ═══════════ 07: TECH STACK ═══════════ -->
-<section class="section" aria-labelledby="s07">
-  <div class="section-head"><span class="section-num">07</span><h2 id="s07">Technical Stack</h2></div>
-  <p class="section-sub">What's actually installed and running on this server.</p>
-
-  <div class="stack-grid" id="stack-grid"></div>
-</section>
-
-
-<section class="section" aria-labelledby="s00">
-  <div class="section-head"><span class="section-num">07</span><h2 id="s07">Deployment Snapshot</h2></div>
-  <p class="section-sub">One server running 24/7 on AWS EC2 (t3.medium Windows Server). Everything connects through a single NSSM-managed gateway process.</p>
-
-  <div class="deploy-grid">
-    <div class="deploy-card">
-      <div class="deploy-label">Host</div>
-      <div class="deploy-val">EC2AMAZ-A3SN2DH</div>
-      <div class="deploy-desc">AWS EC2 t3.medium &middot; Windows Server 2022 &middot; us-east-1</div>
+  <!-- Providers -->
+  <section id="providers" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">LLM Providers</h2>
     </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Runtime</div>
-      <div class="deploy-val">Node.js v24.13.1</div>
-      <div class="deploy-desc">OpenClaw v2026.4.15 (npm global) &middot; NSSM service</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Primary Model</div>
-      <div class="deploy-val">DeepSeek V4 Flash</div>
-      <div class="deploy-desc">Fallback: Claude Sonnet 4.6 → GPT-5.4</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Memory</div>
-      <div class="deploy-val">LanceDB</div>
-      <div class="deploy-desc">Vector + keyword hybrid search &middot; file-based workspace</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Channel Access</div>
-      <div class="deploy-val">Open (all #general)</div>
-      <div class="deploy-desc">Mention-gated in Slack &middot; allowlist on Telegram</div>
-    </div>
-    <div class="deploy-card">
-      <div class="deploy-label">Agent Mode</div>
-      <div class="deploy-val">Pi-embedded runner</div>
-      <div class="deploy-desc">ACP sub-agents &middot; 2-deep max &middot; Tool policy gated</div>
-    </div>
-  </div>
-</section>
-</div><!-- /container -->
+    <p class="section-sub">Model providers configured in the gateway. DeepSeek V4 Flash is the primary; Anthropic, OpenAI, and Google are fallbacks for specific tasks.</p>
+    <div class="prov-grid" id="provGrid"></div>
+  </section>
 
-<footer class="footer">
-  <p>Chris Wyatt &middot; <a href="https://chriswyatt.dev">chriswyatt.dev</a> &middot; Powered by <a href="https://openclaw.ai">OpenClaw</a></p>
-  <p style="margin-top:4px;">Source: <code class="mono">openclaw.json</code> on EC2AMAZ-A3SN2DH &middot; Updated May 2026</p>
-</footer>
+  <!-- Projects -->
+  <section id="projects" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <p class="section-sub">Everything running on this deployment. Click any project card for details.</p>
+    <div id="projectsContainer"></div>
+  </section>
+
+  <!-- Stack -->
+  <section id="stack" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <p class="section-sub">The full foundation powering this deployment.</p>
+    <div class="stack-grid" id="stackGrid"></div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="arch" class="section reveal">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Architecture at a Glance</h2>
+    </div>
+    <p class="section-sub">Five active layers. Data flows up from user channels and down from LLMs through the same gateway process.</p>
+    <div class="arch-diagram" id="archDiagram"></div>
+  </section>
+
 </main>
 
 <script>
-const DATA = {
-  integrations: [
-    {name:"Salesforce", type:"CRM", desc:"Finexio org — contacts, opportunities, calls, transcripts. Full read+write API."},
-    {name:"BigQuery", type:"Data", desc:"wyattplayground project — Finexio revenue, pipeline, activity data. Service account."},
-    {name:"Google Sheets", type:"Data", desc:"All Finexio analysis sheets — BDR dashboard, forecasts, diligence. OAuth + SA."},
-    {name:"Google Drive", type:"Data", desc:"Finexio doc storage, SA access for data exports."},
-    {name:"Gmail", type:"Comm", desc:"booyajones222@gmail.com — IMAP read + SMTP send via app password."},
-    {name:"HubSpot", type:"CRM", desc:"Marketing ops, email campaigns, contact/deal CRM data."},
-    {name:"LinkedIn (Personal)", type:"Social", desc:"chriswyatt — w_member_social scope. Newsletter + deep-dive posts."},
-    {name:"LinkedIn (Finexio)", type:"Social", desc:"Finexio company page — w_organization_social scope."},
-    {name:"Slack", type:"Comm", desc:"Finexio workspace — socket mode bot. All channels open."},
-    {name:"Webflow", type:"CMS", desc:"Finexio.com CMS — pages, collections, assets via MCP."},
-    {name:"Confluence", type:"Docs", desc:"finexio.atlassian.net — page read/write via API token."},
-    {name:"ClickUp", type:"Task", desc:"Finexio task management via API token."},
-    {name:"Cloudflare", type:"Infra", desc:"errorcodefixes.com — Pages deploy + cache purge."},
-    {name:"Vercel", type:"Infra", desc:"chriswyatt.dev, finexio-bdr-v2, projects deploy management."},
-    {name:"Impact.com", type:"Affiliate", desc:"errorcodefixes.com affiliate network, product links."},
-    {name:"Bland AI", type:"Voice", desc:"AI outbound calls — phone agent for demos + outreach."},
-    {name:"Obsidian Wiki", type:"Knowledge", desc:"Memory wiki vault at wiki/ — entities, concepts, syntheses, projects, Karpathy-style knowledge graph."},
-    {name:"MCP Servers", type:"Infra", desc:"7 servers: Playwright, Applitools, Firecrawl, Docfork, Exa, Webflow, Code Review."},
-    {name:"GitHub", type:"Code", desc:"booyajones account — 30+ repos: dashboards, fix sites, branding, analysis, LLM council."}
-  ],
+(function() {
+  const DATA = {
+    integrations: [
+      {name:"Salesforce", type:"CRM", desc:"Finexio org — contacts, opportunities, calls, transcripts. Full read+write API."},
+      {name:"BigQuery", type:"Data", desc:"wyattplayground project — Finexio revenue, pipeline, activity data. Service account."},
+      {name:"Google Sheets", type:"Data", desc:"All Finexio analysis sheets — BDR dashboard, forecasts, diligence. OAuth + SA."},
+      {name:"Google Drive", type:"Data", desc:"Finexio doc storage, SA access for data exports."},
+      {name:"Gmail", type:"Comm", desc:"booyajones222@gmail.com — IMAP read + SMTP send via app password."},
+      {name:"HubSpot", type:"CRM", desc:"Marketing ops, email campaigns, contact/deal CRM data."},
+      {name:"LinkedIn (Personal)", type:"Social", desc:"chriswyatt — w_member_social scope. Newsletter + deep-dive posts."},
+      {name:"LinkedIn (Finexio)", type:"Social", desc:"Finexio company page — w_organization_social scope."},
+      {name:"Slack", type:"Comm", desc:"Finexio workspace — socket mode bot. All channels open."},
+      {name:"Webflow", type:"CMS", desc:"Finexio.com CMS — pages, collections, assets via MCP."},
+      {name:"Confluence", type:"Docs", desc:"finexio.atlassian.net — page read/write via API token."},
+      {name:"ClickUp", type:"Task", desc:"Finexio task management via API token."},
+      {name:"Cloudflare", type:"Infra", desc:"errorcodefixes.com — Pages deploy + cache purge."},
+      {name:"Vercel", type:"Infra", desc:"chriswyatt.dev, finexio-bdr-v2, projects deploy management."},
+      {name:"Impact.com", type:"Affiliate", desc:"errorcodefixes.com affiliate network, product links."},
+      {name:"Bland AI", type:"Voice", desc:"AI outbound calls — phone agent for demos + outreach."},
+      {name:"Obsidian Wiki", type:"Knowledge", desc:"Memory wiki vault at wiki/ — entities, concepts, syntheses, projects."},
+      {name:"MCP Servers", type:"Infra", desc:"7 servers: Playwright, Applitools, Firecrawl, Docfork, Exa, Webflow, Code Review."},
+      {name:"GitHub", type:"Code", desc:"booyajones account — 30+ repos: dashboards, fix sites, branding, analysis."}
+    ],
+    crons: [
+      {name:"BDR v2 Nightly", tag:"FINEXIO", sched:"Nightly", ok:true},
+      {name:"BDR Dashboard Refresh", tag:"FINEXIO", sched:"Daily 8AM CT", ok:true},
+      {name:"Marketing Dashboard", tag:"FINEXIO", sched:"Daily 8AM CT", ok:true},
+      {name:"BQ Nightly Sync", tag:"FINEXIO", sched:"Nightly", ok:true},
+      {name:"Competitor Watch", tag:"FINEXIO", sched:"Tue/Thu", ok:true},
+      {name:"ClawSec Audit", tag:"FINEXIO", sched:"Weekly", ok:true},
+      {name:"State of System", tag:"MIXED", sched:"Daily 8AM CT", ok:true},
+      {name:"Biweekly Prospect Intel", tag:"MIXED", sched:"Biweekly", ok:true},
+      {name:"LinkedIn Sunday Deep-Dive", tag:"PERSONAL", sched:"Sunday", ok:true},
+      {name:"LinkedIn Monday Rapid Fire", tag:"PERSONAL", sched:"Monday", ok:true},
+      {name:"LinkedIn Friday Newsletter", tag:"PERSONAL", sched:"Friday", ok:true},
+      {name:"Job Target Company Watcher", tag:"PERSONAL", sched:"Tue/Thu 7AM CT", ok:true},
+      {name:"Job Search Weekly Briefing", tag:"PERSONAL", sched:"Sun 6PM CT", ok:true},
+      {name:"SOTA Model Tracker", tag:"PERSONAL", sched:"Weekly", ok:true},
+      {name:"Daily AI Tech Radar", tag:"PERSONAL", sched:"Daily", ok:true},
+      {name:"Disk Monitor", tag:"PERSONAL", sched:"Daily", ok:true},
+      {name:"Temp Cleanup", tag:"PERSONAL", sched:"Daily", ok:true},
+      {name:"Proactive Memory Sweep", tag:"PERSONAL", sched:"Daily", ok:true},
+      {name:"HubSpot Email Weekly", tag:"PERSONAL", sched:"Weekly", ok:true}
+    ],
+    providers: [
+      {name:"DeepSeek", models:"V4 Flash (primary) · V4 Pro · Reasoner · Chat"},
+      {name:"Anthropic", models:"Claude Sonnet 4.6 · Opus 4.6 · Opus 4.7 · Haiku 4.5"},
+      {name:"OpenAI", models:"GPT-5.4 · GPT-5.4 Pro · GPT-5.3 · o3 · o4-mini"},
+      {name:"Google", models:"Gemini 2.5 Pro · 2.5 Flash · 3.1 Pro · 3.1 Flash"},
+      {name:"Llama (Meta)", models:"Llama 4 Scout · Maverick (via OpenClaw catalog)"}
+    ],
+    stack: [
+      {area:"OS", name:"Windows Server 2022", desc:"AWS EC2 t3.medium, us-east-1"},
+      {area:"Runtime", name:"Node.js v24.13.1", desc:"ESM, pnpm workspaces"},
+      {area:"Gateway", name:"OpenClaw v2026.4.15", desc:"NSSM service, Express + WS :18789"},
+      {area:"Memory", name:"LanceDB", desc:"Vector DB, hybrid search, file-backed"},
+      {area:"CLI", name:"PowerShell 7", desc:"pwsh, exec shell for all agent commands"},
+      {area:"Browser", name:"Playwright", desc:"Headless browser, agent tool access"},
+      {area:"LLM Runtime", name:"Pi Agent", desc:"@mariozechner/pi-* embedded agent loop"},
+      {area:"Protocol", name:"ACP", desc:"Sub-agent spawning, Codex/Claude Code integration"},
+      {area:"Monorepo", name:"pnpm workspaces", desc:"Extensions, skills, MCPs"},
+      {area:"Schema", name:"TypeBox", desc:"Tool input/output schemas, runtime validation"},
+      {area:"Multi-Channel", name:"Bolt + grammY", desc:"Slack socket mode + Telegram webhook polling"}
+    ],
+    projects: [
+      {cat:"Finexio Operations", tag:"FINEXIO", desc:"Ongoing CSO work: dashboards, reporting, pipeline analysis, marketing campaigns, and platform maintenance.", items:[
+        {name:"BDR Executive Dashboard v2", status:"active", desc:"Sales pipeline, call analytics, rep heatmaps, disposition tracking.", detail:"Vercel-hosted Next.js dashboard connected to Salesforce and BigQuery. Custom analytics on call volume, disposition stats, rep performance. Built with shadcn/ui, Tremor."},
+        {name:"BDR Executive Reports", status:"ongoing", desc:"Weekly/monthly BDR performance reports.", detail:"Automated report generation with pipeline analysis, call activity summaries, and actionable insights for the BDR team."},
+        {name:"Data Engine", status:"active", desc:"BigQuery to Salesforce to Power BI semantic layer.", detail:"Custom SQL queries, analysis scripts, and data validation workflows bridging finexio-prod BigQuery with Power BI."},
+        {name:"Marketing Dashboard", status:"active", desc:"Campaign metrics, HubSpot stats, content performance.", detail:"Aggregates HubSpot email stats, content engagement metrics, and pipeline attribution into a single view."},
+        {name:"Finexio ROI Calculator", status:"active", desc:"Prospect-facing ROI model on finexio.com.", detail:"Interactive web calculator showing cost savings projections for prospective Finexio customers."},
+        {name:"Finexio Website", status:"ongoing", desc:"finexio.com Webflow CMS management.", detail:"Pages, collections, assets, and custom scripts via Webflow MCP integration."},
+        {name:"Brand Assets", status:"archive", desc:"Color palette, logos, brand guidelines.", detail:"Documented Finexio brand standards including primary navy, bright blue, and gold accents."}
+      ]},
+      {cat:"P3 Diligence & M&A", tag:"FINEXIO", desc:"Discrete M&A advisory projects supporting the Finexio acquisition process.", items:[
+        {name:"Project Franklin", status:"active", desc:"Blackstone/M3 acquisition of Finexio.", detail:"Deal structure, economics modeling, narrative positioning, and adversarial diligence prep across 6-week engagement."},
+        {name:"Blackstone Diligence", status:"active", desc:"PE diligence responses and QA sessions.", detail:"Multiple rounds of data room requests, adversarial QA, financial modeling, and positioning memos."},
+        {name:"M3 Payments Analysis", status:"active", desc:"M3 platform economics and payment rail displacement.", detail:"Analysis of ~8,000 hotel properties, AvidXchange displacement opportunity, and blended pricing strategy."},
+        {name:"Birchstreet Analysis", status:"archive", desc:"Buyer analysis and penetration modeling.", detail:"Birchstreet buyer data extraction, fee structure analysis, and penetration visualization."},
+        {name:"Visa BYOC & VARM", status:"active", desc:"Visa BYOC and VARM program diligence.", detail:"Visa bring-your-own-card and Visa Accounts Receivable Match integration analysis."}
+      ]},
+      {cat:"Project Phoenix", tag:"FINEXIO", desc:"Internal restructuring analysis completed April 2026. Retained for reference.", items:[
+        {name:"Headcount Model", status:"archive", desc:"Staffing optimization and cost scenarios.", detail:"Scenario modeling for Finexio headcount restructuring with cost impact analysis."},
+        {name:"Decision Memos", status:"archive", desc:"Executive memos and board communications.", detail:"Multiple iterations of decision memos with CFO-ready financial analysis."},
+        {name:"Manifesto", status:"archive", desc:"Strategic vision document.", detail:"Long-form strategic vision for Finexio's next chapter post-restructuring."}
+      ]},
+      {cat:"Personal Brand & Content", tag:"PERSONAL", desc:"Public writing, LinkedIn presence, and personal websites.", items:[
+        {name:"LinkedIn Newsletter", status:"ongoing", desc:"3 weekly crons: Sunday deep-dive, Monday rapid-fire, Friday newsletter.", detail:"Full research-to-post pipeline with gauntlet quality gates. Topics: autonomous finance, B2B payments, healthcare fintech, AI."},
+        {name:"Executive Site", status:"active", desc:"chriswyatt.dev personal brand site.", detail:"Next.js site with Framer Motion, premium UI, and integrated content pipeline."},
+        {name:"Intel Dashboard", status:"active", desc:"intel.chriswyatt.dev thought leadership hub.", detail:"Content aggregation and thought leadership dashboard for Chris's public presence."},
+        {name:"Industry Research", status:"active", desc:"Healthcare fintech research and long-form writing.", detail:"Ongoing market research, trend analysis, and long-form thought leadership."}
+      ]},
+      {cat:"Job Search", tag:"PERSONAL", desc:"Executive transition search for C-level role at healthcare+fintech intersection.", items:[
+        {name:"Target Company Watcher", status:"active", desc:"Automated monitoring of 20 target companies.", detail:"Tue/Thu cron monitoring news, funding, leadership changes, and job postings."},
+        {name:"Weekly Briefing", status:"active", desc:"Sunday synthesis of market intel and positioning.", detail:"Weekly summary of market intelligence, company updates, and positioning recommendations."},
+        {name:"Resume & Materials", status:"active", desc:"Ramp doc, executive summaries, positioning.", detail:"Ongoing refinement of resume, executive summaries, and positioning documents."},
+        {name:"Network Outreach", status:"active", desc:"Active networking for C-level opportunities.", detail:"Targeted outreach to executive recruiters, board members, and industry connections."}
+      ]},
+      {cat:"ErrorCodeFixes.com", tag:"PERSONAL", desc:"Monetized content site on Cloudflare Pages. Maintenance mode with periodic updates.", items:[
+        {name:"Site Maintenance", status:"ongoing", desc:"Cloudflare Pages deployment and cache management.", detail:"Deploy script, cache purge workflow, and DNS management via Cloudflare API."},
+        {name:"SEO & Content", status:"ongoing", desc:"Content priority and article pipeline.", detail:"SEO audit, content priority queue, and automated article pipeline."},
+        {name:"Affiliate Monetization", status:"ongoing", desc:"Impact.com affiliate network.", detail:"Product links, tracking, and commission management through Impact.com API."},
+        {name:"GA4 Analytics", status:"ongoing", desc:"Traffic tracking and content performance.", detail:"Google Analytics 4 Data API integration for traffic monitoring and content optimization."},
+        {name:"Brand & Redesign", status:"archive", desc:"Brand identity and redesign plan.", detail:"Brand assets, logo development, and site redesign mockups (completed)."}
+      ]},
+      {cat:"OpenClaw Infrastructure", tag:"PERSONAL", desc:"AI gateway operations, architecture documentation, and tooling.", items:[
+        {name:"Architecture Explorer", status:"active", desc:"This page — deployment documentation.", detail:"Single-file static HTML documenting the full OpenClaw deployment. Hosted on Vercel, code on GitHub."},
+        {name:"Wiki & Memory System", status:"active", desc:"Obsidian vault, LanceDB, knowledge graph.", detail:"Karpathy-style Obsidian wiki vault with entities, concepts, syntheses, and project pages."},
+        {name:"Gateway Operations", status:"ongoing", desc:"Upgrades, MCP config, cron management.", detail:"NSSM service, version upgrades, MCP server configuration, and 19 cron jobs."},
+        {name:"Skills & Tools", status:"ongoing", desc:"49 skills from ClawHub, custom development.", detail:"Skills ecosystem: gauntlet, stop-slop, finexio-sheets, pdf-deck-engine, meeting-prep."},
+        {name:"Claude Code Integration", status:"active", desc:"Claude Desktop and CLI setup.", detail:"Claude Desktop with cowork mode. Claude Code CLI via exec pipe."},
+        {name:"Gauntlet / Council", status:"ongoing", desc:"Dual-LLM evaluation pipeline.", detail:"Claude Opus + GPT-5.4 blind evaluation with Gemini chairman synthesis. 30+ runs."}
+      ]},
+      {cat:"Finexio Analysis", tag:"FINEXIO", desc:"Deep-dive data analysis supporting Finexio business decisions.", items:[
+        {name:"Financial Analysis", status:"active", desc:"Revenue, volume, fee, and customer deep-dives.", detail:"BigQuery-powered analysis of payment volumes, fee revenue, customer economics, and rail mix."},
+        {name:"PBIP Data Model", status:"active", desc:"Power BI semantic model analysis.", detail:"Reverse-engineering and documentation of Finexio's Power BI data models."},
+        {name:"Contract Inventory", status:"active", desc:"Supplier contract terms extraction.", detail:"Extraction and analysis of pricing terms, fee schedules, and volume commitments."},
+        {name:"Forecast Model", status:"ongoing", desc:"Revenue forecasting model.", detail:"Revenue forecast with scenario planning, sensitivity analysis, and monthly updates."},
+        {name:"Supplier Opportunity", status:"archive", desc:"Supplier-level opportunity assessment.", detail:"Assessment of supplier payment volume opportunity across customer base."}
+      ]},
+      {cat:"Research & Writing", tag:"PERSONAL", desc:"Independent research, competitive intelligence, and quality evaluation.", items:[
+        {name:"Competitor Watch", status:"ongoing", desc:"Automated competitive intelligence tracking.", detail:"Tue/Thu cron monitoring news, funding, product launches, and personnel changes in B2B payments."},
+        {name:"Gauntlet Evaluations", status:"ongoing", desc:"30+ dual-LLM evaluations across content types.", detail:"Quality gate for decks, plans, writing, and decisions using Claude Opus + GPT-5.4 blind judging."},
+        {name:"SOTA Model Tracking", status:"ongoing", desc:"State-of-the-art model comparison.", detail:"Tracking releases from OpenAI, Anthropic, Google, DeepSeek, Meta."}
+      ]}
+    ]
+  };
 
-  crons: [
-    {name:"BDR v2 Nightly", tag:"FINEXIO", sched:"Nightly", ok:true},
-    {name:"BDR Dashboard Refresh", tag:"FINEXIO", sched:"Daily 8AM CT", ok:true},
-    {name:"Marketing Dashboard", tag:"FINEXIO", sched:"Daily 8AM CT", ok:true},
-    {name:"BQ Nightly Sync", tag:"FINEXIO", sched:"Nightly", ok:true},
-    {name:"Competitor Watch", tag:"FINEXIO", sched:"Tue/Thu", ok:true},
-    {name:"ClawSec Audit", tag:"FINEXIO", sched:"Weekly", ok:true},
-    {name:"State of System", tag:"MIXED", sched:"Daily 8AM CT", ok:true},
-    {name:"Biweekly Prospect Intelligence", tag:"MIXED", sched:"Biweekly", ok:true},
-    {name:"LinkedIn Sunday Deep-Dive", tag:"PERSONAL", sched:"Sunday", ok:true},
-    {name:"LinkedIn Monday Rapid Fire", tag:"PERSONAL", sched:"Monday", ok:true},
-    {name:"LinkedIn Friday Newsletter", tag:"PERSONAL", sched:"Friday", ok:true},
-    {name:"Job Target Company Watcher", tag:"PERSONAL", sched:"Tue/Thu 7AM CT", ok:true},
-    {name:"Job Search Weekly Briefing", tag:"PERSONAL", sched:"Sun 6PM CT", ok:true},
-    {name:"SOTA Model Tracker", tag:"PERSONAL", sched:"Weekly", ok:true},
-    {name:"Daily AI Tech Radar", tag:"PERSONAL", sched:"Daily", ok:true},
-    {name:"Disk Monitor", tag:"PERSONAL", sched:"Daily", ok:true},
-    {name:"Temp Cleanup", tag:"PERSONAL", sched:"Daily", ok:true},
-    {name:"Proactive Memory Sweep", tag:"PERSONAL", sched:"Daily", ok:true},
-    {name:"HubSpot Email Weekly", tag:"PERSONAL", sched:"Weekly", ok:true}
-  ],
+  const tagClass = t => 'cron-tag-' + t.toLowerCase();
 
-  providers: [
-    {name:"DeepSeek", models:"V4 Flash (primary) · V4 Pro · Reasoner · Chat"},
-    {name:"Anthropic", models:"Claude Sonnet 4.6 · Opus 4.6 · Opus 4.7 · Haiku 4.5"},
-    {name:"OpenAI", models:"GPT-5.4 · GPT-5.4 Pro · GPT-5.3 · o3 · o4-mini"},
-    {name:"Google", models:"Gemini 2.5 Pro · 2.5 Flash · 3.1 Pro · 3.1 Flash"},
-    {name:"Llama (Meta)", models:"Llama 4 Scout · Maverick (via OpenClaw catalog)"}
-  ],
+  function buildIntegrations() {
+    const g = document.getElementById('integGrid');
+    DATA.integrations.forEach(d => {
+      const c = document.createElement('div'); c.className = 'integ-card';
+      c.innerHTML = `<div class="integ-card-top"><span class="integ-name">${d.name}</span><span class="integ-type">${d.type}</span></div><div class="integ-desc">${d.desc}</div>`;
+      g.appendChild(c);
+    });
+  }
 
-  stack: [
-    {area:"OS", name:"Windows Server 2022", desc:"AWS EC2 t3.medium, us-east-1"},
-    {area:"Runtime", name:"Node.js v24.13.1", desc:"ESM, pnpm workspaces"},
-    {area:"Gateway", name:"OpenClaw v2026.4.15", desc:"NSSM service, Express + WS :18789"},
-    {area:"Memory", name:"LanceDB", desc:"Vector DB, hybrid search, file-backed"},
-    {area:"CLI", name:"PowerShell 7", desc:"pwsh, exec shell for all agent commands"},
-    {area:"Browser", name:"Playwright", desc:"Headless browser, agent tool access"},
-    {area:"LLM Runtime", name:"Pi Agent (embedded)", desc:"@mariozechner/pi-* agent loop"},
-    {area:"Protocol", name:"ACP", desc:"Sub-agent spawning, Codex/Claude Code integration"},
-    {area:"Monorepo", name:"pnpm workspaces", desc:"Extensions, skills, MCPs"},
-    {area:"Schema", name:"TypeBox", desc:"Tool input/output schemas, runtime validation"},
-    {area:"Multi-Channel", name:"Bolt (Slack) + grammY (Telegram)", desc:"Socket mode + webhook polling"}
-  ],
+  function buildCrons() {
+    const t = document.getElementById('cronTable');
+    DATA.crons.forEach(c => {
+      const r = document.createElement('div'); r.className = 'cron-row';
+      r.innerHTML = `<span class="cron-status ok"></span><span class="cron-name">${c.name}</span><span class="cron-tag ${tagClass(c.tag)}">${c.tag}</span><span class="cron-sched">${c.sched}</span>`;
+      t.appendChild(r);
+    });
+  }
 
-  projects: [
-    {cat:"Finexio Operations", tag:"FINEXIO", desc:"Ongoing CSO work: dashboards, reporting, pipeline analysis, marketing campaigns, and platform maintenance at Finexio.", items:[
-      {name:"BDR Executive Dashboard v2", status:"active", desc:"Sales pipeline, call analytics, rep heatmaps, disposition tracking.", detail:"Vercel-hosted Next.js dashboard connected to Salesforce and BigQuery. Custom analytics on call volume, disposition stats, rep performance. Built with shadcn/ui, Tremor, and Tremor charts."},
-      {name:"BDR Executive Reports", status:"ongoing", desc:"Weekly/monthly BDR performance reports.", detail:"Automated report generation with pipeline analysis, call activity summaries, and actionable insights for the BDR team."},
-      {name:"Data Engine", status:"active", desc:"BigQuery to Salesforce to Power BI semantic layer.", detail:"Custom SQL queries, analysis scripts, and data validation workflows. Bridges finexio-prod BigQuery data with Power BI dashboards."},
-      {name:"Marketing Dashboard", status:"active", desc:"Campaign metrics, HubSpot stats, content performance.", detail:"Aggregates HubSpot email stats, content engagement metrics, and pipeline attribution into a single view."},
-      {name:"Finexio ROI Calculator", status:"active", desc:"Prospect-facing ROI model on finexio.com.", detail:"Interactive web calculator showing cost savings projections for prospective Finexio customers."},
-      {name:"Finexio Website", status:"ongoing", desc:"finexio.com Webflow CMS management.", detail:"Pages, collections, assets, and custom scripts via Webflow MCP integration."},
-      {name:"Brand Assets", status:"archive", desc:"Color palette, logos, brand guidelines.", detail:"Documented Finexio brand standards including primary navy #043886, bright blue #169ee3, and gold accents."}
-    ]},
-    {cat:"Diligence & M&A", tag:"FINEXIO", desc:"Discrete M&A advisory projects supporting the Finexio acquisition process.", items:[
-      {name:"Project Franklin", status:"active", desc:"Blackstone/M3 acquisition of Finexio.", detail:"Deal structure, economics modeling, narrative positioning, and adversarial diligence prep across 6-week engagement."},
-      {name:"Blackstone Diligence", status:"active", desc:"PE diligence responses and QA sessions.", detail:"Multiple rounds of data room requests, adversarial QA, financial modeling, and positioning memos."},
-      {name:"M3 Payments Analysis", status:"active", desc:"M3 platform economics and payment rail displacement.", detail:"Analysis of M3's ~8,000 hotel properties, AvidXchange displacement opportunity, and blended pricing strategy."},
-      {name:"Birchstreet Analysis", status:"archive", desc:"Buyer analysis and penetration modeling.", detail:"Birchstreet buyer data extraction, fee structure analysis, and penetration visualization for BGX diligence."},
-      {name:"Visa BYOC & VARM", status:"active", desc:"Visa BYOC and VARM program diligence.", detail:"Visa bring-your-own-card and Visa Accounts Receivable Match integration analysis and planning."}
-    ]},
-    {cat:"Project Phoenix", tag:"FINEXIO", desc:"Internal restructuring analysis completed April 2026. Retained for reference.", items:[
-      {name:"Headcount Model", status:"archive", desc:"Staffing optimization and cost scenarios.", detail:"Scenario modeling for Finexio headcount restructuring with cost impact analysis across multiple org scenarios."},
-      {name:"Decision Memos", status:"archive", desc:"Executive memos and board communications.", detail:"Multiple iterations of decision memos with CFO-ready financial analysis and board-level communication."},
-      {name:"Manifesto", status:"archive", desc:"Strategic vision document.", detail:"Long-form strategic vision for Finexio's next chapter post-restructuring."}
-    ]},
-    {cat:"Personal Brand & Content", tag:"PERSONAL", desc:"Public writing, LinkedIn presence, and personal websites. Weekly content pipeline.", items:[
-      {name:"LinkedIn Newsletter", status:"ongoing", desc:"3 weekly crons: Sunday deep-dive, Monday rapid-fire, Friday newsletter.", detail:"Full research-to-post pipeline with gauntlet quality gates. Topics: autonomous finance, B2B payments, healthcare fintech, AI."},
-      {name:"Executive Site", status:"active", desc:"chriswyatt.dev personal brand site.", detail:"Next.js site with Framer Motion, premium UI, and integrated content pipeline."},
-      {name:"Intel Dashboard", status:"active", desc:"intel.chriswyatt.dev thought leadership hub.", detail:"Content aggregation and thought leadership dashboard for Chris's public presence."},
-      {name:"Industry Research", status:"active", desc:"Healthcare fintech research and long-form writing.", detail:"Ongoing market research, trend analysis, and long-form thought leadership at the intersection of healthcare and fintech."}
-    ]},
-    {cat:"Job Search", tag:"PERSONAL", desc:"Executive transition search for C-level role at healthcare+fintech intersection.", items:[
-      {name:"Target Company Watcher", status:"active", desc:"Automated monitoring of 20 target companies.", detail:"Tue/Thu cron job monitoring news, funding, leadership changes, and job postings at target companies."},
-      {name:"Weekly Briefing", status:"active", desc:"Sunday synthesis of market intel and positioning.", detail:"Weekly summary of market intelligence, company updates, and positioning recommendations."},
-      {name:"Resume & Materials", status:"active", desc:"Ramp doc, executive summaries, positioning.", detail:"Ongoing refinement of resume, executive summaries, and positioning documents for executive search."},
-      {name:"Network Outreach", status:"active", desc:"Active networking for C-level opportunities.", detail:"Targeted outreach to executive recruiters, board members, and industry connections."}
-    ]},
-    {cat:"ErrorCodeFixes.com", tag:"PERSONAL", desc:"Monetized content site on Cloudflare Pages. Maintenance mode with periodic updates.", items:[
-      {name:"Site Maintenance", status:"ongoing", desc:"Cloudflare Pages deployment and cache management.", detail:"Deploy script, cache purge workflow, and DNS management via Cloudflare API."},
-      {name:"SEO & Content", status:"ongoing", desc:"Content priority and article pipeline.", detail:"SEO audit, content priority queue, and automated article pipeline for errorcodefixes.com."},
-      {name:"Affiliate Monetization", status:"ongoing", desc:"Impact.com affiliate network.", detail:"Product links, tracking, and commission management through Impact.com Mediapartner API."},
-      {name:"GA4 Analytics", status:"ongoing", desc:"Traffic tracking and content performance.", detail:"Google Analytics 4 Data API integration for traffic monitoring and content optimization."},
-      {name:"Brand & Redesign", status:"archive", desc:"Brand identity and redesign plan.", detail:"Brand assets, logo development, and site redesign mockups (completed)."}
-    ]},
-    {cat:"OpenClaw Infrastructure", tag:"PERSONAL", desc:"AI gateway operations, architecture documentation, and tooling.", items:[
-      {name:"Architecture Explorer", status:"active", desc:"This page — deployment documentation.", detail:"Single-file static HTML documenting the full OpenClaw deployment. Hosted on Vercel, code on GitHub."},
-      {name:"Wiki & Memory System", status:"active", desc:"Obsidian vault, LanceDB, knowledge graph.", detail:"Karpathy-style Obsidian wiki vault with entities, concepts, syntheses, and 8 project pages."},
-      {name:"Gateway Operations", status:"ongoing", desc:"Upgrades, MCP config, cron management.", detail:"OpenClaw gateway management: NSSM service, version upgrades, MCP server configuration, and 19 cron jobs."},
-      {name:"Skills & Tools", status:"ongoing", desc:"49 skills from ClawHub, custom development.", detail:"Skills ecosystem management including gauntlet, stop-slop, finexio-sheets, pdf-deck-engine, and meeting-prep."},
-      {name:"Claude Code Integration", status:"active", desc:"Claude Desktop and CLI setup.", detail:"Claude Desktop v1.5354 with cowork mode. Claude Code CLI v2.1.47 accessible via exec pipe."},
-      {name:"Gauntlet / Council", status:"ongoing", desc:"Dual-LLM evaluation pipeline.", detail:"Claude Opus + GPT-5.4 blind evaluation with Gemini chairman synthesis. 30+ runs across all content types."}
-    ]},
-    {cat:"Finexio Analysis", tag:"FINEXIO", desc:"Deep-dive data analysis projects supporting Finexio business decisions.", items:[
-      {name:"Financial Analysis", status:"active", desc:"Revenue, volume, fee, and customer deep-dives.", detail:"BigQuery-powered analysis of payment volumes, fee revenue, customer economics, and rail mix."},
-      {name:"PBIP Data Model", status:"active", desc:"Power BI semantic model analysis.", detail:"Reverse-engineering and documentation of Finexio's Power BI data models for better understanding of metric definitions."},
-      {name:"Contract Inventory", status:"active", desc:"Supplier contract terms extraction.", detail:"Extraction and analysis of pricing terms, fee schedules, and volume commitments from Finexio supplier contracts."},
-      {name:"Forecast Model", status:"ongoing", desc:"Revenue forecasting model.", detail:"Finexio revenue forecast model with scenario planning, sensitivity analysis, and monthly updates."},
-      {name:"Supplier Opportunity", status:"archive", desc:"Supplier-level opportunity assessment.", detail:"Assessment of supplier payment volume opportunity across Finexio's customer base (completed)."}
-    ]},
-    {cat:"Research & Writing", tag:"PERSONAL", desc:"Independent research, competitive intelligence, and quality evaluation.", items:[
-      {name:"Competitor Watch", status:"ongoing", desc:"Automated competitive intelligence tracking.", detail:"Tue/Thu cron monitoring news, funding, product launches, and personnel changes across B2B payments landscape."},
-      {name:"Gauntlet Evaluations", status:"ongoing", desc:"30+ dual-LLM evaluations across content types.", detail:"Quality gate for decks, plans, writing, and decisions using Claude Opus + GPT-5.4 blind judging."},
-      {name:"SOTA Model Tracking", status:"ongoing", desc:"State-of-the-art model comparison.", detail:"Tracking releases from OpenAI, Anthropic, Google, DeepSeek, Meta across coding, reasoning, and writing benchmarks."}
-    ]}
-  ]
-};
+  function buildProviders() {
+    const g = document.getElementById('provGrid');
+    DATA.providers.forEach(p => {
+      const c = document.createElement('div'); c.className = 'prov-card';
+      c.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-models">${p.models}</div>`;
+      g.appendChild(c);
+    });
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Integrations
-  const ig = document.getElementById('int-grid');
-  if (ig) DATA.integrations.forEach(i => {
-    const c = document.createElement('div');
-    c.className = 'int-card';
-    c.innerHTML = `<div class="int-name">${i.name}</div><div class="int-type" style="color:var(--text-muted);">${i.type}</div><div class="int-desc">${i.desc}</div>`;
-    ig.appendChild(c);
-  });
+  function buildStack() {
+    const g = document.getElementById('stackGrid');
+    DATA.stack.forEach(s => {
+      const c = document.createElement('div'); c.className = 'stack-card';
+      c.innerHTML = `<div class="stack-area">${s.area}</div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div>`;
+      g.appendChild(c);
+    });
+  }
 
-  // Crons
-  const cg = document.getElementById('cron-grid');
-  if (cg) DATA.crons.forEach(c => {
-    const r = document.createElement('div');
-    r.className = 'cron-row';
-    const dot = document.createElement('span');
-    dot.className = 'cron-dot';
-    dot.style.background = c.ok ? 'var(--green)' : 'var(--warn)';
-    const tag = document.createElement('span');
-    tag.className = 'cron-tag cron-tag-' + c.tag.toLowerCase();
-    tag.textContent = c.tag;
-    const name = document.createElement('span');
-    name.className = 'cron-name';
-    name.textContent = c.name;
-    const sched = document.createElement('span');
-    sched.className = 'cron-sched';
-    sched.textContent = c.sched;
-    r.append(dot, tag, name, sched);
-    cg.appendChild(r);
-  });
+  function buildProjects() {
+    const container = document.getElementById('projectsContainer');
+    DATA.projects.forEach(p => {
+      const cat = document.createElement('div'); cat.className = 'proj-cat';
+      let items = '';
+      p.items.forEach(item => {
+        items += `<div class="proj-card" onclick="this.classList.toggle('open')">
+          <div class="proj-card-top">
+            <span class="proj-status ${item.status}"></span>
+            <span class="proj-name">${item.name}</span>
+            <span class="proj-chevron">&#9654;</span>
+          </div>
+          <div class="proj-detail">${item.detail}</div>
+        </div>`;
+      });
+      cat.innerHTML = `<div class="proj-cat-header"><h3>${p.cat}</h3><span class="cron-tag ${tagClass(p.tag)}">${p.tag}</span></div>
+        <div class="proj-cat-desc">${p.desc}</div>
+        <div class="proj-grid">${items}</div>`;
+      container.appendChild(cat);
+    });
+  }
 
-  // Providers
-  const pvg = document.getElementById('prov-grid');
-  if (pvg) DATA.providers.forEach(p => {
-    const c = document.createElement('div');
-    c.className = 'prov-card';
-    c.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-models">${p.models}</div>`;
-    pvg.appendChild(c);
-  });
-
-  // Stack
-  const sg = document.getElementById('stack-grid');
-  if (sg) DATA.stack.forEach(s => {
-    const el = document.createElement('div');
-    el.className = 'stack-item';
-    el.innerHTML = `<span class="stack-area">${s.area}</span><div><div class="stack-name">${s.name}</div><div class="stack-desc">${s.desc}</div></div>`;
-    sg.appendChild(el);
-  });
-
-  // Projects
-  const pg = document.getElementById('proj-grid');
-  if (pg) DATA.projects.forEach(g => {
-    const group = document.createElement('div');
-    group.className = 'proj-group';
-
-    const head = document.createElement('div');
-    head.className = 'proj-group-head';
-    const tag = document.createElement('span');
-    tag.className = 'proj-group-tag tag-' + g.tag.toLowerCase().substring(0,3);
-    tag.textContent = g.tag;
-    const name = document.createElement('span');
-    name.className = 'proj-group-name';
-    name.textContent = g.cat;
-    const desc = document.createElement('span');
-    desc.className = 'proj-group-desc';
-    desc.textContent = g.desc;
-    head.append(tag, name, desc);
-    group.appendChild(head);
-
-    const items = document.createElement('div');
-    items.className = 'proj-items';
-    g.items.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'proj-item';
-      card.style.cursor = 'pointer';
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-expanded', 'false');
-      const nameEl = document.createElement('div');
-      nameEl.className = 'proj-item-name';
-      nameEl.textContent = p.name;
-      const st = document.createElement('span');
-      st.className = 'proj-item-status st-' + p.status;
-      st.textContent = p.status;
-      nameEl.appendChild(st);
-      card.appendChild(nameEl);
-      const descEl = document.createElement('div');
-      descEl.className = 'proj-item-desc';
-      descEl.textContent = p.desc;
-      card.appendChild(descEl);
-      if (p.detail) {
-        const detailBody = document.createElement('div');
-        detailBody.className = 'proj-item-detail';
-        detailBody.textContent = p.detail;
-        card.appendChild(detailBody);
+  function buildArch() {
+    const diagram = document.getElementById('archDiagram');
+    const layers = [
+      {label:"User Surfaces", chips:["Slack (socket)", "Telegram", "CLI (exec)"]},
+      {label:"Gateway Core", chips:["Express + WS", "Sessions", "Auth", "Routing"]},
+      {label:"Agent Runtime", chips:["Pi Agent Loop", "49 Skills", "Tools", "Sub-Agents"]},
+      {label:"Memory & Knowledge", chips:["LanceDB", "Obsidian Wiki", "Daily Files"]},
+      {label:"LLM Providers", chips:["DeepSeek (primary)", "Anthropic", "OpenAI", "Google"]},
+      {label:"Integrations & MCPs", chips:["Salesforce", "BigQuery", "HubSpot", "7 MCPs"]}
+    ];
+    let html = '';
+    layers.forEach((l, i) => {
+      let chips = l.chips.map(c => `<span class="arch-chip${c.includes('primary') ? ' gold' : ''}">${c}</span>`).join('');
+      html += `<div class="arch-layer">
+        <div class="arch-label">${l.label}</div>
+        <div class="arch-cards">${chips}</div>
+      </div>`;
+      if (i < layers.length - 1) {
+        html += `<div class="arch-connector"><div class="dot"></div></div>`;
       }
-      card.addEventListener('click', () => {
-        const expanded = card.getAttribute('aria-expanded') === 'true';
-        card.setAttribute('aria-expanded', String(!expanded));
-      });
-      card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
-      items.appendChild(card);
     });
-    group.appendChild(items);
-    pg.appendChild(group);
-  });
-});
-  // Active nav link via scroll position
-  (function() {
-    var links = document.querySelectorAll('.nav-link');
-    var secs = [];
-    links.forEach(function(l) {
-      var id = l.getAttribute('href').replace('#', '');
-      var el = document.getElementById(id);
-      if (el) secs.push({el: el, link: l});
+    diagram.innerHTML = html;
+  }
+
+  // Counter animation
+  function animateCounters() {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      if (isNaN(target)) return;
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 30));
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(interval); }
+        el.textContent = current;
+      }, 40);
     });
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
+  }
+
+  // Reveal on scroll
+  function setupReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // Nav active state
+  function setupNav() {
+    const sections = document.querySelectorAll('.section, .hero');
+    const navItems = document.querySelectorAll('.nav-item');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
         if (e.isIntersecting) {
-          links.forEach(function(l) { l.classList.remove('nav-active'); });
-          var target = document.querySelector('.nav-link[href="#' + e.target.id + '"]');
-          if (target) target.classList.add('nav-active');
+          navItems.forEach(n => n.classList.remove('active'));
+          const match = document.querySelector(`.nav-item[data-section="${e.target.id}"]`);
+          if (match) match.classList.add('active');
         }
       });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    secs.forEach(function(s) { obs.observe(s.el); });
-  })();
+    }, { threshold: 0.3 });
+    sections.forEach(s => observer.observe(s));
+  }
 
-  // Back to top
-  (function() {
-    var btn = document.getElementById('back-top');
-    if (!btn) return;
-    window.addEventListener('scroll', function() {
-      btn.classList.toggle('visible', window.scrollY > 400);
+  // Init
+  buildIntegrations();
+  buildCrons();
+  buildProviders();
+  buildStack();
+  buildProjects();
+  buildArch();
+  setupReveal();
+  setupNav();
+
+  // Counter animation triggers when hero is visible
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { animateCounters(); heroObserver.unobserve(e.target); }
     });
-    btn.addEventListener('click', function() { window.scrollTo({top: 0, behavior: 'smooth'}); });
-  })();
+  }, { threshold: 0.3 });
+  heroObserver.observe(document.getElementById('hero'));
 
+})();
 </script>
 </body>
 </html>
