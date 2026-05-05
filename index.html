@@ -486,11 +486,11 @@ body {
     <h1>One Gateway.<br><span class="highlight">Everything Connected.</span></h1>
     <p>Chris Wyatt's personal AI infrastructure — a single Node.js process on EC2 running OpenClaw, connecting Slack to a network of models, CRMs, data warehouses, and automation crons. All live, all talking to each other.</p>
     <div class="hero-stats" id="heroStats">
-      <div class="hero-stat"><span class="hero-stat-value gold" data-count="49">0</span><span class="hero-stat-label">Skills</span></div>
-      <div class="hero-stat"><span class="hero-stat-value" data-count="19">0</span><span class="hero-stat-label">Cron Jobs</span></div>
-      <div class="hero-stat"><span class="hero-stat-value" data-count="19">0</span><span class="hero-stat-label">Integrations</span></div>
-      <div class="hero-stat"><span class="hero-stat-value" data-count="8">0</span><span class="hero-stat-label">Project Categories</span></div>
-      <div class="hero-stat"><span class="hero-stat-value" data-count="5">0</span><span class="hero-stat-label">LLM Providers</span></div>
+      <div class="hero-stat"><span class="hero-stat-value gold counter" data-count="49">49</span><span class="hero-stat-label">Skills</span></div>
+      <div class="hero-stat"><span class="hero-stat-value counter" data-count="19">19</span><span class="hero-stat-label">Cron Jobs</span></div>
+      <div class="hero-stat"><span class="hero-stat-value counter" data-count="19">19</span><span class="hero-stat-label">Integrations</span></div>
+      <div class="hero-stat"><span class="hero-stat-value counter" data-count="8">8</span><span class="hero-stat-label">Project Categories</span></div>
+      <div class="hero-stat"><span class="hero-stat-value counter" data-count="5">5</span><span class="hero-stat-label">LLM Providers</span></div>
     </div>
   </section>
 
@@ -827,18 +827,16 @@ body {
     diagram.innerHTML = html;
   }
 
-  // Counter animation
+  // Counter entrance animation
   function animateCounters() {
-    document.querySelectorAll('[data-count]').forEach(el => {
-      const target = parseInt(el.dataset.count);
-      if (isNaN(target)) return;
-      let current = 0;
-      const step = Math.max(1, Math.floor(target / 30));
-      const interval = setInterval(() => {
-        current += step;
-        if (current >= target) { current = target; clearInterval(interval); }
-        el.textContent = current;
-      }, 40);
+    document.querySelectorAll('.counter').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
     });
   }
 
@@ -876,13 +874,8 @@ body {
   setupReveal();
   setupNav();
 
-  // Counter animation triggers when hero is visible
-  const heroObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { animateCounters(); heroObserver.unobserve(e.target); }
-    });
-  }, { threshold: 0.3 });
-  heroObserver.observe(document.getElementById('hero'));
+  // Counter entrance on page load + scroll
+  setTimeout(animateCounters, 100);
 
 })();
 </script>
