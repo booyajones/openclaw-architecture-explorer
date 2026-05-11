@@ -845,6 +845,8 @@ input:focus-visible, kbd:focus-visible {
       <a href="#crons" data-sec="crons">Crons</a>
       <a href="#providers" data-sec="providers">Providers</a>
       <a href="#projects" data-sec="projects">Projects</a>
+      <a href="#memory" data-sec="memory">Memory</a>
+      <a href="#discipline" data-sec="discipline">Discipline</a>
       <a href="#stack" data-sec="stack">Stack</a>
       <a href="#arch" data-sec="arch">Architecture</a>
     </nav>
@@ -1123,11 +1125,36 @@ input:focus-visible, kbd:focus-visible {
   </div>
 </section>
 
+
+<!-- ============== DISCIPLINE (Gauntlet + Council) ============== -->
+<section id="discipline" class="section tinted">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="section-num">07 · DISCIPLINE</span>
+      <div>
+        <h2 class="section-title">The gauntlet and the council.</h2>
+        <p class="section-sub">Multi-round defect audits plus multi-model peer review. The two practices that keep one operator shipping at council-grade.</p>
+      </div>
+      <div></div>
+    </header>
+
+    <h3 class="memory-subhead reveal">The Gauntlet</h3>
+    <p class="memory-footnote reveal" style="margin-top:0;margin-bottom:18px">Multi-round defect audit for any artifact where partial execution is unacceptable. Runbooks, migration plans, PRDs, decks, websites. The reviewer reads as if they personally must execute it on production hardware. Tiered defects. Pattern-propagation. Iterates until 5 gates pass and no P0 or P1 open.</p>
+    <div class="stack-grid reveal" id="disciplineGauntletGrid"></div>
+
+    <h3 class="memory-subhead reveal">The Council</h3>
+    <p class="memory-footnote reveal" style="margin-top:0;margin-bottom:18px">Council pattern for strategic and creative artifacts. Four independent reviewers, each with a different lens. Opus strategic. Sonnet persona stress-test. Gemini adversarial. DeepSeek evidence. Plus Perplexity for citation-grounded fact check. Convergent findings become P0. Below threshold gets rewritten before it ships.</p>
+    <div class="stack-grid reveal" id="disciplineCouncilGrid"></div>
+
+    <p class="memory-footnote reveal">Composed methodology, not ceremony. Every site or skill that ships here goes through one or both. The receipts above are real runs, not aspirational claims.</p>
+  </div>
+</section>
+
 <!-- ============== STACK ============== -->
 <section id="stack" class="section tinted">
   <div class="wrap">
     <header class="section-head reveal">
-      <span class="section-num">07 · FOUNDATION</span>
+      <span class="section-num">08 · FOUNDATION</span>
       <div>
         <h2 class="section-title">The pieces underneath.</h2>
         <p class="section-sub">The operating system, runtime, and protocols holding the whole thing up.</p>
@@ -1142,7 +1169,7 @@ input:focus-visible, kbd:focus-visible {
 <section id="arch" class="section">
   <div class="wrap">
     <header class="section-head reveal">
-      <span class="section-num">08 · BLUEPRINT</span>
+      <span class="section-num">09 · BLUEPRINT</span>
       <div>
         <h2 class="section-title">Six layers. One process.</h2>
         <p class="section-sub">Data flows down from user channels and up from LLMs through the same Node.js gateway.</p>
@@ -1418,7 +1445,25 @@ input:focus-visible, kbd:focus-visible {
         { name: "Gauntlet Evaluations", status: "ongoing", desc: "30+ runs", detail: "Quality gate for decks, plans, writing, and decisions using Claude Opus + GPT-5.4 blind judging." },
         { name: "SOTA Model Tracking", status: "ongoing", desc: "Frontier models", detail: "Tracking releases from OpenAI, Anthropic, Google, DeepSeek, Meta." }
       ]}
-    ]
+    ],
+    discipline: {
+      gauntlet: [
+        { name: "P0 / P1 / P2 / P3", desc: "Severity tiers", detail: "P0 will break execution or pass silently dangerous. P1 silent failure that masks a real problem. P2 labeling drift. P3 polish. No artifact ships with P0 or P1 open." },
+        { name: "17-pattern library", desc: "Defect classes swept doc-wide", detail: "Cross-session variable loss, in-place mutation no-op, substring weakening, placeholder leakage, label drift, pattern-class fixes only landing where flagged, and 11 more. Every artifact gets the full sweep." },
+        { name: "5 pre-publish gates", desc: "Parse / cross-ref / mutation-writeback / executable / version", detail: "Every code block parses. Every variable has assignment or persisted reload. Every mutation has a write-back plus on-disk sanity check. Every phase has executable content. Every version label matches across the doc." },
+        { name: "Round 2 catches Round 1 errors", desc: "Fixes can introduce new defects", detail: "Pattern-propagation discipline: when a defect is fixed in one place, sweep the whole doc for the same pattern. The dominant failure mode is fixes only landing where flagged." },
+        { name: "memory-lancedb-pro · v5.7", desc: "4 rounds to convergence", detail: "Real receipts. v5.3 to v5.4 surfaced 14 fixes plus 2 new defects from the fix attempt. v5.5 had a JSON mutation no-op that would have silently aborted the entire migration. v5.6 compressed prose and lost executable content. v5.7 cleared all gates." },
+        { name: "openclaw-architecture-explorer · 2 rounds", desc: "0 axe violations, Lighthouse 100/100/100", detail: "20 P0 fixes shipped Round 1. Round 2 caught a self-introduced contrast defect (gauntlet meta-pattern: fix introduces new defect). Final score: a11y 100, best practices 100, SEO 100, axe 0." },
+      ],
+      council: [
+        { name: "Multi-model peer review", desc: "Different eyes catch different things", detail: "Opus for strategic framing. Sonnet for persona stress-test. Gemini 2.5 Pro for adversarial competitive read. DeepSeek R1 for evidence audit. Perplexity Sonar for citation-grounded fact check. Each reviewer scores independently, then findings are synthesized." },
+        { name: "Convergent findings = highest confidence", desc: "Two reviewers agree -> P0", detail: "When the design critic and the a11y reviewer independently flag the same issue, the synthesis ranks it higher. When all four agree, it's load-bearing." },
+        { name: "Scored dimensions, not narrative", desc: "Pass / great thresholds", detail: "Every reviewer scores against a structured rubric. Pass = 24 of 36 on the Finexio Messaging Rubric. Great = 30. Below threshold gets rewritten before it ships. No vibes-based approvals." },
+        { name: "Adversarial reviewer is mandatory", desc: "Read it as the competitor would", detail: "One reviewer always reads the artifact as the buyer's incumbent vendor would. Surfaces every soft claim, every unsourced number, every attack vector." },
+        { name: "finexio.com council · 4 reviewers", desc: "0/14 pages pass Rubric", detail: "Gauntlet structural + 4-persona stress-test + Corpay POV adversarial + Perplexity evidence currency check. Surfaced 9 P0 defects including a Shield-1M-vs-2M version conflict and AFP fraud stat drift (79% to 76%)." },
+        { name: "qa-pro · 8 / 8 dimensions", desc: "Council-scored skill", detail: "Universal QA skill at booyajones/qa-pro. Smoke runner with Playwright plus axe-core plus link checker. Every council dimension passed." },
+      ]
+    },
   };
 
   const $ = (s, r=document) => r.querySelector(s);
@@ -1745,6 +1790,27 @@ input:focus-visible, kbd:focus-visible {
     `).join('');
   }
 
+
+  // ─── DISCIPLINE ───────────────────────────────────────────
+  function renderDiscipline() {
+    const g = $('#disciplineGauntletGrid');
+    if (g) g.innerHTML = DATA.discipline.gauntlet.map(d => `
+      <div class="stack-card">
+        <div class="stack-area">${esc(d.name)}</div>
+        <div class="stack-name">${esc(d.desc)}</div>
+        <div class="stack-desc">${esc(d.detail)}</div>
+      </div>
+    `).join('');
+    const c = $('#disciplineCouncilGrid');
+    if (c) c.innerHTML = DATA.discipline.council.map(d => `
+      <div class="stack-card">
+        <div class="stack-area">${esc(d.name)}</div>
+        <div class="stack-name">${esc(d.desc)}</div>
+        <div class="stack-desc">${esc(d.detail)}</div>
+      </div>
+    `).join('');
+  }
+
   // ─── PROJECTS ────────────────────────────────────────────
   function renderProjects() {
     const container = $('#projContainer');
@@ -1843,8 +1909,10 @@ input:focus-visible, kbd:focus-visible {
       { group: 'Sections', label: 'Crons', sub: '03 · automation', href: '#crons', meta: '23', ico: 'M12 6v6l4 2 M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z' },
       { group: 'Sections', label: 'Providers', sub: '04 · inference', href: '#providers', meta: '5', ico: 'M3 18v-6a9 9 0 0 1 18 0v6 M21 19a2 2 0 0 1-2 2h-1v-6h3v4z' },
       { group: 'Sections', label: 'Projects', sub: '05 · work', href: '#projects', meta: '42', ico: 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z' },
-      { group: 'Sections', label: 'Stack', sub: '06 · foundation', href: '#stack', meta: '11', ico: 'M12 2L2 7l10 5 10-5z M2 17l10 5 10-5 M2 12l10 5 10-5' },
-      { group: 'Sections', label: 'Architecture', sub: '07 · blueprint', href: '#arch', meta: '6 layers', ico: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
+      { group: 'Sections', label: 'Memory', sub: '06 · the brain', href: '#memory', meta: '3 layers', ico: 'M9 18V5l12-2v13 M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0z M21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z' },
+      { group: 'Sections', label: 'Discipline', sub: '07 · gauntlet + council', href: '#discipline', meta: 'QA', ico: 'M9 12l2 2 4-4 M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z' },
+      { group: 'Sections', label: 'Stack', sub: '08 · foundation', href: '#stack', meta: '11', ico: 'M12 2L2 7l10 5 10-5z M2 17l10 5 10-5 M2 12l10 5 10-5' },
+      { group: 'Sections', label: 'Architecture', sub: '09 · blueprint', href: '#arch', meta: '6 layers', ico: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
     ];
     const integItems = DATA.integrations.map(d => ({ group: 'Integrations', label: d.name, sub: d.desc, href: '#integrations', meta: d.type, ico: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M23 21v-2a4 4 0 0 0-3-3.87' }));
     const projItems = DATA.projects.flatMap(c => c.items.map(it => ({ group: 'Projects', label: it.name, sub: c.cat + ' · ' + it.desc, href: '#projects', meta: it.status, ico: 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z' })));
@@ -1898,6 +1966,7 @@ input:focus-visible, kbd:focus-visible {
     renderProviders();
     renderStack();
     renderMemory();
+    renderDiscipline();
     renderProjects();
     renderArch();
     setupReveal();
