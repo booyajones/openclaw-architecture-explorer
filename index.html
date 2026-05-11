@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Booya Jones · Wyattbot Mission Control</title>
-<meta name="description" content="Live architecture explorer for Wyattbot — Chris Wyatt's personal AI assistant (callsign: Booya Jones) running on OpenClaw. One Node.js gateway, 49 skills, 23 crons, 19 integrations, 5 LLM providers, memory-lancedb-pro with hybrid retrieval + Jina rerank." />
+<meta name="description" content="Live architecture explorer for Wyattbot — Chris Wyatt's personal AI assistant (callsign: Booya Jones) running on OpenClaw. One Node.js gateway, 49 skills, 23 crons, 25 integrations, 5 LLM providers, memory-lancedb-pro with hybrid retrieval + Jina rerank." />
 <link rel="stylesheet" href="css/finexio-tokens.css" />
 <style>
 /* =============================================================
@@ -743,7 +743,7 @@ footer.foot::before {
       <div class="hero-stats" role="group" aria-label="System statistics">
         <div class="stat"><div class="stat-num counter" data-target="49">0</div><div class="stat-label">Skills</div></div>
         <div class="stat"><div class="stat-num counter" data-target="23">0</div><div class="stat-label">Crons</div></div>
-        <div class="stat"><div class="stat-num counter" data-target="19">0</div><div class="stat-label">Integrations</div></div>
+        <div class="stat"><div class="stat-num counter" data-target="25">0</div><div class="stat-label">Integrations</div></div>
         <div class="stat"><div class="stat-num counter" data-target="5">0</div><div class="stat-label">Providers</div></div>
         <div class="stat"><div class="stat-num counter" data-target="38">0</div><div class="stat-label">Projects</div></div>
       </div>
@@ -1071,7 +1071,13 @@ footer.foot::before {
       { name: "Bland AI", type: "Voice", desc: "AI outbound calls — phone agent for demos + outreach." },
       { name: "Obsidian Wiki", type: "Knowledge", desc: "Memory wiki vault at wiki/ — entities, concepts, syntheses, projects." },
       { name: "MCP Servers", type: "Infra", desc: "7 servers: Playwright, Applitools, Firecrawl, Docfork, Exa, Webflow, Code Review." },
-      { name: "GitHub", type: "Code", desc: "booyajones account — 30+ repos: dashboards, fix sites, branding, analysis." }
+      { name: "GitHub", type: "Code", desc: "booyajones account — 30+ repos: dashboards, fix sites, branding, analysis." },
+      { name: "Perplexity", type: "Research", desc: "Sonar API for search-grounded research with citations. PERPLEXITY_API_KEY in env. Default for current events, technical lookups, citation-grounded answers." },
+      { name: "Brave Search", type: "Research", desc: "Web search API fallback. BRAVE_API_KEY in env." },
+      { name: "Jina AI", type: "AI", desc: "Cross-encoder reranker actively wired into memory-lancedb-pro retrieval (jina-reranker-v3, +15% measured precision lift). Also embeddings + rerank." },
+      { name: "X / Twitter", type: "Social", desc: "@wyatt22 — OAuth 1.0a read+write. NEVER posts without explicit approval." },
+      { name: "Mastercard (Clarity Engine)", type: "Data", desc: "Private-key OAuth via skills/Clarity-engine-4/. Used for Finexio payment data analysis." },
+      { name: "GA4", type: "Analytics", desc: "Google Analytics 4 Data API for errorcodefixes.com (property 534919316). Service account access." }
     ],
     crons: [
       { name: "BDR v2 Nightly", tag: "FINEXIO", sched: "Nightly · 02:00 UTC" },
