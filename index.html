@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Booya Jones · Wyattbot Mission Control</title>
-<meta name="description" content="Live architecture explorer for Wyattbot — Chris Wyatt's personal AI assistant (callsign: Booya Jones) running on OpenClaw. One Node.js gateway, 49 skills, 19 crons, 19 integrations, 5 LLM providers." />
+<meta name="description" content="Live architecture explorer for Wyattbot — Chris Wyatt's personal AI assistant (callsign: Booya Jones) running on OpenClaw. One Node.js gateway, 49 skills, 23 crons, 19 integrations, 5 LLM providers, memory-lancedb-pro with hybrid retrieval + Jina rerank." />
 <link rel="stylesheet" href="css/finexio-tokens.css" />
 <style>
 /* =============================================================
@@ -742,7 +742,7 @@ footer.foot::before {
 
       <div class="hero-stats" role="group" aria-label="System statistics">
         <div class="stat"><div class="stat-num counter" data-target="49">0</div><div class="stat-label">Skills</div></div>
-        <div class="stat"><div class="stat-num counter" data-target="19">0</div><div class="stat-label">Crons</div></div>
+        <div class="stat"><div class="stat-num counter" data-target="23">0</div><div class="stat-label">Crons</div></div>
         <div class="stat"><div class="stat-num counter" data-target="19">0</div><div class="stat-label">Integrations</div></div>
         <div class="stat"><div class="stat-num counter" data-target="5">0</div><div class="stat-label">Providers</div></div>
         <div class="stat"><div class="stat-num counter" data-target="38">0</div><div class="stat-label">Projects</div></div>
@@ -887,7 +887,7 @@ footer.foot::before {
     <header class="section-head reveal">
       <span class="section-num">03 · AUTOMATION</span>
       <div>
-        <h2 class="section-title">19 cron jobs · all green.</h2>
+        <h2 class="section-title">23 cron jobs · all green.</h2>
         <p class="section-sub">The recurring routines keeping data fresh, content scheduled, and the system healthy. 7-day execution sparkline per job.</p>
       </div>
       <div></div>
@@ -895,7 +895,7 @@ footer.foot::before {
     <div class="search-row reveal">
       <label class="search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="search" id="cronSearch" placeholder="Search 19 cron jobs…" aria-label="Search cron jobs" />
+        <input type="search" id="cronSearch" placeholder="Search 23 cron jobs…" aria-label="Search cron jobs" />
       </label>
       <div class="filters" id="cronFilters" role="tablist"></div>
     </div>
@@ -1016,14 +1016,14 @@ footer.foot::before {
     <div>
       <h4>Source</h4>
       <ul class="foot-list">
-        <li><a href="https://github.com/booyajones/wyattbot-architecture-explorer" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/booyajones/openclaw-architecture-explorer" target="_blank" rel="noopener">GitHub</a></li>
         <li><a href="https://openclaw.ai" target="_blank" rel="noopener">openclaw.ai</a></li>
       </ul>
     </div>
   </div>
   <div class="wrap foot-meta">
     <span>BUILD · 2026.4.15 · main · clean</span>
-    <span>booyajones / wyattbot-architecture-explorer</span>
+    <span>booyajones / openclaw-architecture-explorer</span>
     <span>Press <kbd style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.16);color:rgba(255,255,255,0.85)">⌘</kbd> <kbd style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.16);color:rgba(255,255,255,0.85)">K</kbd> to navigate</span>
   </div>
 </footer>
@@ -1092,7 +1092,11 @@ footer.foot::before {
       { name: "Disk Monitor", tag: "PERSONAL", sched: "Hourly" },
       { name: "Temp Cleanup", tag: "PERSONAL", sched: "Daily · 04:00" },
       { name: "Proactive Memory Sweep", tag: "PERSONAL", sched: "Daily · 05:00" },
-      { name: "HubSpot Email Weekly", tag: "PERSONAL", sched: "Weekly · Mon" }
+      { name: "HubSpot Email Weekly", tag: "PERSONAL", sched: "Weekly · Mon" },
+      { name: "Memory Pro Daily Health", tag: "PERSONAL", sched: "Daily · 09:00 UTC" },
+      { name: "Memory Nightly Dreaming", tag: "PERSONAL", sched: "Daily · 03:00 UTC" },
+      { name: "Memory Recall Aggregator", tag: "PERSONAL", sched: "Weekly · Mon 08:00 UTC" },
+      { name: "Memory Wiki Promotion", tag: "PERSONAL", sched: "Weekly · Mon 08:00 UTC" }
     ],
     providers: [
       { name: "DeepSeek", primary: true, weight: 70, models: "<b>V4 Flash</b> (primary) · V4 Pro · Reasoner · Chat" },
@@ -1106,7 +1110,7 @@ footer.foot::before {
       { area: "OS", name: "Windows Server 2022", desc: "AWS EC2 t3.medium · us-east-1" },
       { area: "Runtime", name: "Node.js v24.13.1", desc: "ESM · pnpm workspaces" },
       { area: "Gateway", name: "OpenClaw v2026.4.15", desc: "Wyattbot deployment · NSSM service · WS :18789" },
-      { area: "Memory", name: "LanceDB", desc: "Vector DB · hybrid search · file-backed" },
+      { area: "Memory", name: "memory-lancedb-pro v1.0.32", desc: "Hybrid retrieval · vector 0.7 + BM25 0.3 + FTS · Jina cross-encoder rerank · recencyWeight 0.15 · 175 memories · nightly dreaming + dedup" },
       { area: "CLI", name: "PowerShell 7", desc: "pwsh exec shell for all agent commands" },
       { area: "Browser", name: "Playwright", desc: "Headless · agent tool access" },
       { area: "LLM Runtime", name: "Pi Agent", desc: "@mariozechner/pi-* embedded loop" },
@@ -1158,8 +1162,8 @@ footer.foot::before {
       ]},
       { cat: "Wyattbot Infrastructure", tag: "PERSONAL", desc: "AI assistant operations, architecture documentation, and tooling for Booya Jones.", items: [
         { name: "Architecture Explorer", status: "active", desc: "This page", detail: "Single-file static HTML documenting the full Wyattbot / Booya Jones deployment. Hosted on Vercel, code on GitHub." },
-        { name: "Wiki & Memory", status: "active", desc: "Obsidian + LanceDB", detail: "Karpathy-style Obsidian wiki vault with entities, concepts, syntheses, and project pages." },
-        { name: "Gateway Operations", status: "ongoing", desc: "NSSM + crons", detail: "NSSM service, version upgrades, MCP server configuration, and 19 cron jobs." },
+        { name: "Wiki & Memory", status: "active", desc: "Obsidian + memory-lancedb-pro", detail: "Karpathy-style Obsidian wiki vault (18 entities, concepts, syntheses, projects). Bridged to memory-lancedb-pro via mdMirror → daily markdown logs. Nightly dreaming consolidates near-duplicate memories; weekly cron emits promotion candidates from LanceDB → wiki." },
+        { name: "Gateway Operations", status: "ongoing", desc: "NSSM + crons", detail: "NSSM service, version upgrades, MCP server configuration, and 23 cron jobs." },
         { name: "Skills & Tools", status: "ongoing", desc: "49 skills", detail: "Skills ecosystem: gauntlet, stop-slop, finexio-sheets, pdf-deck-engine, meeting-prep." },
         { name: "Claude Code Integration", status: "active", desc: "Desktop + CLI", detail: "Claude Desktop with cowork mode. Claude Code CLI via exec pipe." },
         { name: "Gauntlet / Council", status: "ongoing", desc: "Dual-LLM eval", detail: "Claude Opus + GPT-5.4 blind evaluation with Gemini chairman synthesis. 30+ runs." }
@@ -1530,7 +1534,7 @@ footer.foot::before {
       { name: "User Surfaces",      chips: ["Slack (socket)","Telegram","CLI (exec)"], primary: ["Slack (socket)"] },
       { name: "Gateway Core",       chips: ["Express + WS","Sessions","Auth","Routing","Hooks"], primary: ["Express + WS"], core: true },
       { name: "Agent Runtime",      chips: ["Pi Agent Loop","49 Skills","Tools","Sub-Agents","Sandbox"], primary: ["Pi Agent Loop"] },
-      { name: "Memory & Knowledge", chips: ["LanceDB","Obsidian Wiki","Daily Files"], primary: ["LanceDB"] },
+      { name: "Memory & Knowledge", chips: ["memory-lancedb-pro","Jina Rerank","Obsidian Wiki","mdMirror Daily Files","Nightly Dreaming"], primary: ["memory-lancedb-pro"] },
       { name: "LLM Providers",      chips: ["DeepSeek (primary)","Anthropic","OpenAI","Google","Llama"], primary: ["DeepSeek (primary)"] },
       { name: "Integrations & MCPs",chips: ["Salesforce","BigQuery","HubSpot","GitHub","7 MCPs"], primary: ["7 MCPs"] }
     ];
