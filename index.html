@@ -574,6 +574,11 @@ section.tinted { background: var(--gray-50); }
 .stack-name { font-size: 15px; font-weight: 700; color: var(--finexio-navy); margin-bottom: 4px; letter-spacing: -0.005em; }
 .stack-desc { font-size: 12px; line-height: 1.55; color: var(--fg-2); font-family: var(--font-mono); }
 
+/* Memory section subheadings + footnote */
+.memory-subhead { margin: 36px 0 14px; font-family: var(--font-caption); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--finexio-blue); }
+.memory-subhead:first-of-type { margin-top: 28px; }
+.memory-footnote { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-1); color: var(--fg-2); font-size: 13px; line-height: 1.6; font-style: italic; max-width: 720px; }
+
 /* =============================================================
    ARCHITECTURE
    ============================================================= */
@@ -950,11 +955,36 @@ footer.foot::before {
   </div>
 </section>
 
+<!-- ============== MEMORY ============== -->
+<section id="memory" class="section">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="section-num">06 · MEMORY</span>
+      <div>
+        <h2 class="section-title">Three layers. One brain.</h2>
+        <p class="section-sub">Vector store, structured wiki, and bootstrap context — composed with continuous consolidation, observability, and bridges between them.</p>
+      </div>
+      <div></div>
+    </header>
+
+    <h3 class="memory-subhead reveal">Layers</h3>
+    <div class="stack-grid reveal" id="memLayersGrid"></div>
+
+    <h3 class="memory-subhead reveal">Recall pipeline</h3>
+    <div class="stack-grid reveal" id="memPipeline"></div>
+
+    <h3 class="memory-subhead reveal">Background processes</h3>
+    <div class="stack-grid reveal" id="memProcesses"></div>
+
+    <p class="memory-footnote reveal">Sophisticated, observability-first, end-to-end. Mature techniques composed — hybrid retrieval, cross-encoder reranking, LLM consolidation, spaced-repetition decay. Not novel research; well-engineered for personal deployment.</p>
+  </div>
+</section>
+
 <!-- ============== STACK ============== -->
 <section id="stack" class="section tinted">
   <div class="wrap">
     <header class="section-head reveal">
-      <span class="section-num">06 · FOUNDATION</span>
+      <span class="section-num">07 · FOUNDATION</span>
       <div>
         <h2 class="section-title">The pieces underneath.</h2>
         <p class="section-sub">The operating system, runtime, and protocols holding the whole thing up.</p>
@@ -969,7 +999,7 @@ footer.foot::before {
 <section id="arch" class="section">
   <div class="wrap">
     <header class="section-head reveal">
-      <span class="section-num">07 · BLUEPRINT</span>
+      <span class="section-num">08 · BLUEPRINT</span>
       <div>
         <h2 class="section-title">Six layers. One process.</h2>
         <p class="section-sub">Data flows down from user channels and up from LLMs through the same Node.js gateway.</p>
@@ -1112,6 +1142,35 @@ footer.foot::before {
       { name: "Llama (Meta)", weight: 3, models: "Llama 4 Scout · Maverick (via OpenClaw catalog)" }
     
     ],
+    memorySystem: {
+      layers: [
+        { area: "Vector · ephemeral", name: "memory-lancedb-pro v1.0.32", desc: "179 memories · 106 facts / 55 prefs / 14 decisions / 4 entities · text-embedding-3-small 1536d · hybrid + FTS + Jina rerank · auto-capture + auto-recall · access reinforcement on" },
+        { area: "Structured · stable", name: "Obsidian Wiki Vault", desc: "25 pages: 18 entities, 3 concepts, 4 syntheses, 8 project pages · wikilinks · loaded on demand · hand-curated · weekly promotion candidates from LanceDB" },
+        { area: "Bootstrap · per-session", name: "SOUL · USER · TOOLS · AGENTS · MEMORY · working_memory", desc: "~16.7K tokens injected every session · bootstrapMaxChars 32000 (raised from 25000 after silent truncation found) · totalMax 120000" }
+      ],
+      pipeline: [
+        { step: "1", name: "Query embedding", detail: "OpenAI text-embedding-3-small @ 1536d · dimensions pinned" },
+        { step: "2", name: "Vector cosine top-K", detail: "weight 0.7 · pulls top-15 candidates" },
+        { step: "3", name: "BM25 keyword fusion", detail: "weight 0.3 · merges with vector results" },
+        { step: "4", name: "FTS exact-match boost", detail: "tantivy-backed full-text search adds precision" },
+        { step: "5", name: "Jina cross-encoder rerank", detail: "jina-reranker-v3 over top-15 → top-5 · +15.4% measured precision lift today" },
+        { step: "6", name: "Recency decay", detail: "30-day half-life · weight 0.15 · newer ranks higher" },
+        { step: "7", name: "Access reinforcement", detail: "frequently-recalled memories decay slower · spaced-repetition style" },
+        { step: "8", name: "Score thresholds", detail: "minScore 0.25 · hardMinScore 0.30 · filterNoise on" },
+        { step: "9", name: "Inject as context", detail: "wrapped in &lt;relevant-memories&gt; with UNTRUSTED-DATA notice · category, scope, score visible to agent" }
+      ],
+      processes: [
+        { area: "Auto-capture", name: "Per turn", desc: "After every agent turn · importance-scored · noise-filtered · OpenClaw timestamp prefixes stripped before matching" },
+        { area: "Nightly Dreaming", name: "03:00 UTC daily", desc: "LLM clusters memories @ cos ≥ 0.80 (≥3 members) · GPT-5.4 synthesizes ≤400-char consolidations · additive (preserves originals) · idempotent across runs" },
+        { area: "Manual Dedup", name: "On demand", desc: "cos ≥ 0.95 pairs · keeps higher importance / newer · protects synthesis provenance · 3 dupes removed today (179 → 175 → 179)" },
+        { area: "mdMirror Bridge", name: "Per capture", desc: "Each captured memory appended to workspace/memory/YYYY-MM-DD.md · per-agent workspace resolution · daily markdown trail" },
+        { area: "Daily Health Check", name: "09:00 UTC daily", desc: "Row count + flat-count alert (23h+ gap) + plugin-error scan · writes pro-health.log + pro-alerts.log" },
+        { area: "Weekly Recall Aggregator", name: "Mon 08:00 UTC", desc: "Parses recall-detail logs · top retrieved IDs · never-retrieved set · score distribution · tuning heuristics" },
+        { area: "Weekly Wiki Promotion", name: "Mon 08:00 UTC", desc: "Scans high-importance memories (≥0.85) · regex-matches entity names · writes triage report at wiki/_views/promotion-candidates-YYYY-MM-DD.md" },
+        { area: "Recall Observability", name: "Per recall", desc: "Plugin patched today: every recall logs agent + retrieved IDs + scores · foundation for data-driven weight tuning" },
+        { area: "Internal Backup", name: "Per init", desc: "Plugin auto-backs up to memory-backup-YYYY-MM-DD.jsonl on every init · 178 entries in today's backup · secondary rollback path" }
+      ]
+    },
     stack: [
       { area: "OS", name: "Windows Server 2022", desc: "AWS EC2 t3.medium · us-east-1" },
       { area: "Runtime", name: "Node.js v24.13.1", desc: "ESM · pnpm workspaces" },
@@ -1483,6 +1542,36 @@ footer.foot::before {
     `).join('');
   }
 
+  // ─── MEMORY ───────────────────────────────────────────────
+  function renderMemory() {
+    const layers = $('#memLayersGrid');
+    if (layers) layers.innerHTML = DATA.memorySystem.layers.map(s => `
+      <div class="stack-card">
+        <div class="stack-area">${esc(s.area)}</div>
+        <div class="stack-name">${esc(s.name)}</div>
+        <div class="stack-desc">${esc(s.desc)}</div>
+      </div>
+    `).join('');
+
+    const pipeline = $('#memPipeline');
+    if (pipeline) pipeline.innerHTML = DATA.memorySystem.pipeline.map(p => `
+      <div class="stack-card">
+        <div class="stack-area">Step ${esc(p.step)}</div>
+        <div class="stack-name">${esc(p.name)}</div>
+        <div class="stack-desc">${p.detail}</div>
+      </div>
+    `).join('');
+
+    const procs = $('#memProcesses');
+    if (procs) procs.innerHTML = DATA.memorySystem.processes.map(p => `
+      <div class="stack-card">
+        <div class="stack-area">${esc(p.area)}</div>
+        <div class="stack-name">${esc(p.name)}</div>
+        <div class="stack-desc">${esc(p.desc)}</div>
+      </div>
+    `).join('');
+  }
+
   // ─── PROJECTS ────────────────────────────────────────────
   function renderProjects() {
     const container = $('#projContainer');
@@ -1635,6 +1724,7 @@ footer.foot::before {
     renderCrons();
     renderProviders();
     renderStack();
+    renderMemory();
     renderProjects();
     renderArch();
     setupReveal();
