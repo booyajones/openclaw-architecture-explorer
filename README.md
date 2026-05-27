@@ -6,6 +6,10 @@ Interactive deep-dive into the [OpenClaw](https://openclaw.ai) internal architec
 
 Built by [Patryk Golabek](https://github.com/PatrykQuantumNomad) as part of [Pincer Ops](https://pincer.patrykgolabek.dev/) — a GitOps-driven Kubernetes platform for deploying OpenClaw at scale.
 
+## Documentation
+
+- **[Scaling Guide](scaling-guide.md)** — Hardware requirements, concurrency patterns, and architecture recommendations for 2 to 200+ simultaneous jobs
+
 ## Overview
 
 The Architecture Explorer visualizes the full OpenClaw stack:
